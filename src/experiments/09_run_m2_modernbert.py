@@ -43,7 +43,7 @@ import sklearn
 from sklearn.metrics import average_precision_score, f1_score
 
 
-VERSION = "1.4.0"
+VERSION = "1.4.1"
 ARTIFACT_SCHEMA_VERSION = "sherloc-m2-artifacts-v1"
 PREDICTION_SCHEMA_VERSION = "sherloc-amp-predictions-v1"
 EXPECTED_CONFIG_ID = "m2-modernbert-amp-v2"
@@ -586,6 +586,140 @@ def archive_forced_restart(
         "restart_event_path": display_path(event_path),
         "restart_event_sha256": sha256_file(event_path),
         "reason": force_reason,
+    }
+
+
+def archive_fold1_cpu_inference_for_mps_reexecution(
+    spec: RunSpec,
+    *,
+    current_hardware: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Preserve completed Fold-1 CPU inference before MPS-only re-execution.
+
+    This is intentionally narrower than ``--force``: it may archive only the
+    fixed-protocol Fold-1 fit/selection derivatives and test predictions. The
+    validated legacy grid, including the official C5 checkpoint, is never
+    moved or changed.
+    """
+
+    if spec.evaluation != "A2" or spec.fold != 1:
+        raise M2ProtocolError(
+            "Technical inference re-execution is restricted to A2 Fold 1"
+        )
+    if (
+        current_hardware.get("backend") != "mps"
+        or current_hardware.get("mps_available") is not True
+    ):
+        raise M2ProtocolError(
+            "Fold-1 technical inference re-execution requires available Apple MPS"
+        )
+
+    metadata_path = spec.model_dir / "run_metadata.json"
+    fixed_dir = spec.model_dir / "fixed_a1_hparams_v1"
+    prediction_path = spec.prediction_path
+    for required in (metadata_path, fixed_dir, prediction_path):
+        if not required.exists():
+            raise M2ProtocolError(
+                f"Fold-1 CPU inference artifact is missing: {required}"
+            )
+
+    metadata = load_json(metadata_path)
+    protocol = metadata.get("scientific_protocol")
+    selection = metadata.get("selection")
+    old_hardware = metadata.get("execution_environment", {}).get("hardware", {})
+    if (
+        metadata.get("status") != "COMPLETE"
+        or not isinstance(protocol, Mapping)
+        or protocol.get("protocol_id") != FIXED_A2_PROTOCOL_ID
+        or not isinstance(selection, Mapping)
+        or selection.get("training_reused_without_retraining") is not True
+        or selection.get("selected_configuration_index")
+        != FIXED_A2_CONFIGURATION_INDEX
+        or selection.get("selected_hyperparameters")
+        != FIXED_A2_HYPERPARAMETERS
+        or metadata.get("test_labels_used_for_selection") is not False
+        or old_hardware.get("backend") != "cpu"
+        or old_hardware.get("mps_available") is not False
+    ):
+        raise M2ProtocolError(
+            "Existing Fold-1 artifact is not the eligible fixed-protocol CPU "
+            "inference attempt"
+        )
+
+    fit_state_path = resolve_artifact_path(str(metadata.get("fit_state_path")))
+    checkpoint_path = resolve_artifact_path(
+        str(selection.get("selected_checkpoint_path"))
+    )
+    if fit_state_path.parent != fixed_dir or not fit_state_path.is_file():
+        raise M2ProtocolError("Fold-1 CPU fit-state path is outside the fixed directory")
+    if sha256_file(fit_state_path) != metadata.get("fit_state_sha256"):
+        raise M2ProtocolError("Fold-1 CPU fit state is damaged")
+    if sha256_file(prediction_path) != metadata.get("prediction_sha256"):
+        raise M2ProtocolError("Fold-1 CPU prediction artifact is damaged")
+    if (
+        not checkpoint_path.is_dir()
+        or sha256_directory(checkpoint_path)
+        != selection.get("selected_checkpoint_sha256")
+    ):
+        raise M2ProtocolError("Official Fold-1 C5 checkpoint is missing or damaged")
+
+    old_context = str(metadata.get("execution_context_sha256") or "")
+    if len(old_context) != 64:
+        raise M2ProtocolError("Fold-1 CPU metadata lacks its execution-context hash")
+    history_dir = (
+        spec.model_dir
+        / "_protocol_history"
+        / FIXED_A2_PROTOCOL_ID
+        / "technical_reinference"
+        / (
+            f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}_"
+            f"{old_context[:12]}"
+        )
+    )
+    history_dir.mkdir(parents=True, exist_ok=False)
+    candidates = (fixed_dir, prediction_path, metadata_path)
+    archived: list[dict[str, Any]] = []
+    for source in candidates:
+        digest = sha256_directory(source) if source.is_dir() else sha256_file(source)
+        destination = history_dir / source.name
+        os.replace(source, destination)
+        observed = (
+            sha256_directory(destination)
+            if destination.is_dir()
+            else sha256_file(destination)
+        )
+        if observed != digest:
+            raise M2ProtocolError(
+                f"Fold-1 CPU inference archive verification failed: {destination}"
+            )
+        archived.append(
+            {
+                "source_path": display_path(source),
+                "archived_path": display_path(destination),
+                "sha256": digest,
+                "kind": "directory" if destination.is_dir() else "file",
+            }
+        )
+    event = {
+        "archive_schema_version": "sherloc-m2-technical-reinference-v1",
+        "recorded_at": utc_now(),
+        "run": spec.key,
+        "reason": "SANDBOX_HID_MPS_DURING_FOLD1_TEST_INFERENCE",
+        "scope": "FOLD1_FIXED_DERIVATIVES_AND_TEST_INFERENCE_ONLY",
+        "training_reexecuted": False,
+        "legacy_grid_changed": False,
+        "old_execution_context_sha256": old_context,
+        "old_backend": "cpu",
+        "required_new_backend": "mps",
+        "archived_artifacts": archived,
+    }
+    event_path = history_dir / "archive_event.json"
+    atomic_json(event_path, event)
+    return {
+        "archive_event_path": display_path(event_path),
+        "archive_event_sha256": sha256_file(event_path),
+        "reason": event["reason"],
+        "training_reexecuted": False,
     }
 
 
@@ -3228,6 +3362,7 @@ def run_one(
     adamw_foreach_false: bool,
     pad_to_multiple_of: int | None,
     fixed_a2_hyperparameters_from_a1: bool = False,
+    reexecute_fold1_test_inference_on_mps: bool = False,
     model_root: Path = DEFAULT_MODEL_ROOT,
     amendment_path: Path = DEFAULT_FIXED_A2_AMENDMENT,
 ) -> dict[str, Any]:
@@ -3329,6 +3464,11 @@ def run_one(
 
     stack = load_ml_stack()
     device, hardware = select_device(stack["torch"])
+    if fixed_a2_hyperparameters_from_a1 and device.type != "mps":
+        raise M2ProtocolError(
+            "Fixed A2 contingency mode requires Apple MPS; observed "
+            f"device={device.type}"
+        )
     environment = runtime_environment(stack, hardware, mps_allocator)
     scientific_protocol = (
         fixed_a2_scientific_protocol(
@@ -3378,6 +3518,14 @@ def run_one(
         if fixed_a2_hyperparameters_from_a1 and spec.fold == 1
         else artifact_dir / "tokenizer"
     )
+    technical_reinference_provenance: dict[str, Any] | None = None
+    if reexecute_fold1_test_inference_on_mps:
+        technical_reinference_provenance = (
+            archive_fold1_cpu_inference_for_mps_reexecution(
+                spec,
+                current_hardware=hardware,
+            )
+        )
     restart_provenance: dict[str, Any] | None = None
     if force:
         if not force_reason or not force_reason.strip():
@@ -3417,6 +3565,7 @@ def run_one(
             "execution_context_sha256": context_digest(context),
             "environment": environment,
             "forced_restart_provenance": restart_provenance,
+            "technical_reinference_provenance": technical_reinference_provenance,
         },
     )
 
@@ -3508,6 +3657,7 @@ def run_one(
                 "training_reused_without_retraining", False
             ),
             "forced_restart_provenance": restart_provenance,
+            "technical_reinference_provenance": technical_reinference_provenance,
             "validation_hyperparameter_search_path": display_path(search_path),
             "validation_hyperparameter_search_sha256": sha256_file(search_path),
             "validation_threshold_search_path": display_path(threshold_path),
@@ -3643,6 +3793,7 @@ def run_one(
         "test_inference_mixed_precision_dtype": inference_mixed_precision_dtype,
         "environment": environment,
         "forced_restart_provenance": restart_provenance,
+        "technical_reinference_provenance": technical_reinference_provenance,
         "protocol_attestation": {
             "architecture": "one_shared_ModernBERT_encoder_one_17_logit_head",
             "pretrained_model_id": EXPECTED_MODEL_ID,
@@ -3821,6 +3972,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Pinned compute-contingency amendment used by fixed A2 mode.",
     )
     parser.add_argument(
+        "--reexecute-fold1-test-inference-on-mps",
+        action="store_true",
+        help=(
+            "One-time recovery for a fixed-protocol Fold-1 inference attempt "
+            "that completed on CPU when a sandbox hid MPS. Byte-archives the "
+            "fixed derivatives and predictions, preserves legacy C5, and reruns "
+            "selection reconstruction plus test inference on MPS without training."
+        ),
+    )
+    parser.add_argument(
         "--plan",
         action="store_true",
         help="Validate frozen inputs and print plans without importing PyTorch or training.",
@@ -3952,6 +4113,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "--pad-to-multiple-of 64 and max_length=2048; observed "
                 + canonical_json(stable)
             )
+    if args.reexecute_fold1_test_inference_on_mps:
+        if not args.a2_fixed_hyperparameters_from_a1:
+            raise M2ProtocolError(
+                "--reexecute-fold1-test-inference-on-mps requires fixed A2 mode"
+            )
+        if args.evaluation != "A2" or args.fold != 1:
+            raise M2ProtocolError(
+                "--reexecute-fold1-test-inference-on-mps requires "
+                "--evaluation A2 --fold 1"
+            )
+        if args.plan:
+            raise M2ProtocolError(
+                "--reexecute-fold1-test-inference-on-mps is an execution-only mode"
+            )
     if args.max_length_override is not None:
         if not args.acknowledge_max_length_reduction:
             raise M2ProtocolError(
@@ -4029,6 +4204,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                     pad_to_multiple_of=args.pad_to_multiple_of,
                     fixed_a2_hyperparameters_from_a1=(
                         args.a2_fixed_hyperparameters_from_a1
+                    ),
+                    reexecute_fold1_test_inference_on_mps=(
+                        args.reexecute_fold1_test_inference_on_mps
                     ),
                     model_root=args.model_root,
                     amendment_path=args.a2_amendment,

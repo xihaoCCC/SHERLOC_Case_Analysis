@@ -92,6 +92,86 @@ class M2A2FixedProtocolTest(unittest.TestCase):
                 ]
             )
 
+    def test_fold1_mps_reinference_cli_is_narrowly_scoped(self) -> None:
+        with self.assertRaises(M2.M2ProtocolError):
+            M2.main(
+                [
+                    "--evaluation",
+                    "A2",
+                    "--fold",
+                    "2",
+                    "--plan",
+                    "--a2-fixed-hyperparameters-from-a1",
+                    "--reexecute-fold1-test-inference-on-mps",
+                ]
+            )
+
+    def test_cpu_fold1_inference_archive_preserves_legacy_grid(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            model_dir = root / "a2_fold_1"
+            prediction_path = root / "predictions/fold1.jsonl"
+            fixed_dir = model_dir / "fixed_a1_hparams_v1"
+            fit_state = fixed_dir / "fit_state.json"
+            checkpoint = model_dir / "grid/configuration_05/checkpoint_best"
+            checkpoint.mkdir(parents=True)
+            (checkpoint / "weights").write_bytes(b"official-c5")
+            M2.atomic_json(
+                fit_state,
+                {"status": "FIT_AND_VALIDATION_SELECTION_COMPLETE"},
+            )
+            prediction_path.parent.mkdir(parents=True)
+            prediction_path.write_text("{}\n", encoding="utf-8")
+            metadata_path = model_dir / "run_metadata.json"
+            M2.atomic_json(
+                metadata_path,
+                {
+                    "status": "COMPLETE",
+                    "execution_context_sha256": "a" * 64,
+                    "execution_environment": {
+                        "hardware": {"backend": "cpu", "mps_available": False}
+                    },
+                    "scientific_protocol": {
+                        "protocol_id": M2.FIXED_A2_PROTOCOL_ID
+                    },
+                    "selection": {
+                        "training_reused_without_retraining": True,
+                        "selected_configuration_index": 5,
+                        "selected_hyperparameters": dict(
+                            M2.FIXED_A2_HYPERPARAMETERS
+                        ),
+                        "selected_checkpoint_path": str(checkpoint),
+                        "selected_checkpoint_sha256": M2.sha256_directory(
+                            checkpoint
+                        ),
+                    },
+                    "fit_state_path": str(fit_state),
+                    "fit_state_sha256": M2.sha256_file(fit_state),
+                    "prediction_sha256": M2.sha256_file(prediction_path),
+                    "test_labels_used_for_selection": False,
+                },
+            )
+            spec = M2.RunSpec(
+                evaluation="A2",
+                fold=1,
+                split_path=root / "unused.csv",
+                model_dir=model_dir,
+                prediction_path=prediction_path,
+            )
+            provenance = M2.archive_fold1_cpu_inference_for_mps_reexecution(
+                spec,
+                current_hardware={"backend": "mps", "mps_available": True},
+            )
+            event = M2.load_json(
+                M2.resolve_artifact_path(provenance["archive_event_path"])
+            )
+            self.assertEqual(event["old_backend"], "cpu")
+            self.assertFalse(event["training_reexecuted"])
+            self.assertTrue(checkpoint.is_dir())
+            self.assertFalse(metadata_path.exists())
+            self.assertFalse(fixed_dir.exists())
+            self.assertFalse(prediction_path.exists())
+
     def test_same_context_interrupted_run_is_recoverable_only_when_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             metadata_path = Path(directory) / "run_metadata.json"
@@ -261,4 +341,3 @@ class M2A2FixedProtocolTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
