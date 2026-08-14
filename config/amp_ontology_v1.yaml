@@ -1,0 +1,121 @@
+{
+  "ontology_id": "sherloc-legacy-amp-v1",
+  "ontology_version": "1.0.0",
+  "format_note": "This JSON document is valid YAML 1.2 and is read with the Python standard library.",
+  "semantic_source": "UNODC SHERLOC main-record Legacy Keywords",
+  "source_path": "legacy_keywords.core_fields",
+  "primary_ground_truth_policy": "Only Legacy Keywords define benchmark-v1 AMP targets.",
+  "sidebar_policy": "Trafficking-sidebar AMP remains source-separated secondary metadata and never changes the primary ontology or labels.",
+  "indexing": "zero_based",
+  "ordering_basis": "Stable Palermo Protocol conceptual order; never frequency-sorted.",
+  "families": {
+    "ACT": [
+      {
+        "index": 0,
+        "id": "ACT_RECRUITMENT",
+        "family": "ACT",
+        "raw_sherloc_label": "Recruitment"
+      },
+      {
+        "index": 1,
+        "id": "ACT_TRANSPORTATION",
+        "family": "ACT",
+        "raw_sherloc_label": "Transportation"
+      },
+      {
+        "index": 2,
+        "id": "ACT_TRANSFER",
+        "family": "ACT",
+        "raw_sherloc_label": "Transfer"
+      },
+      {
+        "index": 3,
+        "id": "ACT_HARBOURING",
+        "family": "ACT",
+        "raw_sherloc_label": "Harbouring"
+      },
+      {
+        "index": 4,
+        "id": "ACT_RECEIPT",
+        "family": "ACT",
+        "raw_sherloc_label": "Receipt"
+      }
+    ],
+    "MEANS": [
+      {
+        "index": 0,
+        "id": "MEANS_THREAT_FORCE_OR_COERCION",
+        "family": "MEANS",
+        "raw_sherloc_label": "Threat or use of force or other forms of coercion"
+      },
+      {
+        "index": 1,
+        "id": "MEANS_ABDUCTION",
+        "family": "MEANS",
+        "raw_sherloc_label": "Abduction"
+      },
+      {
+        "index": 2,
+        "id": "MEANS_FRAUD",
+        "family": "MEANS",
+        "raw_sherloc_label": "Fraud"
+      },
+      {
+        "index": 3,
+        "id": "MEANS_DECEPTION",
+        "family": "MEANS",
+        "raw_sherloc_label": "Deception"
+      },
+      {
+        "index": 4,
+        "id": "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+        "family": "MEANS",
+        "raw_sherloc_label": "Abuse of power or a position of vulnerability"
+      },
+      {
+        "index": 5,
+        "id": "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL",
+        "family": "MEANS",
+        "raw_sherloc_label": "Giving or receiving payments or benefits to achieve the consent of a person having control over another person"
+      }
+    ],
+    "PURPOSE": [
+      {
+        "index": 0,
+        "id": "PURPOSE_SEXUAL_EXPLOITATION",
+        "family": "PURPOSE",
+        "raw_sherloc_label": "Exploitation of the prostitution of others or other forms of sexual exploitation"
+      },
+      {
+        "index": 1,
+        "id": "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+        "family": "PURPOSE",
+        "raw_sherloc_label": "Forced labour or services"
+      },
+      {
+        "index": 2,
+        "id": "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+        "family": "PURPOSE",
+        "raw_sherloc_label": "Slavery or practices similar to slavery"
+      },
+      {
+        "index": 3,
+        "id": "PURPOSE_SERVITUDE",
+        "family": "PURPOSE",
+        "raw_sherloc_label": "Servitude"
+      },
+      {
+        "index": 4,
+        "id": "PURPOSE_REMOVAL_OF_ORGANS",
+        "family": "PURPOSE",
+        "raw_sherloc_label": "Removal of organs"
+      },
+      {
+        "index": 5,
+        "id": "PURPOSE_OTHER",
+        "family": "PURPOSE",
+        "raw_sherloc_label": "Other"
+      }
+    ]
+  }
+}
