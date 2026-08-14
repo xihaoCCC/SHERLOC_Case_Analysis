@@ -1,0 +1,167 @@
+{
+  "config_id": "m2-modernbert-v1",
+  "config_version": "1.0.0",
+  "status": "FROZEN_PREPARATION_ONLY_NOT_TRAINED",
+  "method_id": "M2",
+  "method_name": "ModernBERT joint 17-label AMP classifier",
+  "primary_cohort_id": "sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9",
+  "primary_cohort_n": 1263,
+  "random_seed": 20260811,
+  "input": {
+    "field": "text_input.english_fact_summary_raw",
+    "one_case_per_document": true,
+    "excluded_fields": [
+      "case title",
+      "jurisdiction",
+      "URL",
+      "Legacy Keywords",
+      "trafficking sidebar",
+      "all other structured case metadata"
+    ]
+  },
+  "model": {
+    "pretrained_model_id": "answerdotai/ModernBERT-base",
+    "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+    "tokenizer_id": "answerdotai/ModernBERT-base",
+    "tokenizer_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+    "model_class": "transformers.ModernBertForSequenceClassification",
+    "shared_encoder_count": 1,
+    "classification_head_count": 1,
+    "num_labels": 17,
+    "problem_type": "multi_label_classification",
+    "classifier_pooling": "mean",
+    "classifier_dropout": 0.0
+  },
+  "targets": {
+    "label_order": [
+      "ACT_RECRUITMENT",
+      "ACT_TRANSPORTATION",
+      "ACT_TRANSFER",
+      "ACT_HARBOURING",
+      "ACT_RECEIPT",
+      "MEANS_THREAT_FORCE_OR_COERCION",
+      "MEANS_ABDUCTION",
+      "MEANS_FRAUD",
+      "MEANS_DECEPTION",
+      "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+      "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL",
+      "PURPOSE_SEXUAL_EXPLOITATION",
+      "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+      "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+      "PURPOSE_SERVITUDE",
+      "PURPOSE_REMOVAL_OF_ORGANS",
+      "PURPOSE_OTHER"
+    ],
+    "geographic_form": "NOT_INCLUDED_IN_THE_FROZEN_17_LOGIT_HEAD_PENDING_SEPARATE_AUXILIARY_MODEL_DECISION"
+  },
+  "tokenization": {
+    "audit_file": "outputs/tables/modernbert_token_length_audit.csv",
+    "audit_n": 1263,
+    "add_special_tokens": true,
+    "max_length": 2048,
+    "coverage_at_max_length_n": 1254,
+    "coverage_at_max_length_percent": 99.287411,
+    "truncated_cases_n": 9,
+    "truncation": true,
+    "truncation_side": "right",
+    "padding": "dynamic_to_longest_in_batch",
+    "report_truncated_case_ids": true
+  },
+  "objective": {
+    "primary_loss": "BCEWithLogitsLoss",
+    "class_weighting_default": "NONE",
+    "optional_preregistered_variant": {
+      "enabled_by_default": false,
+      "loss": "BCEWithLogitsLoss_WITH_TRAIN_ONLY_POS_WEIGHT",
+      "pos_weight_source": "TRAIN_ROLE_ONLY",
+      "pos_weight_cap": 20.0,
+      "selection_data": "VALIDATION_ONLY"
+    },
+    "complex_custom_loss": "PROHIBITED_IN_V1"
+  },
+  "training_defaults": {
+    "learning_rate": 0.00002,
+    "weight_decay": 0.01,
+    "epochs": 6,
+    "warmup_ratio": 0.1,
+    "lr_scheduler_type": "linear",
+    "per_device_train_batch_size": 4,
+    "per_device_eval_batch_size": 8,
+    "gradient_accumulation_steps": 4,
+    "effective_train_batch_size_per_device": 16,
+    "max_grad_norm": 1.0,
+    "optimizer": "AdamW",
+    "early_stopping_patience": 2,
+    "early_stopping_threshold": 0.0,
+    "best_checkpoint_metric": "validation_macro_average_precision",
+    "greater_is_better": true,
+    "load_best_model_at_end": true,
+    "save_strategy": "epoch",
+    "evaluation_strategy": "epoch",
+    "seed": 20260811,
+    "data_seed": 20260811
+  },
+  "planned_validation_search": {
+    "selection_data": "VALIDATION_ONLY",
+    "test_labels_forbidden": true,
+    "grid": {
+      "learning_rate": [0.00001, 0.00002, 0.00003],
+      "weight_decay": [0.01, 0.05]
+    },
+    "maximum_configurations": 6,
+    "fixed_during_search": [
+      "max_length",
+      "classifier_pooling",
+      "classifier_dropout",
+      "epochs",
+      "effective batch size"
+    ]
+  },
+  "precision_and_backend": {
+    "mixed_precision_preference": ["bf16", "fp16", "fp32"],
+    "require_runtime_capability_check": true,
+    "attention_backend_default": "sdpa",
+    "flash_attention_2": "OPTIONAL_ONLY_IF_INSTALLED_AND_SUPPORTED",
+    "gradient_checkpointing": false,
+    "record_actual_precision_and_backend": true,
+    "deterministic_algorithms": "WARN_ONLY_AND_RECORD_NONDETERMINISTIC_OPERATIONS"
+  },
+  "thresholding": {
+    "fixed_baseline": 0.5,
+    "primary_policy": "ONE_GLOBAL_THRESHOLD_TUNED_ON_VALIDATION_ONLY",
+    "candidate_grid_start": 0.05,
+    "candidate_grid_stop": 0.95,
+    "candidate_grid_step": 0.05,
+    "selection_metric": "macro_f1",
+    "per_label_thresholds": "DISABLED_IN_V1_DUE_TO_UNSTABLE_RARE_LABEL_VALIDATION_COUNTS",
+    "test_label_tuning": "PROHIBITED"
+  },
+  "reproducibility": {
+    "split_status": "PROVISIONAL_PENDING_DEMO_APPROVAL",
+    "provisional_demo_set_id": "demo-bank-proposal-set-01-v1",
+    "regenerate_if_demo_membership_changes": true,
+    "split_files": [
+      "data/splits/a1_iid_split_v1.csv",
+      "data/splits/a2_jurisdiction_folds_v1.csv"
+    ],
+    "record_model_and_tokenizer_resolved_commits": true,
+    "record_transformers_torch_cuda_and_device_versions": true,
+    "record_config_sha256": true,
+    "record_best_checkpoint_sha256": true
+  },
+  "preparation_environment": {
+    "environment_name": "xihao_env",
+    "python_version": "3.10.19",
+    "transformers_version": "5.5.3",
+    "tokenizers_version": "0.22.2",
+    "torch_version": "2.11.0",
+    "numpy_version": "2.2.6"
+  },
+  "scope_guard": {
+    "train_now": false,
+    "predict_now": false,
+    "evaluate_now": false,
+    "future_test_error_prompt_or_model_tuning": false
+  },
+  "format_note": "This JSON document is valid YAML 1.2 and can be read with the Python standard library."
+}

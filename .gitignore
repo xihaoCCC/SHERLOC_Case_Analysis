@@ -1,5 +1,63 @@
 # Object file
 *.o
 
+# Bulk data
+data/raw_html/*
+data/interim/*
+data/processed/*
+
+# Keep folder structure
+!data/raw_html/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+!logs/url_discovery_diagnostics.json
+!logs/page_download_manifest.csv
+!logs/page_download_diagnostics.json
+!logs/parser_diagnostics.json
+
+# Reproducible but bulky experiment artifacts
+outputs/models/
+outputs/checkpoints/
+outputs/logs/
+*.safetensors
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
+.env.*
+api.txt
+venv/
+.venv/
+
+# macOS
+.DS_Store
+
 # Ada Library Information
 *.ali
+data/sample_html/B637.L6.961-X7-DF.html
+data/sample_html/Case 130125.html
+data/sample_html/Case No. 21-cv-00485-JCS – John Doe et al. v. Twitter. INC..html
+data/sample_html/Case of Hug.html
+data/sample_html/Causa 2422.html
+data/sample_html/Conviction KOK.br.52_10.html
+data/sample_html/Criminal Case No. 23-1556.html
+data/sample_html/Dosar nr 1ra - 144_2011.html
+data/sample_html/Ho v The Queen; Leech v The Queen \[2011] VSCA 344 as related to DPP (Cth) v Ho & Ho \[2009] VSC 437.html
+data/sample_html/IV KK 52_11.html
+data/sample_html/O.O.O. and Others v Commissioner of Police for the Metropolis.html
+data/sample_html/People of Philippines vs. Nelia Ogalesco y Torio.html
+data/sample_html/Querela n°11_19.html
+data/sample_html/R v. N. and R v. Le.html
+data/sample_html/R. v. A.A.html
+data/sample_html/Rex and Obinna Obeta, Ike and Beatrice Ekweremadu.html
+data/sample_html/Sentencia 298_2015.html
+data/sample_html/United States v Robinson.html
+data/sample_html/United States v. Cha.html

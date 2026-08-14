@@ -1,0 +1,128 @@
+{
+  "config_id": "m1-tfidf-logreg-v1",
+  "config_version": "1.0.0",
+  "status": "FROZEN_PREPARATION_ONLY_NOT_TRAINED",
+  "method_id": "M1",
+  "method_name": "TF-IDF plus one-vs-rest logistic regression",
+  "primary_cohort_id": "sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9",
+  "primary_cohort_n": 1263,
+  "random_seed": 20260811,
+  "input": {
+    "field": "text_input.english_fact_summary_raw",
+    "one_case_per_document": true,
+    "excluded_fields": [
+      "case title",
+      "jurisdiction",
+      "URL",
+      "Legacy Keywords",
+      "trafficking sidebar",
+      "all other structured case metadata"
+    ],
+    "fit_preprocessing_on": "TRAIN_ONLY"
+  },
+  "targets": {
+    "task_type": "multilabel_binary_relevance",
+    "number_of_labels": 17,
+    "label_order": [
+      "ACT_RECRUITMENT",
+      "ACT_TRANSPORTATION",
+      "ACT_TRANSFER",
+      "ACT_HARBOURING",
+      "ACT_RECEIPT",
+      "MEANS_THREAT_FORCE_OR_COERCION",
+      "MEANS_ABDUCTION",
+      "MEANS_FRAUD",
+      "MEANS_DECEPTION",
+      "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+      "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL",
+      "PURPOSE_SEXUAL_EXPLOITATION",
+      "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+      "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+      "PURPOSE_SERVITUDE",
+      "PURPOSE_REMOVAL_OF_ORGANS",
+      "PURPOSE_OTHER"
+    ],
+    "geographic_form": "NOT_INCLUDED_IN_M1_V1_PENDING_SEPARATE_AUXILIARY_MODEL_DECISION"
+  },
+  "pipeline": {
+    "vectorizer": {
+      "class": "sklearn.feature_extraction.text.TfidfVectorizer",
+      "analyzer": "word",
+      "ngram_range": [1, 2],
+      "lowercase": true,
+      "strip_accents": null,
+      "stop_words": null,
+      "token_pattern": "(?u)\\b\\w\\w+\\b",
+      "norm": "l2",
+      "use_idf": true,
+      "smooth_idf": true,
+      "sublinear_tf": true,
+      "min_df": 2,
+      "max_df": 1.0,
+      "max_features": 50000,
+      "dtype": "float64"
+    },
+    "classifier_wrapper": {
+      "class": "sklearn.multiclass.OneVsRestClassifier",
+      "n_jobs": 1
+    },
+    "base_classifier": {
+      "class": "sklearn.linear_model.LogisticRegression",
+      "penalty": "l2",
+      "solver": "liblinear",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "max_iter": 2000,
+      "tol": 0.0001,
+      "random_state": 20260811
+    }
+  },
+  "planned_validation_search": {
+    "selection_data": "VALIDATION_ONLY",
+    "selection_metric": "macro_average_precision",
+    "refit_vectorizer_for_each_training_fold": true,
+    "grid": {
+      "vectorizer.min_df": [1, 2],
+      "base_classifier.C": [0.25, 1.0, 4.0],
+      "base_classifier.class_weight": [null, "balanced"]
+    },
+    "maximum_configurations": 12,
+    "test_labels_forbidden": true
+  },
+  "thresholding": {
+    "fixed_baseline": 0.5,
+    "primary_policy": "ONE_GLOBAL_THRESHOLD_TUNED_ON_VALIDATION_ONLY",
+    "candidate_grid_start": 0.05,
+    "candidate_grid_stop": 0.95,
+    "candidate_grid_step": 0.05,
+    "selection_metric": "macro_f1",
+    "per_label_thresholds": "DISABLED_IN_V1_DUE_TO_UNSTABLE_RARE_LABEL_VALIDATION_COUNTS",
+    "test_label_tuning": "PROHIBITED"
+  },
+  "reproducibility": {
+    "split_status": "PROVISIONAL_PENDING_DEMO_APPROVAL",
+    "provisional_demo_set_id": "demo-bank-proposal-set-01-v1",
+    "regenerate_if_demo_membership_changes": true,
+    "split_files": [
+      "data/splits/a1_iid_split_v1.csv",
+      "data/splits/a2_jurisdiction_folds_v1.csv"
+    ],
+    "record_library_versions": true,
+    "record_config_sha256": true,
+    "persist_fitted_vocabulary_and_idf": true
+  },
+  "preparation_environment": {
+    "environment_name": "xihao_env",
+    "python_version": "3.10.19",
+    "scikit_learn_version": "1.7.2",
+    "numpy_version": "2.2.6",
+    "iterative_stratification_version": "0.1.9"
+  },
+  "scope_guard": {
+    "train_now": false,
+    "predict_now": false,
+    "evaluate_now": false,
+    "future_test_error_prompt_or_model_tuning": false
+  },
+  "format_note": "This JSON document is valid YAML 1.2 and can be read with the Python standard library."
+}

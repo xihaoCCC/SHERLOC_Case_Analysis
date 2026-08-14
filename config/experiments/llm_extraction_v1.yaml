@@ -1,0 +1,231 @@
+{
+  "config_id": "llm-extraction-evaluation-a-v1",
+  "config_version": "1.0.0",
+  "status": "FROZEN_PREPARATION_ONLY_NO_API_CALLS",
+  "methods": {
+    "M3": {
+      "experiment_id": "evaluation-a-m3-zero-shot-v1",
+      "prompt_version": "m3-zero-shot-v1",
+      "prompt_path": "prompts/m3_zero_shot_v1.md",
+      "demonstration_count": 0
+    },
+    "M4": {
+      "experiment_id": "evaluation-a-m4-six-shot-v1",
+      "prompt_version": "m4-six-shot-v1",
+      "prompt_path": "prompts/m4_six_shot_v1.md",
+      "demonstration_count": 6
+    }
+  },
+  "shared_task": {
+    "shared_instruction_marker_version": "SHERLOC_SHARED_INSTRUCTIONS_V1",
+    "unit_of_analysis": "ONE_ENGLISH_FACT_SUMMARY_ONE_INDEPENDENT_REQUEST",
+    "case_specific_evidence": "SUPPLIED_FACT_SUMMARY_ONLY",
+    "target_families": ["ACT", "MEANS", "PURPOSE", "GEOGRAPHIC_FORM"],
+    "excluded_targets": ["VICTIM_MULTIPLICITY", "CHILD_MINOR", "SECTOR"],
+    "evidence_spans": false,
+    "confidence_scores": false,
+    "rationales_or_chain_of_thought": false,
+    "empty_amp_arrays_allowed_when_unsupported": true,
+    "form_both_false_allowed_when_unsupported": true,
+    "form_both_true_allowed_when_independently_supported": true
+  },
+  "ontology": {
+    "ontology_id": "sherloc-legacy-amp-v1",
+    "ontology_path": "config/amp_ontology_v1.yaml",
+    "act_ids": [
+      "ACT_RECRUITMENT",
+      "ACT_TRANSPORTATION",
+      "ACT_TRANSFER",
+      "ACT_HARBOURING",
+      "ACT_RECEIPT"
+    ],
+    "means_ids": [
+      "MEANS_THREAT_FORCE_OR_COERCION",
+      "MEANS_ABDUCTION",
+      "MEANS_FRAUD",
+      "MEANS_DECEPTION",
+      "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+      "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+    ],
+    "purpose_ids": [
+      "PURPOSE_SEXUAL_EXPLOITATION",
+      "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+      "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+      "PURPOSE_SERVITUDE",
+      "PURPOSE_REMOVAL_OF_ORGANS",
+      "PURPOSE_OTHER"
+    ]
+  },
+  "api_request": {
+    "provider": "OpenAI",
+    "endpoint": "Responses API",
+    "model": "gpt-5.6-luna",
+    "model_snapshot_policy": "RECORD_REQUESTED_AND_RETURNED_MODEL_IDS; FREEZE_A_DATED_SNAPSHOT_IF_ONE_BECOMES_AVAILABLE_BEFORE_EXECUTION",
+    "one_case_per_request": true,
+    "store": false,
+    "reasoning": {
+      "effort": "low"
+    },
+    "text_verbosity": "low",
+    "max_output_tokens": 512,
+    "tools": "NONE",
+    "previous_response_id": "NONE",
+    "temperature": "OMITTED",
+    "top_p": "OMITTED",
+    "api_key_in_config": false
+  },
+  "model_role_rationale": "GPT-5.6 Luna is the explicitly frozen high-throughput extraction tier. Do not substitute another tier without a preregistered config change.",
+  "structured_output": {
+    "format_type": "json_schema",
+    "schema_name": "sherloc_amp_form_v1",
+    "strict": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "acts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ACT_RECRUITMENT",
+              "ACT_TRANSPORTATION",
+              "ACT_TRANSFER",
+              "ACT_HARBOURING",
+              "ACT_RECEIPT"
+            ]
+          },
+          "maxItems": 5
+        },
+        "means": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MEANS_THREAT_FORCE_OR_COERCION",
+              "MEANS_ABDUCTION",
+              "MEANS_FRAUD",
+              "MEANS_DECEPTION",
+              "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+              "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+            ]
+          },
+          "maxItems": 6
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "PURPOSE_SEXUAL_EXPLOITATION",
+              "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+              "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+              "PURPOSE_SERVITUDE",
+              "PURPOSE_REMOVAL_OF_ORGANS",
+              "PURPOSE_OTHER"
+            ]
+          },
+          "maxItems": 6
+        },
+        "geographic_form": {
+          "type": "object",
+          "properties": {
+            "internal": {"type": "boolean"},
+            "transnational": {"type": "boolean"}
+          },
+          "required": ["internal", "transnational"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["acts", "means", "purposes", "geographic_form"],
+      "additionalProperties": false
+    },
+    "duplicate_policy": "PROMPT_PROHIBITS_DUPLICATES; HOST_VALIDATOR_REJECTS_DUPLICATES; NEVER_SILENTLY_REPAIR",
+    "unsupported_unique_items_note": "uniqueItems is intentionally omitted because it is not listed in the documented OpenAI Structured Outputs array subset."
+  },
+  "demonstration_bank": {
+    "required_for": "M4_ONLY",
+    "expected_count": 6,
+    "current_status": "HUMAN_APPROVAL_REQUIRED_NOT_FROZEN",
+    "provisional_split_anchor": {
+      "candidate_set_id": "demo-bank-proposal-set-01-v1",
+      "search_ranks": [31, 146, 955, 1293, 1494, 1517],
+      "not_valid_for_m4_requests_until_human_approved": true,
+      "regenerate_a1_a2_if_membership_changes": true
+    },
+    "fixed_order_required": true,
+    "same_bank_for_all_a1_and_a2_requests": true,
+    "required_case_fields": [
+      "demo_id",
+      "demo_order",
+      "search_rank",
+      "canonical_url",
+      "jurisdiction",
+      "fact_summary",
+      "output",
+      "human_approved",
+      "frozen",
+      "approval_record"
+    ],
+    "required_approval_values": {
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "NONEMPTY_STRING"
+    },
+    "builder_policy": "FAIL_CLOSED_UNLESS_EXACTLY_SIX_UNIQUE_EXPLICITLY_ORDERED_APPROVED_FROZEN_DEMOS_ARE_SUPPLIED",
+    "test_exclusion_policy": "DEMO_CASES_NEVER_ENTER_A1_VALIDATION_A1_TEST_OR_ANY_A2_HELDOUT_TEST_METRIC"
+  },
+  "request_metadata": {
+    "fields": [
+      "experiment_id",
+      "case_id",
+      "search_rank",
+      "canonical_url",
+      "model",
+      "prompt_version",
+      "demo_bank_version",
+      "input_text_sha256",
+      "shared_instruction_sha256",
+      "schema_sha256",
+      "demo_bank_sha256",
+      "request_payload_sha256"
+    ],
+    "storage": "RETURNED_BESIDE_API_PAYLOAD_NOT_EMBEDDED_IN_THE_CASE_PROMPT",
+    "hash_encoding": "UTF-8",
+    "canonical_json": "SORT_KEYS_NO_INSIGNIFICANT_WHITESPACE_ENSURE_ASCII_FALSE"
+  },
+  "preparation_environment": {
+    "environment_name": "xihao_env",
+    "python_version": "3.10.19",
+    "openai_sdk_version_for_contract_check": "2.31.0",
+    "api_sdk_not_imported_by_request_builder": true
+  },
+  "response_handling_for_later_execution": {
+    "preserve_raw_api_response": true,
+    "explicit_nonprediction_statuses": [
+      "API_ERROR",
+      "REFUSAL",
+      "INCOMPLETE",
+      "SCHEMA_VALIDATION_ERROR",
+      "DUPLICATE_LABEL_ERROR"
+    ],
+    "map_failures_to_empty_labels": false,
+    "silent_output_repair": false
+  },
+  "methodological_guard": {
+    "prompt_or_demo_selection_sources": [
+      "TRAIN",
+      "VALIDATION",
+      "SEPARATE_DEMO_REVIEW"
+    ],
+    "a1_test_labels_for_prompt_tuning": "PROHIBITED",
+    "a2_test_fold_labels_for_prompt_tuning": "PROHIBITED",
+    "test_label_threshold_or_hyperparameter_tuning": "PROHIBITED",
+    "m3_m4_substantive_difference": "SIX_FIXED_DEMONSTRATION_MESSAGE_PAIRS_ONLY"
+  },
+  "scope_guard": {
+    "call_api_now": false,
+    "create_predictions_now": false,
+    "evaluate_now": false
+  },
+  "format_note": "This JSON document is valid YAML 1.2 and can be read with the Python standard library."
+}

@@ -1,0 +1,450 @@
+{
+  "bank_id": "sherloc-amp-demo-bank-v1",
+  "bank_version": "1.0.0",
+  "status": "FINAL_FROZEN_PRE_MODEL_EXECUTION",
+  "frozen_on": "2026-08-13",
+  "generator": "07_finalize_experiment_freeze.py v1.0.0",
+  "primary_cohort_id": "sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9",
+  "source_review": {
+    "path": "data/annotations/demo_bank_review_v2.csv",
+    "sha256": "c7e793e781c77bde4f99507b66b6ffeb5e37de768c86fd27f58c9e5cdf5e242f",
+    "approved_value": "Keep"
+  },
+  "target_scope": {
+    "families": [
+      "ACT",
+      "MEANS",
+      "PURPOSE"
+    ],
+    "label_count": 17,
+    "excluded_from_outputs": [
+      "GEOGRAPHIC_FORM",
+      "VICTIM_MULTIPLICITY",
+      "SECTOR",
+      "CHILD_MINOR"
+    ]
+  },
+  "roles": {
+    "active_six": [
+      1487,
+      1494,
+      1178,
+      498,
+      391,
+      157
+    ],
+    "reserve_two": [
+      1343,
+      936
+    ]
+  },
+  "approved_cases": [
+    {
+      "approved_order": 1,
+      "demo_id": "sherloc-rank-1487",
+      "role": "ACTIVE",
+      "search_rank": 1487,
+      "case_title": "Case 2014",
+      "unodc_case_number": "MKD008",
+      "jurisdiction": "North Macedonia",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/mkd/case_2014.html",
+      "fact_summary": "With abuse of the economic situation of the victim’s parents, the perpetrator (with false promise for achieving social, economic and other rights or gaining asylum in Germany or Belgium) organized transportation and accommodation without any fee. The deal was that after victim’s family start to receive humanitarian financial aid as asylum seekers, they will pay back the costs that perpetrator paid for their transport to Germany or Belgium. Instead, after they arrive to Belgium, with use of force and threats, he grabs the minor (victim) from her family (female kid age 12) who was immediately sold in other family as “bride” (forced marriage). Later this family testifies that they paid a solid amount of money for perpetrator to bring the “bride” from Macedonia.\nThe defendant was convicted in 2014 of 13 years imprisonment.",
+      "fact_summary_sha256": "97b7ddcf52938ebaacc1f63acbfd5671b788a6d517fb0d33442dd7f216d7f4a3",
+      "output": {
+        "acts": [
+          "ACT_TRANSPORTATION",
+          "ACT_HARBOURING"
+        ],
+        "means": [
+          "MEANS_THREAT_FORCE_OR_COERCION",
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+          "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+        ],
+        "purposes": [
+          "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+          "PURPOSE_OTHER"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=1487:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "5546ee6c1750abf75f688b8513c7a20fc683055963d03e7370892ef5c00820a2"
+    },
+    {
+      "approved_order": 2,
+      "demo_id": "sherloc-rank-1494",
+      "role": "ACTIVE",
+      "search_rank": 1494,
+      "case_title": "BH2004. 217",
+      "unodc_case_number": "HUN005",
+      "jurisdiction": "Hungary",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/hun/bh2004._217.html",
+      "fact_summary": "The victims wanted to work in either a club or a bar and for the purposes of discussing their options they met the secondary defendant. After the meeting, the secondary defendant contacted the tertiary defendant, who operated a brothel. The tertiary defendant agreed to employ the victims as prostitutes knowing that they had not yet turned 18. Subsequently, the tertiary defendant asked the secondary defendant if he could offer the victims to the prime defendant in exchange for money for the purpose of sodomy or sexual intercourse. Eventually, the prime defendant purchased the victims from the secondary defendant.",
+      "fact_summary_sha256": "b01f67e7fa3346682540bc61836f95f44c21ddffc1a0c9ba25889947851bdb3f",
+      "output": {
+        "acts": [
+          "ACT_TRANSFER",
+          "ACT_RECEIPT"
+        ],
+        "means": [
+          "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+        ],
+        "purposes": [
+          "PURPOSE_SEXUAL_EXPLOITATION"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=1494:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "dbc88607fc7df41a416cea91888114a5367389c67026076a65f488725b53ada9"
+    },
+    {
+      "approved_order": 3,
+      "demo_id": "sherloc-rank-1178",
+      "role": "ACTIVE",
+      "search_rank": 1178,
+      "case_title": "United States v. Fermin Pedro Ramos-Ramos et al",
+      "unodc_case_number": "USA060",
+      "jurisdiction": "United States of America",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2007/united_states_v._fermin_pedro_ramos-ramos_et_al.html",
+      "fact_summary": "The defendants, husband and wife Fermin Pedro Ramos-Ramos, and Laurie Ann Ramos, held a young woman in a state of involuntary servitude in their Detroit area home. The victim was forced to work, without pay, as a housekeeper. The defendants recruited and transported the victim from Mexico. Fermin Pedro Ramos-Ramos and his wife used threats and physical violence for control over the victim, they also confiscated the victims’ identity documents, and told her that the police would arrest her if she was found.",
+      "fact_summary_sha256": "5e7719a52660e414fa186f7f05ca25b4f90811451842acadc1b6945470c32d43",
+      "output": {
+        "acts": [
+          "ACT_RECRUITMENT",
+          "ACT_TRANSPORTATION",
+          "ACT_HARBOURING"
+        ],
+        "means": [
+          "MEANS_THREAT_FORCE_OR_COERCION",
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY"
+        ],
+        "purposes": [
+          "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+          "PURPOSE_SERVITUDE"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=1178:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "671009a9ee7b26f4d044f1f618c75b3bd0a1a821fd812795ac1405b148024009"
+    },
+    {
+      "approved_order": 4,
+      "demo_id": "sherloc-rank-498",
+      "role": "ACTIVE",
+      "search_rank": 498,
+      "case_title": "United States v. Edk Kenit",
+      "unodc_case_number": "USA160",
+      "jurisdiction": "United States of America",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2011/united_states_v._edk_kenit.html",
+      "fact_summary": "A Micronesian couple was indicted by a federal grand jury for recruiting a 19-year-old girl from Micronesia to work in their home in the United States without paying her. They had promised the victim an education and the opportunity to travel in the United States, but instead, they forced her into domestic servitude. The couple arranged for the girl to obtain a passport to travel from Micronesia to Tacoma, Washington, and they also obtained a social security card in the victim’s name, concealed the card from her, and forced her to work at a chicken processing plant. In addition to forcing her to perform domestic labour such as cooking, cleaning, and childcare without pay, the defendants withheld all of her earnings from the chicken processing plant. They isolated the woman in their home, did not allow her to leave the home unmonitored, and controlled her passport to compel her labour. After a year, the victim escaped, partly thanks to the help of what the Department of Justice press release described as “an alert neighbour.”",
+      "fact_summary_sha256": "b2cb76a4d56254ddaa887326e4b97eef759970622919efa3e669b4f4b7f001f8",
+      "output": {
+        "acts": [
+          "ACT_RECRUITMENT",
+          "ACT_HARBOURING"
+        ],
+        "means": [
+          "MEANS_THREAT_FORCE_OR_COERCION",
+          "MEANS_DECEPTION",
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY"
+        ],
+        "purposes": [
+          "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+          "PURPOSE_SERVITUDE"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=498:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "20e0ac4da94422bbcdcda22503e0bda777bc8d10039a4745f0479febfbf3bb26"
+    },
+    {
+      "approved_order": 5,
+      "demo_id": "sherloc-rank-391",
+      "role": "ACTIVE",
+      "search_rank": 391,
+      "case_title": "Case n352012",
+      "unodc_case_number": "BEL033",
+      "jurisdiction": "Belgium",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bel/2012/case_n352012.html",
+      "fact_summary": "In this case in Tongeren, a Nigerian network of traffickers in women was dismantled. The organisation also had branches in the Netherlands and in Spain and was active in large-scale money laundering activities and credit card fraud. One of the victims was a Nigerian minor.\n\nThe girls were recruited in Nigeria under all sorts of pretexts and were transported illegally into Belgium via Greece in order to work as escort-girls in the prostitution world. They had to pay back the travel costs through prostitution. The defendants took advantage of voodoo rituals to instil fear in the victims. The Nigerian girls were forced to submit to extreme forms of sex on dirty mattresses and had to work day and night. There was virtually no hygiene; even the customers complained about the filthy premises and the unpleasant odours.\n\nThe victims were staying irregularly in Belgium. It is precisely this precarious and dependent situation that leaves these victims no other choice than to let themselves be exploited. The statements of the victims illustrated in detail how they were manipulated, deceived and intimidated. One of the victims was physically abused and locked in a room when the defendants discovered that she had withheld part of the money earned from the customers. When she refused to spontaneously hand over the money, the defendant struck her in order to try to take the money from her hands. He locked her up in the room where she was then staying and took away her telephone to prevent her from communicating with the outside world. He would return later, after work, to sort things out. In the meantime the victim was able to escape with the help of the neighbour.",
+      "fact_summary_sha256": "eb4bf8a90bc2572f91cd7fff2824ea9139999ae5827d12fea5b6be1e35e10cad",
+      "output": {
+        "acts": [
+          "ACT_RECRUITMENT",
+          "ACT_TRANSPORTATION",
+          "ACT_HARBOURING"
+        ],
+        "means": [
+          "MEANS_THREAT_FORCE_OR_COERCION",
+          "MEANS_DECEPTION",
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY"
+        ],
+        "purposes": [
+          "PURPOSE_SEXUAL_EXPLOITATION"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=391:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "04251cbc754d2aff5e7156e73bc9e1e289051c1f8c8d52b05e3eafb39f50bbb6"
+    },
+    {
+      "approved_order": 6,
+      "demo_id": "sherloc-rank-157",
+      "role": "ACTIVE",
+      "search_rank": 157,
+      "case_title": "The State of Israel v. Teddy Ness",
+      "unodc_case_number": "ISR017",
+      "jurisdiction": "Israel",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/isr/2015/the_state_of_israel_v._teddy_ness.html",
+      "fact_summary": "The defendant is an Israeli citizen who met the complainants, the mother and her 10 years old daughter who lived in Georgia, through the internet. The defendant persisted in an on-line relations with the mother, as well as later upon his arrival to Georgia, where he met her and the daughter, bought the child gifts, went out with them and wired money for them from Israel. Later, according to the indictment, the defendant arrived to a hotel in Tbilisi and asked the mother and daughter to join him. The defendant and the mother reached an agreement according to which he will pay her a monthly payments of 100$ and in exchange she will allow him to use her daughter's body for the production of pornographic material and conducting sexual acts.\nAccording to this agreement, in two cases, the defendant arrived to the hotel in Tbilisi and the mother brought the daughter there. In the hotel room, the defendant took obscene photos of the minor and sexually assaulted her, including partial penetration while visually recording the acts by several cameras belonging to him and the mother.\nThe defendant gave the mother a camera and a laptop so she can produce pedophile photos of the minor at his will. The mother emailed the photos to the defendant and he paid her. Later on, the defendant published and sold the photos and films. Additionally, the defendant held in his possession many other obscene materials of other minors, which he also published.",
+      "fact_summary_sha256": "508f25e80ed640b99d3457fcff7c1c0c508977497e2605b7a23e814844ae402f",
+      "output": {
+        "acts": [
+          "ACT_RECEIPT"
+        ],
+        "means": [
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+          "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+        ],
+        "purposes": [
+          "PURPOSE_SEXUAL_EXPLOITATION"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=157:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "a20cab89b88d7e5bcf759601d45f9aa68e850133f7ab7301916f96017b9f296d"
+    },
+    {
+      "approved_order": 7,
+      "demo_id": "sherloc-rank-1343",
+      "role": "RESERVE",
+      "search_rank": 1343,
+      "case_title": "Case No B 4385-05",
+      "unodc_case_number": "SWE031",
+      "jurisdiction": "Sweden",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2005/case_no_b_4385-05.html",
+      "fact_summary": "One male perpetrator was accused of recruiting two 17-year-old girls from Poland and transporting them to Sweden for the purpose of exploiting them sexually. The perpetrator withheld information about the activities of his prostitution business from the girls and was aware that the victims arrived in Sweden without any economic resources.\n\nThe victim testified that she led a poor life in Poland and was approached by a person at a party with an offer of coming to Sweden and work as a prostitute. She declined, but later decided to accept and together with a female friend she was picked up by the prosecuted and transported to Sweden. The Polish girls have during the period February-May, 2005, performed sexual services in exchange for money, under the control of the perpetrator. This control consisted in contacting clients, booking hotel rooms for encounters, controlling the profit and supervising them in the work on the street.\n\nOne of the girls had to give the prosecuted her passport and the other victim was once hit in the face by him.",
+      "fact_summary_sha256": "caa4939cf3a303c0ec3e08c86bc84ab3792e3ae827f022898a95c3e789304366",
+      "output": {
+        "acts": [
+          "ACT_RECRUITMENT",
+          "ACT_TRANSPORTATION"
+        ],
+        "means": [
+          "MEANS_THREAT_FORCE_OR_COERCION",
+          "MEANS_DECEPTION",
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY"
+        ],
+        "purposes": [
+          "PURPOSE_SEXUAL_EXPLOITATION"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=1343:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "6f88f1de103f125985776e50635c851e37627c51892102533d074fd33b702796"
+    },
+    {
+      "approved_order": 8,
+      "demo_id": "sherloc-rank-936",
+      "role": "RESERVE",
+      "search_rank": 936,
+      "case_title": "Dosar nr. 1ra – 511/2009",
+      "unodc_case_number": "MDA059",
+      "jurisdiction": "Republic of Moldova",
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/mda/2009/dosar_nr._1ra_5112009.html",
+      "fact_summary": "The court of first instance retained that defendant, as part of an organized criminal group (together with, Nitu M., Tirdea V., Busuioc I, Dragutan I., Nitu I., and Chiriac N. – the last three already sentenced) recruited and transported two young women (one of them was underage) from Republic of Moldova to Russian Federation, by deceiving them and abusing their position of vulnerability for the purpose of commercial sexual exploitation. He took their passports, threatened them with the use of physical force and forced them to provide sexual services.",
+      "fact_summary_sha256": "eab6afa470c31a57169fc9278edcdc7142903082417ca03e85aa45951e70b3a9",
+      "output": {
+        "acts": [
+          "ACT_RECRUITMENT",
+          "ACT_TRANSPORTATION"
+        ],
+        "means": [
+          "MEANS_THREAT_FORCE_OR_COERCION",
+          "MEANS_DECEPTION",
+          "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY"
+        ],
+        "purposes": [
+          "PURPOSE_SEXUAL_EXPLOITATION"
+        ]
+      },
+      "reference_terminology": "SILVER_REFERENCE_LEGACY_KEYWORDS",
+      "human_approved": true,
+      "frozen": true,
+      "approval_record": "data/annotations/demo_bank_review_v2.csv:search_rank=936:reviewer_approve_v2=Keep",
+      "human_approval": {
+        "status": "Keep",
+        "source": "data/annotations/demo_bank_review_v2.csv",
+        "field": "reviewer_approve_v2"
+      },
+      "case_content_sha256": "31514a91e307f42dd43256e8af8a0de0e8444e81bb7a72589077a59ce960cae7"
+    }
+  ],
+  "evaluation_banks": {
+    "A1": {
+      "demo_count": 6,
+      "ordered_search_ranks": [
+        1487,
+        1494,
+        1178,
+        498,
+        391,
+        157
+      ],
+      "ordered_jurisdictions": [
+        "North Macedonia",
+        "Hungary",
+        "United States of America",
+        "United States of America",
+        "Belgium",
+        "Israel"
+      ],
+      "heldout_test_jurisdictions": [],
+      "demo_heldout_jurisdiction_intersection": [],
+      "membership_sha256": "0e98d6196d4b7e1a3f15c81186a37e61e00ec34828f4b6bfb7c1398323f02eba"
+    },
+    "A2_FOLD_1": {
+      "demo_count": 6,
+      "ordered_search_ranks": [
+        1487,
+        1494,
+        1178,
+        498,
+        391,
+        157
+      ],
+      "ordered_jurisdictions": [
+        "North Macedonia",
+        "Hungary",
+        "United States of America",
+        "United States of America",
+        "Belgium",
+        "Israel"
+      ],
+      "heldout_test_jurisdictions": [
+        "Argentina",
+        "Australia",
+        "Republic of Moldova",
+        "Romania",
+        "Serbia",
+        "Slovakia"
+      ],
+      "demo_heldout_jurisdiction_intersection": [],
+      "membership_sha256": "e53b60b495899040eb8d51bfe7441203ea32939eaa13a911eafeb5df0c1dc3ec"
+    },
+    "A2_FOLD_2": {
+      "demo_count": 6,
+      "ordered_search_ranks": [
+        1487,
+        1494,
+        1178,
+        498,
+        157,
+        936
+      ],
+      "ordered_jurisdictions": [
+        "North Macedonia",
+        "Hungary",
+        "United States of America",
+        "United States of America",
+        "Israel",
+        "Republic of Moldova"
+      ],
+      "heldout_test_jurisdictions": [
+        "Belgium",
+        "Brazil",
+        "Czechia",
+        "India",
+        "Philippines",
+        "Sweden"
+      ],
+      "demo_heldout_jurisdiction_intersection": [],
+      "membership_sha256": "e7a06695dad296df8e21ec5c12653fe3a1c626946f429ee6c17e875ccb0e1453"
+    },
+    "A2_FOLD_3": {
+      "demo_count": 6,
+      "ordered_search_ranks": [
+        1487,
+        1494,
+        391,
+        157,
+        1343,
+        936
+      ],
+      "ordered_jurisdictions": [
+        "North Macedonia",
+        "Hungary",
+        "Belgium",
+        "Israel",
+        "Sweden",
+        "Republic of Moldova"
+      ],
+      "heldout_test_jurisdictions": [
+        "Canada",
+        "Colombia",
+        "Poland",
+        "Ukraine",
+        "United Kingdom of Great Britain and Northern Ireland",
+        "United States of America"
+      ],
+      "demo_heldout_jurisdiction_intersection": [],
+      "membership_sha256": "d983c920149a7fec28e7af2326f44508b6561bbf29d9441463e4f7f3be2b01d2"
+    }
+  },
+  "hashes": {
+    "approved_case_content_sha256": "3d533a53c9fffc4bd0f2a2d377319d384a404b6f4f93098760228bcd967c4b14",
+    "bank_membership_sha256": "5905b0ef3533c268fa753098d64f9a625cd1a82c7a5c54bd7d2d9d0f61da14c7",
+    "hash_encoding": "UTF-8",
+    "canonical_json": "SORT_KEYS_NO_INSIGNIFICANT_WHITESPACE_ENSURE_ASCII_FALSE"
+  },
+  "immutability_rule": "Do not change membership, order, text, or outputs after viewing model/test results.",
+  "format_note": "This JSON document is valid YAML 1.2 and can be read with the Python standard library."
+}

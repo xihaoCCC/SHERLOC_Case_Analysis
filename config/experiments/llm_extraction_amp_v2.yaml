@@ -1,0 +1,281 @@
+{
+  "config_id": "llm-amp-extraction-v2",
+  "config_version": "2.0.0",
+  "status": "FINAL_FROZEN_PRE_MODEL_EXECUTION",
+  "frozen_on": "2026-08-13",
+  "primary_cohort_id": "sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9",
+  "methods": {
+    "M3": {
+      "experiment_id": "phase4-m3-zero-shot-amp-v2",
+      "prompt_version": "m3-zero-shot-amp-v2",
+      "prompt_path": "prompts/m3_zero_shot_amp_v2.md",
+      "prompt_sha256": "00b87b84356092b6d01b70f1a495f76c0ebd3ea49eb835a3bd7915a050a23f85",
+      "demonstration_count": 0
+    },
+    "M4": {
+      "experiment_id": "phase4-m4-six-shot-amp-v2",
+      "prompt_version": "m4-six-shot-amp-v2",
+      "prompt_path": "prompts/m4_six_shot_amp_v2.md",
+      "prompt_sha256": "2d857b1a54b9ed2355558d5f1e8bc7dd3e216e37c5eb7397ffde8d82ee1bfb37",
+      "demonstration_count": 6,
+      "demo_bank_path": "config/experiments/demo_bank_amp_v1.yaml",
+      "demo_bank_version": "1.0.0",
+      "demo_bank_file_sha256": "1f6316aa564e44222c5755843544244766daab7344dd002430f365aca235809b",
+      "demo_bank_membership_sha256": "5905b0ef3533c268fa753098d64f9a625cd1a82c7a5c54bd7d2d9d0f61da14c7",
+      "evaluation_banks": {
+        "A1": {
+          "ordered_search_ranks": [
+            1487,
+            1494,
+            1178,
+            498,
+            391,
+            157
+          ],
+          "membership_sha256": "0e98d6196d4b7e1a3f15c81186a37e61e00ec34828f4b6bfb7c1398323f02eba",
+          "heldout_test_jurisdictions": []
+        },
+        "A2_FOLD_1": {
+          "ordered_search_ranks": [
+            1487,
+            1494,
+            1178,
+            498,
+            391,
+            157
+          ],
+          "membership_sha256": "e53b60b495899040eb8d51bfe7441203ea32939eaa13a911eafeb5df0c1dc3ec",
+          "heldout_test_jurisdictions": [
+            "Argentina",
+            "Australia",
+            "Republic of Moldova",
+            "Romania",
+            "Serbia",
+            "Slovakia"
+          ]
+        },
+        "A2_FOLD_2": {
+          "ordered_search_ranks": [
+            1487,
+            1494,
+            1178,
+            498,
+            157,
+            936
+          ],
+          "membership_sha256": "e7a06695dad296df8e21ec5c12653fe3a1c626946f429ee6c17e875ccb0e1453",
+          "heldout_test_jurisdictions": [
+            "Belgium",
+            "Brazil",
+            "Czechia",
+            "India",
+            "Philippines",
+            "Sweden"
+          ]
+        },
+        "A2_FOLD_3": {
+          "ordered_search_ranks": [
+            1487,
+            1494,
+            391,
+            157,
+            1343,
+            936
+          ],
+          "membership_sha256": "d983c920149a7fec28e7af2326f44508b6561bbf29d9441463e4f7f3be2b01d2",
+          "heldout_test_jurisdictions": [
+            "Canada",
+            "Colombia",
+            "Poland",
+            "Ukraine",
+            "United Kingdom of Great Britain and Northern Ireland",
+            "United States of America"
+          ]
+        }
+      }
+    }
+  },
+  "shared_task": {
+    "shared_instruction_marker_version": "SHERLOC_SHARED_INSTRUCTIONS_V2",
+    "shared_marked_block_sha256": "b06d12d1efac3433ff0435ca589aa0aeec4328c5713e035bb7e029bc62468671",
+    "unit_of_analysis": "ONE_ENGLISH_FACT_SUMMARY_ONE_INDEPENDENT_REQUEST",
+    "case_specific_evidence": "SUPPLIED_FACT_SUMMARY_ONLY",
+    "target_families": [
+      "ACT",
+      "MEANS",
+      "PURPOSE"
+    ],
+    "number_of_binary_outputs": 17,
+    "output_only": [
+      "acts",
+      "means",
+      "purposes"
+    ],
+    "evidence_spans": false,
+    "confidence_scores": false,
+    "rationales_or_chain_of_thought": false,
+    "empty_arrays_allowed_when_unsupported": true
+  },
+  "ontology": {
+    "ontology_id": "sherloc-legacy-amp-v1",
+    "ontology_version": "1.0.0",
+    "ontology_path": "config/amp_ontology_v1.yaml",
+    "ontology_sha256": "f01a61b5c27f5ed3cc7a8922ddf6ec5aa80f7fea487746d07be358050c5160c1",
+    "act_ids": [
+      "ACT_RECRUITMENT",
+      "ACT_TRANSPORTATION",
+      "ACT_TRANSFER",
+      "ACT_HARBOURING",
+      "ACT_RECEIPT"
+    ],
+    "means_ids": [
+      "MEANS_THREAT_FORCE_OR_COERCION",
+      "MEANS_ABDUCTION",
+      "MEANS_FRAUD",
+      "MEANS_DECEPTION",
+      "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+      "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+    ],
+    "purpose_ids": [
+      "PURPOSE_SEXUAL_EXPLOITATION",
+      "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+      "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+      "PURPOSE_SERVITUDE",
+      "PURPOSE_REMOVAL_OF_ORGANS",
+      "PURPOSE_OTHER"
+    ]
+  },
+  "api_request": {
+    "provider": "OpenAI",
+    "endpoint": "Responses API",
+    "model": "gpt-5.6-luna",
+    "model_snapshot_policy": "PREFER_DATED_SNAPSHOT_IF_AVAILABLE_BEFORE_EXECUTION; OTHERWISE_RECORD_REQUESTED_AND_RETURNED_MODEL_IDS",
+    "one_case_per_request": true,
+    "store": false,
+    "reasoning": {
+      "effort": "low"
+    },
+    "text_verbosity": "low",
+    "max_output_tokens": 512,
+    "tools": "NONE",
+    "previous_response_id": "NONE",
+    "temperature": "OMITTED",
+    "top_p": "OMITTED",
+    "credential_source": "OPENAI_API_KEY_ENVIRONMENT_ONLY",
+    "api_key_in_config": false
+  },
+  "structured_output": {
+    "format_type": "json_schema",
+    "schema_name": "sherloc_amp_v2",
+    "strict": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "acts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ACT_RECRUITMENT",
+              "ACT_TRANSPORTATION",
+              "ACT_TRANSFER",
+              "ACT_HARBOURING",
+              "ACT_RECEIPT"
+            ]
+          },
+          "maxItems": 5
+        },
+        "means": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MEANS_THREAT_FORCE_OR_COERCION",
+              "MEANS_ABDUCTION",
+              "MEANS_FRAUD",
+              "MEANS_DECEPTION",
+              "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+              "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL"
+            ]
+          },
+          "maxItems": 6
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "PURPOSE_SEXUAL_EXPLOITATION",
+              "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+              "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+              "PURPOSE_SERVITUDE",
+              "PURPOSE_REMOVAL_OF_ORGANS",
+              "PURPOSE_OTHER"
+            ]
+          },
+          "maxItems": 6
+        }
+      },
+      "required": [
+        "acts",
+        "means",
+        "purposes"
+      ],
+      "additionalProperties": false
+    },
+    "schema_sha256": "d106c4ab1aa5bfcf34a6accd4f8c77df0bd21436cb0761d7828b21d9d87f46da",
+    "duplicate_policy": "PROMPT_PROHIBITS_DUPLICATES; HOST_VALIDATOR_REJECTS_DUPLICATES; NEVER_SILENTLY_REPAIR",
+    "unsupported_unique_items_note": "uniqueItems is omitted because it is not in the documented Structured Outputs array subset."
+  },
+  "execution_policy": {
+    "technical_dry_run_before_a1_test": true,
+    "dry_run_cases": "3_TO_5_NON_TEST_CASES_ONLY",
+    "dry_run_semantic_tuning": "PROHIBITED",
+    "resume_safe": true,
+    "success_commit_rule": "WRITE_ONLY_AFTER_STRICT_SCHEMA_VALIDATION",
+    "rerun_policy": "ONLY_MISSING_OR_FAILED_CASES",
+    "independent_requests": true,
+    "fold_demo_leakage_check_before_each_m4_fold": true
+  },
+  "response_record": {
+    "required_fields": [
+      "experiment_id",
+      "method",
+      "case_id",
+      "search_rank",
+      "split_or_fold",
+      "requested_model_id",
+      "returned_model_id",
+      "execution_timestamp",
+      "sdk_version",
+      "prompt_version",
+      "prompt_sha256",
+      "schema_sha256",
+      "demo_bank_id",
+      "demo_bank_membership_sha256",
+      "input_sha256",
+      "request_sha256",
+      "response_id",
+      "token_usage",
+      "latency_seconds",
+      "retry_count",
+      "status",
+      "raw_structured_response",
+      "validated_prediction"
+    ],
+    "api_secret_serialization": "PROHIBITED",
+    "raw_response_preserved": true,
+    "failure_to_empty_prediction": "PROHIBITED"
+  },
+  "test_set_protection": {
+    "prompt_or_demo_changes_from_test_results": "PROHIBITED",
+    "fold_to_fold_adaptation_from_test_results": "PROHIBITED",
+    "substantive_rerun_after_test_inspection": "PROHIBITED"
+  },
+  "scope_guard": {
+    "call_api_in_freeze_stage": false,
+    "create_predictions_in_freeze_stage": false,
+    "evaluate_in_freeze_stage": false
+  },
+  "format_note": "This JSON document is valid YAML 1.2 and can be read with the Python standard library."
+}
