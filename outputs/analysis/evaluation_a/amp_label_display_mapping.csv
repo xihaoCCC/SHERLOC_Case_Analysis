@@ -1,0 +1,18 @@
+ontology_order,label_id,family,display_label,figure_short_label
+1,ACT_RECRUITMENT,Act,Recruitment,Recruit.
+2,ACT_TRANSPORTATION,Act,Transportation,Transport.
+3,ACT_TRANSFER,Act,Transfer,Transfer
+4,ACT_HARBOURING,Act,Harbouring,Harbour.
+5,ACT_RECEIPT,Act,Receipt,Receipt
+6,MEANS_THREAT_FORCE_OR_COERCION,Means,Threat or force or coercion,Threat/coercion
+7,MEANS_ABDUCTION,Means,Abduction,Abduction
+8,MEANS_FRAUD,Means,Fraud,Fraud
+9,MEANS_DECEPTION,Means,Deception,Deception
+10,MEANS_ABUSE_OF_POWER_OR_VULNERABILITY,Means,Abuse of power or vulnerability,Power/vulnerability
+11,MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL,Means,Payments or benefits for control,Payments/benefits
+12,PURPOSE_SEXUAL_EXPLOITATION,Purpose,Sexual exploitation,Sexual exploit.
+13,PURPOSE_FORCED_LABOUR_OR_SERVICES,Purpose,Forced labour or services,Forced labour
+14,PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES,Purpose,Slavery or similar practices,Slavery/similar
+15,PURPOSE_SERVITUDE,Purpose,Servitude,Servitude
+16,PURPOSE_REMOVAL_OF_ORGANS,Purpose,Removal of organs,Organ removal
+17,PURPOSE_OTHER,Purpose,Other,Other

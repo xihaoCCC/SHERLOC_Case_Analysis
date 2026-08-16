@@ -1,0 +1,209 @@
+cohort_id,feature,source,analysis,category,value,denominator,percentage,unit,notes
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,primary_cohort,parser_v2,cohort_validation,included_cases,1263,1590,79.433962,cases,"Nonempty English Fact Summary and nonempty Legacy Acts, Means, and Exploitative Purposes; no Sidebar AMP used."
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,primary_cohort,ordered search_rank + canonical_url,cohort_identifier,membership_sha256,097ce2027171ebc9cac5ad6dfdbf6e854729f81a8ede78e8401086fe5d5ed48c,,,sha256,SHA-256 of UTF-8 lines '<search_rank>\t<canonical_url>\n' in ascending search_rank order.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,primary_cohort,parser_v2 JSONL,input_provenance,source_jsonl_sha256,ea0592fcb633a0eee55e5feacb02fc1ef119cfcbb0f594566b4da6420eb184df,,,sha256,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,coverage,cases_with_section,1241,1263,98.258116,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,coverage,cases_without_section,22,1263,1.741884,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,structure,source_person_records,2892,,,records,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,record_count_distribution,0,22,1263,1.741884,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,record_count_distribution,1,658,1263,52.098179,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,record_count_distribution,2_plus,583,1263,46.159937,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,grouped_records,grouped_source_records,323,,,records,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,grouped_records,cases_with_grouped_record,295,1263,23.357086,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,visible_heading,Victims / Plaintiffs in the first instance,1238,,,sections,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,visible_heading,Migrants,5,,,sections,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_Gender_Child_record_count,755,,,records_or_fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_Gender_Child_case_count,442,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_numeric_Age_under18_field_count,426,,,records_or_fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_numeric_Age_under18_case_count,238,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_Victim_or_Migrant_child_word_case_count,25,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_base_signal_union_case_count,455,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,manually_screened_direct_group_statement_addition_count,10,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,participant_positive_union_before_exceptions_count,465,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,sidebar_child_offence_case_count,71,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,combined_positive_union_before_exceptions_count,468,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role + Sidebar Offences,explicit_signal,combined_positive_exception_count,7,,,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,coverage,available,176,1263,13.935075,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,coverage,missing,1087,1263,86.064925,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,raw_vocabulary,Trafficking in persons (adults),132,176,75,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,raw_vocabulary,Trafficking in children (under 18 years),71,176,40.340909,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,tag_pattern,child_only,44,176,25,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,tag_pattern,adult_only,105,176,59.659091,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Trafficking sidebar Offences,tag_pattern,both,27,176,15.340909,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,conservative feasibility policy,provisional_state,TRUE,461,1263,36.500396,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,conservative feasibility policy,provisional_state,FALSE,90,1263,7.125891,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,conservative feasibility policy,provisional_state,UNKNOWN,712,1263,56.373713,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,conservative feasibility policy,provisional_eligibility,TRUE_or_FALSE,551,1263,43.626287,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Fact Summary lexical support screen,recoverability,TRUE_with_obvious_support,337,461,73.101952,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Fact Summary lexical support screen,recoverability,FALSE_with_complete_adult_support,18,90,20,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,Fact Summary lexical support screen,recoverability,eligible_with_obvious_support,355,551,64.428312,cases,Conservative automated support screen; not a production label or a prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_gender_value,Child,755,2617,28.849828,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_gender_value,Female,1666,2617,63.66068,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_gender_value,Male,196,2617,7.489492,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_age_representation,Age_field_count,745,,,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_age_representation,numeric_Age_field_count,743,,,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_age_representation,numeric_under18_Age_field_count,426,,,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_age_representation,numeric_18_to_120_Age_field_count,317,,,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_age_representation,Born_field_count,222,,,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,participants.person_role,raw_age_representation,unlabelled_age_class_field_count,333,,,fields,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,sample,reviewed_cases,42,1263,3.325416,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,judgment,TRUE,22,42,52.380952,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,judgment,FALSE,9,42,21.428571,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,judgment,UNKNOWN,11,42,26.190476,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,answerability,YES,26,42,61.904762,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,answerability,NO,13,42,30.952381,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,answerability,AMBIGUOUS,3,42,7.142857,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,structured_narrative_case_type,TYPE_1,17,42,40.47619,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,structured_narrative_case_type,TYPE_2,16,42,38.095238,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,structured_narrative_case_type,TYPE_3,7,42,16.666667,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,structured_narrative_case_type,TYPE_4,2,42,4.761905,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,manual stratified review,policy_check,policy_vs_human_mismatches,8,42,19.047619,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,child_minor_involvement,audit decision,recommendation,large_scale_auxiliary_benchmark,NOT WORTH ADDING AS LARGE-SCALE TARGET UNDER CURRENT TIME LIMIT,,,classification,"The provisional reference cohort only narrowly exceeds 500 (551), is highly imbalanced (461 TRUE vs 90 FALSE), and only 355 have obvious automated Fact-Summary support. Temporal, grouped, disputed, attempt, and source-conflict cases need human adjudication."
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,coverage,cases_with_section,1241,1263,98.258116,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,coverage,cases_without_section,22,1263,1.741884,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,record_count_distribution,1,658,1263,52.098179,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,record_count_distribution,2+,583,1263,46.159937,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,record_count_distribution,0,22,1263,1.741884,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,aggregate_record,one_record_explicit_aggregate,208,658,31.610942,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,Fact Summary broad lexical screen,one_record_group_language_screen,one_record_literal_plural_victim_wording,187,658,28.419453,cases,Broad lexical screen over one-record cases; may overlap the structured aggregate screen and is not by itself a reliable multiplicity label.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,duplicate_records,multi_record_cases_with_exact_duplicates,24,583,4.116638,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,participants.person_role,unusual_heading,Migrants,5,1263,0.395883,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,conservative feasibility policy,provisional_state,SINGLE,183,1263,14.489311,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,conservative feasibility policy,provisional_state,MULTIPLE,782,1263,61.916073,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,conservative feasibility policy,provisional_state,UNKNOWN,298,1263,23.594616,cases,Feasibility candidates only; not final production labels.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,conservative feasibility policy,provisional_eligibility,SINGLE_or_MULTIPLE,965,1263,76.405384,cases,Feasibility candidates only; all SINGLE candidates require confirmation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,conservative feasibility policy,class_imbalance,MULTIPLE_to_SINGLE,4.273224,,,ratio,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,multi-record case review,multi_record_disposition,MULTIPLE,574,583,98.456261,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,multi-record case review,multi_record_disposition,SINGLE_exception,3,583,0.51458,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,multi-record case review,multi_record_disposition,UNKNOWN_role_semantics,6,583,1.02916,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,sample,reviewed_cases,42,1263,3.325416,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,judgment,MULTIPLE,24,42,57.142857,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,judgment,SINGLE,14,42,33.333333,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,judgment,UNKNOWN,4,42,9.52381,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,answerability,YES,38,42,90.47619,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,answerability,PARTIAL,3,42,7.142857,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,answerability,NO,1,42,2.380952,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,structured_narrative_case_type,TYPE_1,32,42,76.190476,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,structured_narrative_case_type,TYPE_3,5,42,11.904762,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,structured_narrative_case_type,TYPE_2,4,42,9.52381,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,manual stratified review,structured_narrative_case_type,TYPE_4,1,42,2.380952,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,victim_multiplicity,audit decision,recommendation,large_scale_auxiliary_benchmark,FEASIBLE WITH RESTRICTIONS,,,classification,"A conservative screen exceeds 700 cases, but the 782 versus 183 class balance is strongly skewed and SINGLE is partly narrative-adjudicated rather than an independent SHERLOC count. Human confirmation is required before benchmark construction."
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,coverage,available,1186,1263,93.903405,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,coverage,missing,77,1263,6.096595,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,raw_vocabulary_size,unique_labels,3,,,labels,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,raw_vocabulary,Transnational,771,1186,65.008432,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,raw_vocabulary,Internal,433,1186,36.509275,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,raw_vocabulary,Organized Criminal Group,176,1186,14.839798,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,cardinality,single_label,1006,1186,84.822934,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,cardinality,multi_label,180,1186,15.177066,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,cardinality,missing,77,1263,6.096595,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,label_count_distribution,0,77,1263,6.096595,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,label_count_distribution,1,1006,1263,79.651623,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,label_count_distribution,2,166,1263,13.14331,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy,label_count_distribution,3,14,1263,1.108472,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,coverage,available,4,1263,0.316706,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,coverage,missing,1259,1263,99.683294,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,raw_vocabulary_size,unique_labels,2,,,labels,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,raw_vocabulary,Transnational trafficking,3,4,75,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,raw_vocabulary,Internal trafficking,1,4,25,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,cardinality,single_label,4,4,100,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,cardinality,multi_label,0,4,0,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,cardinality,missing,1259,1263,99.683294,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,label_count_distribution,0,1259,1263,99.683294,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Sidebar,label_count_distribution,1,4,1263,0.316706,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Either source,coverage,available,1186,1263,93.903405,cases,Availability union only; raw values are not merged or reconciled.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,source_availability_pattern,legacy_only,1182,1263,93.586698,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,source_availability_pattern,sidebar_only,0,1263,0,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,source_availability_pattern,both,4,1263,0.316706,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,source_availability_pattern,neither,77,1263,6.096595,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,raw_set_agreement,exact_raw_set_match,0,4,0,cases,Exact raw strings; no normalization or semantic reconciliation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,raw_set_agreement,partial_overlap,0,4,0,cases,Exact raw strings; no normalization or semantic reconciliation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,raw_set_agreement,disjoint,4,4,100,cases,Exact raw strings; no normalization or semantic reconciliation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,raw_set_similarity,mean_jaccard,0.0,,,similarity,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,Legacy vs Sidebar,raw_set_similarity,median_jaccard,0.0,,,similarity,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,sample,reviewed_cases,36,1263,2.850356,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,judgment,CLEAN_SUPPORTED,20,36,55.555556,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,judgment,NARRATIVE_INFORMATIVE_WITHOUT_REFERENCE,4,36,11.111111,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,judgment,INSUFFICIENT_OR_MISMATCHED,6,36,16.666667,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,judgment,PARTIAL_SUPPORT,6,36,16.666667,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,answerability,YES,23,36,63.888889,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,answerability,NO,6,36,16.666667,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,answerability,PARTIAL,7,36,19.444444,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,structured_narrative_case_type,TYPE_1,20,36,55.555556,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,structured_narrative_case_type,TYPE_2,12,36,33.333333,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,structured_narrative_case_type,TYPE_3,4,36,11.111111,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,structured_narrative_case_type,TYPE_4,0,36,0,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,structured_present_support,clean_supported,20,32,62.5,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,manual stratified review,structured_present_support,at_least_partial_support,26,32,81.25,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,form_of_trafficking,audit decision,recommendation,large_scale_auxiliary_benchmark,FEASIBLE WITH RESTRICTIONS,,,classification,"Legacy reference coverage is high (1,186), taxonomy is small, and many summaries support it, but Internal and Organized Criminal Group require answerability/adjudication rules. Sidebar adds no cases and its four strings differ lexically from Legacy."
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,coverage,available,1183,1263,93.665875,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,coverage,missing,80,1263,6.334125,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary_size,unique_labels,11,,,labels,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Commercial sexual exploitation,920,1183,77.768385,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Hotel/Restaurant/Bar,119,1183,10.059172,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Domestic servitude,80,1183,6.762468,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Other sectors,73,1183,6.170752,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Begging,39,1183,3.296703,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Agriculture,34,1183,2.874049,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Construction,19,1183,1.606086,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Factory/Manufacturing,19,1183,1.606086,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Organ/tissue removal,10,1183,0.845309,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Hair/Beauty Salon,6,1183,0.507185,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,raw_vocabulary,Mining,2,1183,0.169062,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,cardinality,single_label,1058,1183,89.433643,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,cardinality,multi_label,125,1183,10.566357,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,cardinality,missing,80,1263,6.334125,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,label_count_distribution,0,80,1263,6.334125,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,label_count_distribution,1,1058,1263,83.768804,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,label_count_distribution,2,116,1263,9.184481,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,label_count_distribution,3,6,1263,0.475059,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,label_count_distribution,4,2,1263,0.158353,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy,label_count_distribution,5,1,1263,0.079177,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,coverage,available,5,1263,0.395883,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,coverage,missing,1258,1263,99.604117,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,raw_vocabulary_size,unique_labels,3,,,labels,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,raw_vocabulary,Prostitution / sex work / pornography industry,3,5,60,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,raw_vocabulary,Construction,1,5,20,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,raw_vocabulary,Agriculture,1,5,20,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,cardinality,single_label,5,5,100,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,cardinality,multi_label,0,5,0,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,cardinality,missing,1258,1263,99.604117,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,label_count_distribution,0,1258,1263,99.604117,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Sidebar,label_count_distribution,1,5,1263,0.395883,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Either source,coverage,available,1183,1263,93.665875,cases,Availability union only; raw values are not merged or reconciled.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,source_availability_pattern,legacy_only,1178,1263,93.269992,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,source_availability_pattern,sidebar_only,0,1263,0,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,source_availability_pattern,both,5,1263,0.395883,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,source_availability_pattern,neither,80,1263,6.334125,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,raw_set_agreement,exact_raw_set_match,2,5,40,cases,Exact raw strings; no normalization or semantic reconciliation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,raw_set_agreement,partial_overlap,0,5,0,cases,Exact raw strings; no normalization or semantic reconciliation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,raw_set_agreement,disjoint,3,5,60,cases,Exact raw strings; no normalization or semantic reconciliation.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,raw_set_similarity,mean_jaccard,0.4,,,similarity,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,Legacy vs Sidebar,raw_set_similarity,median_jaccard,0.0,,,similarity,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,sample,reviewed_cases,36,1263,2.850356,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,judgment,CLEAN_SUPPORTED,18,36,50,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,judgment,PARTIAL_SUPPORT,3,36,8.333333,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,judgment,NARRATIVE_INFORMATIVE_WITHOUT_REFERENCE,4,36,11.111111,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,judgment,NARRATIVE_INSUFFICIENT_WITHOUT_REFERENCE,1,36,2.777778,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,judgment,INSUFFICIENT_OR_MISMATCHED,10,36,27.777778,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,answerability,YES,22,36,61.111111,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,answerability,PARTIAL,3,36,8.333333,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,answerability,NO,11,36,30.555556,cases,Purposefully stratified challenge sample; percentage is not a corpus prevalence estimate.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,structured_narrative_case_type,TYPE_1,18,36,50,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,structured_narrative_case_type,TYPE_2,13,36,36.111111,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,structured_narrative_case_type,TYPE_3,4,36,11.111111,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,structured_narrative_case_type,TYPE_4,1,36,2.777778,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,structured_present_support,clean_supported,18,31,58.064516,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,manual stratified review,structured_present_support,at_least_partial_support,21,31,67.741935,cases,
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,sector_of_exploitation,audit decision,recommendation,large_scale_auxiliary_benchmark,FEASIBLE WITH RESTRICTIONS,,,classification,"Legacy reference coverage is high (1,183) and taxonomy is compact, but severe imbalance and several taxonomy/narrative mismatches make a naive all-label benchmark unfair. Sidebar adds no cases."
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,feature_intersection,provisional field-specific policies,intersection,minor_and_multiplicity,412,1263,32.620744,cases,Audit-only intersection; must not redefine the primary cohort.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,feature_intersection,provisional field-specific policies,intersection,legacy_form_and_legacy_sector,1126,1263,89.152811,cases,Audit-only intersection; must not redefine the primary cohort.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,feature_intersection,provisional field-specific policies,intersection,minor_and_legacy_form_and_legacy_sector,492,1263,38.954869,cases,Audit-only intersection; must not redefine the primary cohort.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,feature_intersection,provisional field-specific policies,intersection,multiplicity_and_legacy_form_and_legacy_sector,864,1263,68.408551,cases,Audit-only intersection; must not redefine the primary cohort.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,feature_intersection,provisional field-specific policies,intersection,all_four_provisional,371,1263,29.374505,cases,Audit-only intersection; must not redefine the primary cohort.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,future_reliability_set,proposed sampling plan,sampling_stratum,A_representative_clean,50,140,35.714286,cases,Plan only; cases were not selected or annotated in this task.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,future_reliability_set,proposed sampling plan,sampling_stratum,B_structured_present_narrative_incomplete,25,140,17.857143,cases,Plan only; cases were not selected or annotated in this task.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,future_reliability_set,proposed sampling plan,sampling_stratum,C_structured_missing_narrative_informative,20,140,14.285714,cases,Plan only; cases were not selected or annotated in this task.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,future_reliability_set,proposed sampling plan,sampling_stratum,D_both_insufficient_abstention,20,140,14.285714,cases,Plan only; cases were not selected or annotated in this task.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,future_reliability_set,proposed sampling plan,sampling_stratum,E_rare_or_challenge,25,140,17.857143,cases,Plan only; cases were not selected or annotated in this task.
+sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9,future_reliability_set,proposed sampling plan,sample_size,total,140,,,cases,Target range requested: approximately 120-150 cases.

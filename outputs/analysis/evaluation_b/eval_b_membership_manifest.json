@@ -1,0 +1,567 @@
+{
+  "a1_active_m4_demo_overlap_audit": {
+    "a1_split_path": "data/splits/a1_iid_split_final_v1.csv",
+    "a1_split_sha256": "63a739fcb5a1d6af67a1ffc414f5b616a1e2ed7d063f7d34358ac7155803293d",
+    "active_demo_search_ranks": [
+      157,
+      391,
+      498,
+      1178,
+      1487,
+      1494
+    ],
+    "human_labels_inspected_for_overlap": false,
+    "overlap_members": [],
+    "overlap_n": 0,
+    "status": "PASS_NO_OVERLAP"
+  },
+  "abstain_n": 6,
+  "authoritative_review_gate": "Done? == 1",
+  "counts": {
+    "abstain_n": 6,
+    "not_reviewed_n": 26,
+    "retained_n": 61,
+    "reviewed_n": 74,
+    "skip_n": 13,
+    "source_n": 100,
+    "substantive_n": 55
+  },
+  "exclusions": {
+    "excluded_n": 39,
+    "path": "data/annotations/human_grounded_reference_exclusions_v1.csv",
+    "sha256": "0a7d562b291b3c18a4c41fc837579667792bd244c164014291b9930a1a024855"
+  },
+  "freeze_id": "single-reviewer-human-grounded-reference-v1",
+  "frozen_at_utc": "2026-08-16T01:36:27+00:00",
+  "human_reference": {
+    "path": "data/annotations/human_grounded_reference_v1.csv",
+    "retained_n": 61,
+    "sha256": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2"
+  },
+  "human_reference_path": "data/annotations/human_grounded_reference_v1.csv",
+  "human_reference_sha256": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2",
+  "inter_annotator_statistics_permitted": false,
+  "manifest_schema_version": "1.0.0",
+  "membership": {
+    "all_source_n": 100,
+    "path": "outputs/analysis/evaluation_b/human_grounded_reference_membership_v1.csv",
+    "retained_membership_sha256": "2f6cf53ff2e806f4801fb5e59b5551fff681482ab85ce3ce5bd80947f08dfd75",
+    "sha256": "ffa9f3bd26cb5ab5b714d07fe385ab03cae590314320125a2361b9a02cf1ace0",
+    "substantive_membership_sha256": "288704212b1bd24196a0b241c2f10fb10bf11c6e4a358bb532db6e445667bb23"
+  },
+  "membership_path": "outputs/analysis/evaluation_b/human_grounded_reference_membership_v1.csv",
+  "membership_sha256": "ffa9f3bd26cb5ab5b714d07fe385ab03cae590314320125a2361b9a02cf1ace0",
+  "qc": {
+    "blocking_issue_count": 0,
+    "status": "PASS",
+    "summary_path": "outputs/analysis/evaluation_b/human_annotation_qc_summary.json",
+    "summary_sha256": "2ea9af5be7f6bca5bc2943122f0319100e60544176850923f61d14b060010f7d"
+  },
+  "retained_members": [
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aze/2021/case_of_zoletic_and_others_v._azerbaijan.html",
+      "input_sha256": "86feaa04873e5aeb0202ec517bac72d0fc4842f0adc2645a851944139365f3e0",
+      "reliability_case_id": "HRV1-014",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 13,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/gbr/2020/the_queen_on_the_application_of_l_v._the_director_of_public_prosecutions.html",
+      "input_sha256": "b256b5e58112891a1eff77586a7755b37aa8863311fac995bee373f063e1fbca",
+      "reliability_case_id": "HRV1-003",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 23,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/ita/2019/proc._no._128092019.html",
+      "input_sha256": "34bba3eb864658b7e3283d8939c06a4181bf44429cd2865d08d2923b7c1e51b5",
+      "reliability_case_id": "HRV1-024",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 34,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/nam/2019/s_v._jonas_cc142017.html",
+      "input_sha256": "5fa88c3e5c764be660b5d93b016fc2bba2ab34c4b115bb2ad4f3348b07ff0ff7",
+      "reliability_case_id": "HRV1-005",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 38,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/nld/2018/1703852.html",
+      "input_sha256": "82163da3ead4597040aa6b03460a64cc0c7792d0d2e23ed03bd997d84ef809d6",
+      "reliability_case_id": "HRV1-040",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 52,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2018/c.m.s._y_guillemet_gaston_.html",
+      "input_sha256": "c89e96b55744fd044df0a12e10c57636f3d286afce5f1b034512d1d2ead4ac64",
+      "reliability_case_id": "HRV1-078",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 53,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/syc/2018/s_v._alam_co_672016_2018_scsc_946_.html",
+      "input_sha256": "50e612f47861aba79545e934260befcb411669d705d987693b38748a76417bbf",
+      "reliability_case_id": "HRV1-007",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 54,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/cri/2018/13-000227-1219-pe.html",
+      "input_sha256": "a6b61bbb7b21d6fbe0b6434555a1053ed8ca8c87c140cb973b07d4f26c6b4729",
+      "reliability_case_id": "HRV1-008",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 58,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/lux/2018/jugt_n_5342018_.html",
+      "input_sha256": "50283e6d11fb78de730ba0c38fa959759f3027efcb83dfcb7be0344c7b7c15d6",
+      "reliability_case_id": "HRV1-006",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 68,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/col/2016/n660001-62-66-001-2011-00021-00_ac-233-15.html",
+      "input_sha256": "d777410fddf8ce2439fcb59f74f9b9a9cfbd409fe9e36344d7690aa013fbd628",
+      "reliability_case_id": "HRV1-039",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 123,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/grc/2016/affaire_l.e._c._grece.html",
+      "input_sha256": "84fd4c08efd763c1349011d59cd155dfed2625f00f45bd90281cc0e5283ad121",
+      "reliability_case_id": "HRV1-044",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 127,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/mkd/2015/case_n280515.html",
+      "input_sha256": "a60579c84ffeb169cb69cfb95ea9e542c4356a723fc9c7ec5daa6a2a46f5eee0",
+      "reliability_case_id": "HRV1-052",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 146,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/dom/2014/caso_antonio_perez_y_cabral_flete.html",
+      "input_sha256": "572276b92022235df5d30b41098b06ee3729dc93a49f381c582e7e7823714eea",
+      "reliability_case_id": "HRV1-056",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 167,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/pol/2014/nikolae_l_2014.html",
+      "input_sha256": "9782dd1f249fce6b2b9893b282c1ba59ffa0dcabed677814c9ab46ce3a2a14ea",
+      "reliability_case_id": "HRV1-004",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 202,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/ken/2013/j.f._another_v_republic_2013_eklr.html",
+      "input_sha256": "6a4f652ca3e7b3856238952827a891877e0dc5f5d5b20646053d2c085cde7253",
+      "reliability_case_id": "HRV1-042",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 235,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2013/docket_number_-_211cr193_2013.html",
+      "input_sha256": "ca3811126a985dfe86410ac69c1a6e25308abb858319023d9b5b83d6c9c5bef3",
+      "reliability_case_id": "HRV1-001",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 237,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aus/2013/r_v_kuavong_2013_qca310.html",
+      "input_sha256": "0bf79aad8eb95edcff317be6f6cf2eb564a200cff751879f21ed6e952e138477",
+      "reliability_case_id": "HRV1-070",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 238,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/phl/2013/case_no.cbu-91076.html",
+      "input_sha256": "952c22eefba4206e0f1f661a328cc8afd4221875e1026e0f1fc87988871b2481",
+      "reliability_case_id": "HRV1-034",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 262,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/migrantsmugglingcrimetype/bel/2013/case_no._20131339.html",
+      "input_sha256": "62a1fcb24a63cab0daaece4a55f3666b94017e5b9ed67ccc4685f9a2b44964f9",
+      "reliability_case_id": "HRV1-045",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 285,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/tha/2013/samaesan.html",
+      "input_sha256": "d34640cb75083cab778d3a1e3ee52d82f2fb3cebc917ebdc9b740f0c94366b4f",
+      "reliability_case_id": "HRV1-023",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 304,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/nor/2012/12-175933med-otir03.html",
+      "input_sha256": "373e57f233403a4050e39edd66b9c2ce5914c0de6d97264dcff6a091250e4f54",
+      "reliability_case_id": "HRV1-051",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 317,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/swe/2012/case_no_b_6114-11.html",
+      "input_sha256": "3835310d6ef3734f0224585633d9850d2949edbf5774e79da96ea27df8a1a551",
+      "reliability_case_id": "HRV1-033",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 375,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2012/case_no_b_16821-11.html",
+      "input_sha256": "dfe6082e2b8e4f8f1055c1c9a9fb6fc0ee7734bc971ccf741e114653bca99124",
+      "reliability_case_id": "HRV1-037",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 409,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/gbr/2012/r_v._n._and_r_v._le.html",
+      "input_sha256": "539f4ae5ab8650bcc5b46c61c97b8d9c0770734ef9d0bbe499be9f60bceac85b",
+      "reliability_case_id": "HRV1-062",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 418,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/fin/2011/ko_r_111073.html",
+      "input_sha256": "f596acbc90a42ffc52dbfe0845426cb2b09b49c4d734a09ae9d7d0ac4762b3de",
+      "reliability_case_id": "HRV1-035",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 468,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2011/causa_2422.html",
+      "input_sha256": "a16834e34703ed28e20ddc6367f2895fb2b84efad3ed5d762eea2eedb1aec302",
+      "reliability_case_id": "HRV1-049",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 480,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2011/case_n_2338.html",
+      "input_sha256": "b342ca6598513a7e78738c2d23e9807fa8f293da997f67fb6e79765254078f9e",
+      "reliability_case_id": "HRV1-030",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 509,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/bra/2011/processo_n_2004.81.00.018889-0.html",
+      "input_sha256": "e8af8e6e07e6670813b42cc9f4a2bccb2c73c3cf8aa13d85d576635f4143f67a",
+      "reliability_case_id": "HRV1-072",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 513,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/per/2011/exp._n._01024-2011-phctc.html",
+      "input_sha256": "3c2b42f7c4dcf5b9692ec4891dea9be6ca0331936d648eab2e33ce1e23af5e5d",
+      "reliability_case_id": "HRV1-002",
+      "review_status": "ABSTAIN",
+      "search_rank": 545,
+      "substantive_amp_evaluable": false
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2011/case_no_b_87-11.html",
+      "input_sha256": "7bb552033f8a7a12ad5c49dd07260080db394e06d35718071b4d66dba49d14b4",
+      "reliability_case_id": "HRV1-031",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 546,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/nic/2011/lovo.html",
+      "input_sha256": "1f99de18744e7ffaff93fa694c6cb8dbd87099f1232a25722dd46562afabf91d",
+      "reliability_case_id": "HRV1-055",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 574,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/srb/2011/k.br._410_.html",
+      "input_sha256": "bcee71fc72e232507529f27dbf3dc9e09edd88d588c99da0bb20aaed9c0d5228",
+      "reliability_case_id": "HRV1-071",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 582,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2011/united_states_v._steven_c._albers.html",
+      "input_sha256": "6faba033f4cd2246a257401a66ee86d93d450991ccb602fd414fe9f1a9d7821b",
+      "reliability_case_id": "HRV1-013",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 615,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bol/2010/auto_supremo_2632010_-_declaratory_judgment_for_the_first_juvenile_court_of_la_paz.html",
+      "input_sha256": "44f72450b37b553a59bb3bec13345d75ff4f1952c182843eda2b8f328bdcea2c",
+      "reliability_case_id": "HRV1-054",
+      "review_status": "ABSTAIN",
+      "search_rank": 628,
+      "substantive_amp_evaluable": false
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/gtm/2010/quiroa_diaz_munoz.html",
+      "input_sha256": "4045a1b308d5fa2afca2f785ffb4afe0ba1065d3553a3413795074233d48a771",
+      "reliability_case_id": "HRV1-067",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 633,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bol/2010/auto_supremo_no._571_sucre_-_michael_gerard_marroquin_1.html",
+      "input_sha256": "4b978c7f1dcb62f9841955d2f8cf36879ba080d637b68c58a6469f131eb6b875",
+      "reliability_case_id": "HRV1-061",
+      "review_status": "ABSTAIN",
+      "search_rank": 640,
+      "substantive_amp_evaluable": false
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/gtm/2010/expediente_2571-2010_inconstitucionalidad_en_caso_concreto.html",
+      "input_sha256": "0ea23f7bf43a6c2f40de7820b2f586742ffde25b44a5f21ec502f720ee31a675",
+      "reliability_case_id": "HRV1-015",
+      "review_status": "ABSTAIN",
+      "search_rank": 728,
+      "substantive_amp_evaluable": false
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2010/k_40810_.html",
+      "input_sha256": "d04021f6bbae697429df7ba74569aa2d15d07d42e276592a20b513b5dfdd5135",
+      "reliability_case_id": "HRV1-069",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 751,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/usa/2010/docket_number_-_unknown_2010.html",
+      "input_sha256": "a1342bf1df530d950728c18d51599b511db02bb92233ef31c9da7cd714e53937",
+      "reliability_case_id": "HRV1-065",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 759,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bel/2010/correctional_tribunal_of_brussels_20-04-2010.html",
+      "input_sha256": "2422325a108035aa84304d0cb65502e98601c5ffa4eb9c2469a64b963a0c180d",
+      "reliability_case_id": "HRV1-050",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 769,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/ecu/2009/juicio_no._460-2009.html",
+      "input_sha256": "e80f6a1a9da58947a3d032cc5c623ca35f007dfab5d4862ca5c35b1a005bd5da",
+      "reliability_case_id": "HRV1-060",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 839,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/cze/2009/17_t_152007.html",
+      "input_sha256": "e31d6728153c7e531efa0a44e04536c69b5d0a24150ae0c2ef4c2b9ef18d01ee",
+      "reliability_case_id": "HRV1-047",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 842,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bra/2009/acr_2006.72.03.003070-2_trf4.html",
+      "input_sha256": "07e67c4360bdef3c185ccb5ca9d833ffbdf4c7a8916556d25145e9e749d93a22",
+      "reliability_case_id": "HRV1-018",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 889,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2009/united_states_v._oscar_mondragon.html",
+      "input_sha256": "45a51a2025d51c4c551ca1a526b93d3121e73fc540603fe6dbf4468e34c90730",
+      "reliability_case_id": "HRV1-016",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 898,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/bra/2009/processo_n_2009.03.00.014160-5.html",
+      "input_sha256": "c31a56843a7c9927c3a88e85fc3d0ff67f1bda84251bf4f60bf249402817b390",
+      "reliability_case_id": "HRV1-012",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 917,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/tha/2009/kulab_or_rampueng_thongmeesri_or_sai-utah.html",
+      "input_sha256": "b6310895411c9c831670f6766a7ab95019e16f99d121f07e1005560a99e17433",
+      "reliability_case_id": "HRV1-019",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 934,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/can/2009/emerson.html",
+      "input_sha256": "339463d573486bd149c38188947890f322bb113333ded99db77109300cea0acf",
+      "reliability_case_id": "HRV1-022",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 962,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2008/united_states_v._mondragon.html",
+      "input_sha256": "6c9f8cb05c63ab791e31ae67f96d0fc8482e37ac81574dd9b02927de5ffc8626",
+      "reliability_case_id": "HRV1-077",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1105,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/khm/2008/p._s..html",
+      "input_sha256": "bbf9662f30e07afbead2421076eea576329f9c7f46b545262e97f03674911233",
+      "reliability_case_id": "HRV1-032",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1111,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/col/2008/valencia_et_al.html",
+      "input_sha256": "ddb663d14fabd8e325420928a8c2d209f9ee7bc19a4007465b72321665678d01",
+      "reliability_case_id": "HRV1-057",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1142,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/che/2008/6b_277_-_2007.html",
+      "input_sha256": "d74d0ddde4f160e2fab40642476d4c899d10a135810cb88d806b6cad78edcaaa",
+      "reliability_case_id": "HRV1-046",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1159,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/per/2007/exp._n._07853-2006-phtc_.html",
+      "input_sha256": "3c2b42f7c4dcf5b9692ec4891dea9be6ca0331936d648eab2e33ce1e23af5e5d",
+      "reliability_case_id": "HRV1-053",
+      "review_status": "ABSTAIN",
+      "search_rank": 1173,
+      "substantive_amp_evaluable": false
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2007/united_states_v._telichenko.html",
+      "input_sha256": "0d9ddc6ceaadf8cc2804d3df34ffb9b80a3056133f4b5660c7d599fc40a53278",
+      "reliability_case_id": "HRV1-068",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1229,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/svk/2007/2_to_3792006_.html",
+      "input_sha256": "f6470886c4f4eba9882b044f1297335feb29a76799133b672149d41a13d1ef94",
+      "reliability_case_id": "HRV1-010",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1238,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/chn/2004/kwok_ho.html",
+      "input_sha256": "64db1dd6b3886fa3518e3d9bd2bca787ba9e1ee18ff1d7fecf546ba23c023909",
+      "reliability_case_id": "HRV1-011",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1396,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2003/united_states_v._tong_xiong.html",
+      "input_sha256": "cb818b0f477903cfb5ea96aeecdc42b27be472cb933f87b85b9698798bac0064",
+      "reliability_case_id": "HRV1-036",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1399,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/1999/united_states_v._alex_mishulovich.html",
+      "input_sha256": "d9fa77ff5f7f3e372f4aa5c6aee598d4bcb8024d37cf8774a3102b6b8f72a547",
+      "reliability_case_id": "HRV1-029",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1462,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/jor/case_no._23572010.html",
+      "input_sha256": "4df8300134faf41aa4a54a5d48ce531a850bdb8fe8483748ac4de57609ea22f8",
+      "reliability_case_id": "HRV1-020",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1508,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/jor/case_no._21052009.html",
+      "input_sha256": "1551e69f5bdc4f68149b1337ae8d08d19ca15a1973fedfc97c3c40001e9c29df",
+      "reliability_case_id": "HRV1-026",
+      "review_status": "ABSTAIN",
+      "search_rank": 1515,
+      "substantive_amp_evaluable": false
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/jor/case_no._26352009.html",
+      "input_sha256": "65baf1a0f25d8386ee9bcc5a82c95806cf4551fe71df7c0446c134787e0e3a7e",
+      "reliability_case_id": "HRV1-048",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1517,
+      "substantive_amp_evaluable": true
+    },
+    {
+      "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/ven/jorge_eliecer_castro_davila_.html",
+      "input_sha256": "207e7f2a4d17d7fcb86f1ce73a067996fe8c3e0793856a54032178c5fb87ee05",
+      "reliability_case_id": "HRV1-041",
+      "review_status": "SUBSTANTIVE",
+      "search_rank": 1566,
+      "substantive_amp_evaluable": true
+    }
+  ],
+  "retained_membership_sha256": "2f6cf53ff2e806f4801fb5e59b5551fff681482ab85ce3ce5bd80947f08dfd75",
+  "retained_n": 61,
+  "rules": {
+    "abstain_in_ordinary_amp_scoring": false,
+    "abstain_retained_separate": true,
+    "organized_criminal_group_split_from_geographic_form": true,
+    "semantic_normalization_performed": false,
+    "skip_excluded": true,
+    "unreviewed_prepopulated_values_used": false
+  },
+  "single_reviewer_design": true,
+  "source_manifest": {
+    "path": "outputs/analysis/evaluation_b/human_annotation_source_manifest.json",
+    "sha256": "dc7f1a33b78c8f1d23cad182ee1371276476091bfaeffb0c7fc1ff709252a193"
+  },
+  "status": "FROZEN_FOR_EVALUATION_B_PRE_MODEL_INFERENCE",
+  "substantive_n": 55
+}

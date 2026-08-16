@@ -56,13 +56,17 @@ except ImportError:  # pragma: no cover - direct CLI execution.
     import llm_request_builder as builder  # type: ignore
 
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 PREDICTION_SCHEMA_VERSION = "sherloc-amp-predictions-v1"
 EXECUTION_SCHEMA_VERSION = "sherloc-llm-amp-execution-v1"
 FAILURE_SCHEMA_VERSION = "sherloc-llm-amp-failure-v1"
 MODEL_ACCESS_SCHEMA_VERSION = "sherloc-openai-model-access-v1"
 DRY_RUN_GATE_SCHEMA_VERSION = "sherloc-llm-dry-run-gate-v1"
 RUN_LOCK_SCHEMA_VERSION = "sherloc-llm-setting-run-lock-v1"
+FALLBACK_RESERVATION_SCHEMA_VERSION = "sherloc-llm-fallback-reservation-v1"
+PRIMARY_RECOVERY_RESERVATION_SCHEMA_VERSION = (
+    "sherloc-llm-primary-recovery-reservation-v1"
+)
 EXPECTED_COHORT_ID = (
     "sherloc-tip-2026-08-09-en-legacy-amp-complete-"
     "n1263-097ce2027171ebc9"
@@ -111,6 +115,15 @@ MAX_BACKOFF_SECONDS = 60.0
 DEFAULT_WORKERS = 1
 MAX_WORKERS = 8
 MALFORMED_LOCK_STALE_SECONDS = 24 * 60 * 60
+TECHNICAL_AMENDMENT_ID = "sherloc-llm-amp-technical-failure-amendment-v1"
+INITIAL_MAX_OUTPUT_TOKENS = 512
+FALLBACK_MAX_OUTPUT_TOKENS = 2048
+MAX_FALLBACK_ATTEMPTS_PER_CASE = 2
+EXPECTED_M3_A1_AMENDMENT_PENDING_RANKS = frozenset({266, 551, 1356})
+RANK_1340_EXCEPTION_ID = (
+    "sherloc-m4-a2-fold1-rank1340-rate-limit-exception-v1"
+)
+RANK_1340_EXCEPTION_MAX_FALLBACK_ATTEMPTS = 4
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BENCHMARK = REPO_ROOT / "data/processed/sherloc_benchmark_v1.jsonl"
@@ -122,6 +135,12 @@ DEFAULT_M3_PROMPT = REPO_ROOT / "prompts/m3_zero_shot_amp_v2.md"
 DEFAULT_M4_PROMPT = REPO_ROOT / "prompts/m4_six_shot_amp_v2.md"
 DEFAULT_ONTOLOGY = REPO_ROOT / "config/amp_ontology_v1.yaml"
 DEFAULT_REVIEW = REPO_ROOT / "data/annotations/demo_bank_review_v2.csv"
+DEFAULT_TECHNICAL_AMENDMENT = (
+    REPO_ROOT / "docs/llm_amp_technical_failure_amendment_v1.md"
+)
+DEFAULT_RANK_1340_EXCEPTION_ADDENDUM = (
+    REPO_ROOT / "docs/m4_a2_rank_1340_technical_exception_addendum_v1.md"
+)
 DEFAULT_PREDICTION_ROOT = REPO_ROOT / "outputs/predictions"
 DEFAULT_LOG_ROOT = REPO_ROOT / "outputs/logs/llm"
 DEFAULT_METRIC_ROOT = REPO_ROOT / "outputs/metrics"
@@ -131,12 +150,29 @@ DEFAULT_M2_CONFIG = REPO_ROOT / "config/experiments/m2_modernbert_amp_v2.yaml"
 EXPECTED_M2_CONFIG_SHA256 = (
     "73f5992afe934f1198f09382fb2ec38d0438831c157fc6ce44180798d51ba3e3"
 )
+EXPECTED_TECHNICAL_AMENDMENT_SHA256 = (
+    "363c06abb49390a3cf66d646466313d6f50d655e41b801483063d1b180d7cb84"
+)
+EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256 = (
+    "0ebb7945049d097476c3244407bff46b9f272704eb1a10118e649bfed2c8f6dc"
+)
 
 AMP_LABEL_IDS = builder.ACT_IDS + builder.MEANS_IDS + builder.PURPOSE_IDS
 
 
 class LLMProtocolError(RuntimeError):
     """Raised when execution would violate a frozen or security invariant."""
+
+
+class MaxOutputTokensIncomplete(LLMProtocolError):
+    """Exact technical fallback trigger returned by the Responses API."""
+
+    def __init__(self, response: Any) -> None:
+        super().__init__(
+            "Response status is 'incomplete'; "
+            "details={'reason': 'max_output_tokens'}"
+        )
+        self.response = response
 
 
 @dataclass(frozen=True)
@@ -166,6 +202,32 @@ class RunSpec:
         if self.evaluation == "A1":
             return "A1_TEST"
         return f"A2_FOLD_{self.fold}_TEST"
+
+
+def _is_rank_1340_exception_scope(
+    spec: RunSpec, case: Mapping[str, Any]
+) -> bool:
+    return (
+        not spec.dry_run
+        and spec.method == "M4"
+        and spec.evaluation == "A2"
+        and spec.fold == 1
+        and int(case.get("search_rank") or 0) == 1340
+    )
+
+
+def _validate_exception_record_scope(
+    spec: RunSpec, case: Mapping[str, Any], technical: Mapping[str, Any]
+) -> None:
+    if technical.get("technical_exception_id") is None:
+        return
+    if not (
+        _is_rank_1340_exception_scope(spec, case)
+        and technical.get("technical_exception_id") == RANK_1340_EXCEPTION_ID
+        and technical.get("technical_exception_sha256")
+        == EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+    ):
+        raise LLMProtocolError("Technical exception escaped M4 A2 Fold 1 rank 1340")
 
 
 def utc_now() -> str:
@@ -271,6 +333,16 @@ def validate_canonical_artifact_hashes() -> None:
         (DEFAULT_M4_PROMPT, EXPECTED_M4_PROMPT_SHA256, "M4 prompt"),
         (DEFAULT_ONTOLOGY, EXPECTED_ONTOLOGY_SHA256, "AMP ontology"),
         (DEFAULT_REVIEW, EXPECTED_REVIEW_SHA256, "human demo review"),
+        (
+            DEFAULT_TECHNICAL_AMENDMENT,
+            EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+            "LLM technical-failure amendment",
+        ),
+        (
+            DEFAULT_RANK_1340_EXCEPTION_ADDENDUM,
+            EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256,
+            "M4 A2 rank-1340 technical exception addendum",
+        ),
     )
     for path, expected, name in artifacts:
         require_file_sha256(path, expected, name)
@@ -792,6 +864,16 @@ def validate_frozen_contract(
     ontology_path: Path = DEFAULT_ONTOLOGY,
     review_path: Path = DEFAULT_REVIEW,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    require_file_sha256(
+        DEFAULT_TECHNICAL_AMENDMENT,
+        EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+        "LLM technical-failure amendment",
+    )
+    require_file_sha256(
+        DEFAULT_RANK_1340_EXCEPTION_ADDENDUM,
+        EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256,
+        "M4 A2 rank-1340 technical exception addendum",
+    )
     require_file_sha256(config_path, EXPECTED_CONFIG_SHA256, "LLM config")
     require_file_sha256(demo_bank_path, EXPECTED_DEMO_BANK_SHA256, "demo bank")
     require_file_sha256(m3_prompt_path, EXPECTED_M3_PROMPT_SHA256, "M3 prompt")
@@ -1449,10 +1531,52 @@ def _response_refusal(response: Any) -> str | None:
     return None
 
 
+def _incomplete_details(response: Any) -> dict[str, Any] | None:
+    value = _object_attr(response, "incomplete_details")
+    if value is None:
+        return None
+    try:
+        primitive = safe_primitive(value)
+    except LLMProtocolError:
+        reason = _object_attr(value, "reason")
+        return {"reason": str(reason)} if reason is not None else None
+    return dict(primitive) if isinstance(primitive, Mapping) else None
+
+
+def _response_attempt_provenance(
+    response: Any, *, payload: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Select auditable response metadata without serializing narrative output."""
+
+    return {
+        "response_id": (
+            str(_object_attr(response, "id"))
+            if _object_attr(response, "id") is not None
+            else None
+        ),
+        "returned_model_id": (
+            str(_object_attr(response, "model"))
+            if _object_attr(response, "model") is not None
+            else None
+        ),
+        "response_status": _object_attr(response, "status"),
+        "incomplete_details": _incomplete_details(response),
+        "token_usage": _usage(response),
+        "max_output_tokens": payload.get("max_output_tokens"),
+        "actual_request_sha256": sha256_text(canonical_json(payload)),
+    }
+
+
 def parse_response(response: Any) -> dict[str, Any]:
     status = _object_attr(response, "status")
     if status not in (None, "completed"):
-        details = safe_primitive(_object_attr(response, "incomplete_details"))
+        details = _incomplete_details(response)
+        if (
+            status == "incomplete"
+            and isinstance(details, Mapping)
+            and details.get("reason") == "max_output_tokens"
+        ):
+            raise MaxOutputTokensIncomplete(response)
         raise LLMProtocolError(f"Response status is {status!r}; details={details}")
     refusal = _response_refusal(response)
     if refusal is not None:
@@ -1472,6 +1596,57 @@ def parse_response(response: Any) -> dict[str, Any]:
     }
 
 
+def output_token_fallback_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the one permitted payload variant, changing only token budget."""
+
+    if payload.get("max_output_tokens") != INITIAL_MAX_OUTPUT_TOKENS:
+        raise LLMProtocolError(
+            "Technical fallback requires a 512-token frozen base payload"
+        )
+    fallback = dict(payload)
+    fallback["max_output_tokens"] = FALLBACK_MAX_OUTPUT_TOKENS
+    base_without_budget = dict(payload)
+    fallback_without_budget = dict(fallback)
+    del base_without_budget["max_output_tokens"]
+    del fallback_without_budget["max_output_tokens"]
+    if canonical_json(base_without_budget) != canonical_json(fallback_without_budget):
+        raise LLMProtocolError(
+            "Technical fallback payload changed outside max_output_tokens"
+        )
+    return fallback
+
+
+def _attempt_error_event(
+    exc: BaseException,
+    *,
+    payload: Mapping[str, Any],
+    attempt: int,
+    phase: str,
+    secret: str,
+) -> dict[str, Any]:
+    transient = is_transient_error(exc)
+    event: dict[str, Any] = {
+        "attempt": attempt,
+        "timestamp": utc_now(),
+        "request_phase": phase,
+        "max_output_tokens": payload.get("max_output_tokens"),
+        "actual_request_sha256": sha256_text(canonical_json(payload)),
+        "error_type": type(exc).__name__,
+        "http_status": exception_status_code(exc),
+        "transient": transient,
+        "message": safe_error_message(exc, secret),
+    }
+    if isinstance(exc, MaxOutputTokensIncomplete):
+        event.update(_response_attempt_provenance(exc.response, payload=payload))
+        event["technical_fallback_trigger"] = (
+            phase == "INITIAL_512"
+            and event.get("response_status") == "incomplete"
+            and isinstance(event.get("incomplete_details"), Mapping)
+            and event["incomplete_details"].get("reason") == "max_output_tokens"
+        )
+    return event
+
+
 def invoke_with_retries(
     client: Any,
     payload: Mapping[str, Any],
@@ -1481,39 +1656,212 @@ def invoke_with_retries(
     sleeper: Callable[[float], None] = time.sleep,
     clock: Callable[[], float] = time.perf_counter,
     secret: str,
+    start_with_fallback: bool = False,
+    prior_fallback_attempts: int = 0,
+    prior_primary_incomplete_provenance: Mapping[str, Any] | None = None,
+    primary_attempt_limit: int | None = None,
+    fallback_attempt_ceiling: int = MAX_FALLBACK_ATTEMPTS_PER_CASE,
+    technical_exception_id: str | None = None,
+    technical_exception_sha256: str | None = None,
+    fallback_attempt_reserver: (
+        Callable[[int, Mapping[str, Any]], None] | None
+    ) = None,
+    primary_attempt_reserver: (
+        Callable[[int, Mapping[str, Any]], None] | None
+    ) = None,
 ) -> dict[str, Any]:
+    """Invoke a case under the frozen base and additive fallback policies.
+
+    Normal HTTP/transient retries retain their prior behavior at 512.  The
+    2048-token payload is reachable only from an exact max-output incomplete or
+    an independently validated persisted instance of that trigger.  Every
+    actual 2048-token call counts toward a cumulative two-call ceiling.
+    """
+
     if max_attempts < 1:
         raise LLMProtocolError("max_attempts must be positive")
+    if primary_attempt_limit is not None and (
+        isinstance(primary_attempt_limit, bool)
+        or not isinstance(primary_attempt_limit, int)
+        or primary_attempt_limit < 1
+    ):
+        raise LLMProtocolError("primary_attempt_limit must be a positive integer")
+    if payload.get("max_output_tokens") != INITIAL_MAX_OUTPUT_TOKENS:
+        raise LLMProtocolError("Initial request must retain max_output_tokens=512")
+    if (
+        isinstance(prior_fallback_attempts, bool)
+        or not isinstance(prior_fallback_attempts, int)
+        or prior_fallback_attempts < 0
+        or prior_fallback_attempts > fallback_attempt_ceiling
+    ):
+        raise LLMProtocolError("Invalid cumulative fallback-attempt count")
+    exception_active = (
+        fallback_attempt_ceiling == RANK_1340_EXCEPTION_MAX_FALLBACK_ATTEMPTS
+        and technical_exception_id == RANK_1340_EXCEPTION_ID
+        and technical_exception_sha256
+        == EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+        and start_with_fallback
+        and prior_fallback_attempts == MAX_FALLBACK_ATTEMPTS_PER_CASE
+    )
+    if fallback_attempt_ceiling != MAX_FALLBACK_ATTEMPTS_PER_CASE and not exception_active:
+        raise LLMProtocolError("Invalid rank-1340 exception execution policy")
+    if start_with_fallback:
+        proof = prior_primary_incomplete_provenance
+        base_sha256 = sha256_text(canonical_json(payload))
+        if not (
+            isinstance(proof, Mapping)
+            and proof.get("response_status") == "incomplete"
+            and isinstance(proof.get("incomplete_details"), Mapping)
+            and proof["incomplete_details"].get("reason") == "max_output_tokens"
+            and proof.get("max_output_tokens") == INITIAL_MAX_OUTPUT_TOKENS
+            and proof.get("actual_request_sha256") == base_sha256
+        ):
+            raise LLMProtocolError(
+                "Direct fallback resume lacks an exact persisted 512 trigger"
+            )
+    if start_with_fallback and prior_fallback_attempts >= fallback_attempt_ceiling:
+        raise LLMProtocolError("The per-case 2048-token fallback ceiling is exhausted")
+
     started = clock()
     retry_events: list[dict[str, Any]] = []
-    for attempt in range(1, max_attempts + 1):
+    actual_calls = 0
+    fallback_calls = 0
+    initial_incomplete_provenance = (
+        dict(prior_primary_incomplete_provenance)
+        if prior_primary_incomplete_provenance is not None
+        else None
+    )
+    base_request_sha256 = sha256_text(canonical_json(payload))
+
+    def result_metadata(actual_payload: Mapping[str, Any]) -> dict[str, Any]:
+        metadata = {
+            "latency_seconds": max(0.0, clock() - started),
+            "retry_count": max(0, actual_calls - 1),
+            "request_attempt_count": actual_calls,
+            "retry_events": retry_events,
+            "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+            "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+            "base_request_sha256": base_request_sha256,
+            "actual_request_sha256": sha256_text(canonical_json(actual_payload)),
+            "initial_max_output_tokens": INITIAL_MAX_OUTPUT_TOKENS,
+            "effective_max_output_tokens": actual_payload.get("max_output_tokens"),
+            "output_token_fallback_used": fallback_calls > 0,
+            "output_token_fallback_attempts_this_invocation": fallback_calls,
+            "prior_output_token_fallback_attempts": prior_fallback_attempts,
+            "cumulative_output_token_fallback_attempts": (
+                prior_fallback_attempts + fallback_calls
+            ),
+            "initial_incomplete_response_provenance": initial_incomplete_provenance,
+        }
+        if exception_active:
+            metadata.update(
+                {
+                    "technical_exception_id": RANK_1340_EXCEPTION_ID,
+                    "technical_exception_sha256": (
+                        EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+                    ),
+                }
+            )
+        return metadata
+
+    if not start_with_fallback:
+        allowed_primary_attempts = min(
+            max_attempts,
+            primary_attempt_limit if primary_attempt_limit is not None else max_attempts,
+        )
+        for primary_attempt in range(1, allowed_primary_attempts + 1):
+            if primary_attempt_reserver is not None:
+                primary_attempt_reserver(primary_attempt, payload)
+            actual_calls += 1
+            try:
+                response = client.responses.create(**dict(payload))
+                parsed = parse_response(response)
+                return {
+                    "ok": True,
+                    "response": response,
+                    "parsed": parsed,
+                    **result_metadata(payload),
+                }
+            except Exception as exc:
+                event = _attempt_error_event(
+                    exc,
+                    payload=payload,
+                    attempt=actual_calls,
+                    phase="INITIAL_512",
+                    secret=secret,
+                )
+                if isinstance(exc, MaxOutputTokensIncomplete):
+                    retry_events.append(event)
+                    initial_incomplete_provenance = {
+                        key: event.get(key)
+                        for key in (
+                            "timestamp",
+                            "response_id",
+                            "returned_model_id",
+                            "response_status",
+                            "incomplete_details",
+                            "token_usage",
+                            "max_output_tokens",
+                            "actual_request_sha256",
+                        )
+                    }
+                    break
+                if event["transient"] and primary_attempt < allowed_primary_attempts:
+                    advised = retry_after_seconds(exc)
+                    exponential = min(
+                        MAX_BACKOFF_SECONDS,
+                        base_backoff_seconds * (2 ** (primary_attempt - 1)),
+                    )
+                    delay = min(MAX_BACKOFF_SECONDS, max(exponential, advised or 0.0))
+                    event["retry_after_seconds"] = advised
+                    event["sleep_seconds"] = delay
+                    retry_events.append(event)
+                    sleeper(delay)
+                    continue
+                retry_events.append(event)
+                return {
+                    "ok": False,
+                    "error": event,
+                    "fatal_access_error": is_fatal_access_error(exc),
+                    **result_metadata(payload),
+                }
+
+    fallback_payload = output_token_fallback_payload(payload)
+    remaining_fallback_attempts = (
+        fallback_attempt_ceiling - prior_fallback_attempts
+    )
+    for fallback_attempt in range(1, remaining_fallback_attempts + 1):
+        fallback_calls += 1
+        if fallback_attempt_reserver is not None:
+            fallback_attempt_reserver(
+                prior_fallback_attempts + fallback_calls, fallback_payload
+            )
+        actual_calls += 1
         try:
-            response = client.responses.create(**dict(payload))
+            response = client.responses.create(**dict(fallback_payload))
             parsed = parse_response(response)
             return {
                 "ok": True,
                 "response": response,
                 "parsed": parsed,
-                "latency_seconds": max(0.0, clock() - started),
-                "retry_count": attempt - 1,
-                "retry_events": retry_events,
+                **result_metadata(fallback_payload),
             }
         except Exception as exc:
-            transient = is_transient_error(exc)
-            status_code = exception_status_code(exc)
-            event = {
-                "attempt": attempt,
-                "timestamp": utc_now(),
-                "error_type": type(exc).__name__,
-                "http_status": status_code,
-                "transient": transient,
-                "message": safe_error_message(exc, secret),
-            }
-            if transient and attempt < max_attempts:
+            event = _attempt_error_event(
+                exc,
+                payload=fallback_payload,
+                attempt=actual_calls,
+                phase="FALLBACK_2048",
+                secret=secret,
+            )
+            retryable_fallback = isinstance(exc, MaxOutputTokensIncomplete) or bool(
+                event["transient"]
+            )
+            if retryable_fallback and fallback_attempt < remaining_fallback_attempts:
                 advised = retry_after_seconds(exc)
                 exponential = min(
                     MAX_BACKOFF_SECONDS,
-                    base_backoff_seconds * (2 ** (attempt - 1)),
+                    base_backoff_seconds * (2 ** (fallback_attempt - 1)),
                 )
                 delay = min(MAX_BACKOFF_SECONDS, max(exponential, advised or 0.0))
                 event["retry_after_seconds"] = advised
@@ -1524,11 +1872,9 @@ def invoke_with_retries(
             retry_events.append(event)
             return {
                 "ok": False,
-                "latency_seconds": max(0.0, clock() - started),
-                "retry_count": attempt - 1,
-                "retry_events": retry_events,
                 "error": event,
                 "fatal_access_error": is_fatal_access_error(exc),
+                **result_metadata(fallback_payload),
             }
     raise AssertionError("unreachable")
 
@@ -1539,6 +1885,130 @@ def _usage(response: Any) -> dict[str, Any] | None:
         return None
     value = safe_primitive(usage)
     return value if isinstance(value, dict) else {"value": value}
+
+
+def _validated_technical_execution_provenance(
+    result: Mapping[str, Any], request: Mapping[str, Any]
+) -> dict[str, Any]:
+    fields = (
+        "technical_amendment_id",
+        "technical_amendment_sha256",
+        "base_request_sha256",
+        "actual_request_sha256",
+        "initial_max_output_tokens",
+        "effective_max_output_tokens",
+        "output_token_fallback_used",
+        "output_token_fallback_attempts_this_invocation",
+        "prior_output_token_fallback_attempts",
+        "cumulative_output_token_fallback_attempts",
+        "request_attempt_count",
+        "initial_incomplete_response_provenance",
+    )
+    provenance = {field: result.get(field) for field in fields}
+    exception_active = (
+        result.get("technical_exception_id") == RANK_1340_EXCEPTION_ID
+        and result.get("technical_exception_sha256")
+        == EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+    )
+    if exception_active:
+        provenance.update(
+            {
+                "technical_exception_id": RANK_1340_EXCEPTION_ID,
+                "technical_exception_sha256": (
+                    EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+                ),
+            }
+        )
+    expected = {
+        "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+        "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+        "base_request_sha256": request["request_sha256"],
+        "initial_max_output_tokens": INITIAL_MAX_OUTPUT_TOKENS,
+    }
+    mismatches = {
+        field: {"expected": value, "observed": provenance.get(field)}
+        for field, value in expected.items()
+        if provenance.get(field) != value
+    }
+    fallback_used = provenance["output_token_fallback_used"] is True
+    expected_budget = (
+        FALLBACK_MAX_OUTPUT_TOKENS if fallback_used else INITIAL_MAX_OUTPUT_TOKENS
+    )
+    if provenance["effective_max_output_tokens"] != expected_budget:
+        mismatches["effective_max_output_tokens"] = {
+            "expected": expected_budget,
+            "observed": provenance["effective_max_output_tokens"],
+        }
+    request_payload = request.get("payload")
+    if isinstance(request_payload, Mapping):
+        expected_actual_payload = (
+            output_token_fallback_payload(request_payload)
+            if fallback_used
+            else dict(request_payload)
+        )
+        expected_actual_sha = sha256_text(canonical_json(expected_actual_payload))
+        if provenance["actual_request_sha256"] != expected_actual_sha:
+            mismatches["actual_request_sha256"] = {
+                "expected": expected_actual_sha,
+                "observed": provenance["actual_request_sha256"],
+            }
+    elif not fallback_used and (
+        provenance["actual_request_sha256"] != request["request_sha256"]
+    ):
+        mismatches["actual_request_sha256"] = {
+            "expected": request["request_sha256"],
+            "observed": provenance["actual_request_sha256"],
+        }
+    current = provenance["output_token_fallback_attempts_this_invocation"]
+    prior = provenance["prior_output_token_fallback_attempts"]
+    cumulative = provenance["cumulative_output_token_fallback_attempts"]
+    if (
+        isinstance(current, bool)
+        or not isinstance(current, int)
+        or isinstance(prior, bool)
+        or not isinstance(prior, int)
+        or isinstance(cumulative, bool)
+        or not isinstance(cumulative, int)
+        or cumulative != current + prior
+        or cumulative
+        > (
+            RANK_1340_EXCEPTION_MAX_FALLBACK_ATTEMPTS
+            if exception_active
+            else MAX_FALLBACK_ATTEMPTS_PER_CASE
+        )
+        or (exception_active and prior != MAX_FALLBACK_ATTEMPTS_PER_CASE)
+        or (fallback_used != (current > 0))
+    ):
+        mismatches["fallback_attempt_counts"] = {
+            "current": current,
+            "prior": prior,
+            "cumulative": cumulative,
+        }
+    proof = provenance["initial_incomplete_response_provenance"]
+    if fallback_used:
+        if not (
+            isinstance(proof, Mapping)
+            and proof.get("response_status") == "incomplete"
+            and isinstance(proof.get("incomplete_details"), Mapping)
+            and proof["incomplete_details"].get("reason") == "max_output_tokens"
+            and proof.get("max_output_tokens") == INITIAL_MAX_OUTPUT_TOKENS
+            and proof.get("actual_request_sha256") == request["request_sha256"]
+        ):
+            mismatches["initial_incomplete_response_provenance"] = {
+                "expected": "exact persisted 512 max_output_tokens trigger",
+                "observed": proof,
+            }
+    elif proof is not None:
+        mismatches["initial_incomplete_response_provenance"] = {
+            "expected": None,
+            "observed": proof,
+        }
+    if mismatches:
+        raise LLMProtocolError(
+            "Invalid technical-amendment execution provenance: "
+            + canonical_json(mismatches)
+        )
+    return provenance
 
 
 def make_success_record(
@@ -1561,6 +2031,8 @@ def make_success_record(
     method_config = config["methods"][spec.method]
     response_id = _object_attr(response, "id")
     returned_model = _object_attr(response, "model")
+    technical_execution = _validated_technical_execution_provenance(result, request)
+    _validate_exception_record_scope(spec, case, technical_execution)
     execution_timestamp = utc_now()
     run_id = sha256_text(
         canonical_json(
@@ -1603,6 +2075,9 @@ def make_success_record(
         "validated_prediction": prediction,
         "raw_structured_response": parsed["raw_structured_response"],
         "raw_structured_response_text": parsed["raw_structured_response_text"],
+        "label_array_canonicalization_applied": (
+            parsed["raw_structured_response"] != prediction
+        ),
         "requested_model_id": MODEL_ALIAS,
         "effective_requested_model_id": model_marker["effective_model_id"],
         "returned_model_id": str(returned_model) if returned_model else None,
@@ -1631,6 +2106,7 @@ def make_success_record(
         "latency_seconds": float(result["latency_seconds"]),
         "retry_count": int(result["retry_count"]),
         "retry_events": result["retry_events"],
+        "technical_execution": technical_execution,
         "status": "SUCCESS_VALIDATED",
         "truncated_input": False,
         "primary_cohort_id": EXPECTED_COHORT_ID,
@@ -1653,6 +2129,8 @@ def make_failure_record(
     sdk_version: str,
     demo_metadata: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
+    technical_execution = _validated_technical_execution_provenance(result, request)
+    _validate_exception_record_scope(spec, case, technical_execution)
     return {
         "failure_schema_version": FAILURE_SCHEMA_VERSION,
         "runner_version": VERSION,
@@ -1685,6 +2163,7 @@ def make_failure_record(
         "latency_seconds": float(result["latency_seconds"]),
         "retry_count": int(result["retry_count"]),
         "retry_events": result["retry_events"],
+        "technical_execution": technical_execution,
         "error": result["error"],
         "fatal_access_error": bool(result.get("fatal_access_error")),
         "validated_prediction": None,
@@ -1696,12 +2175,721 @@ def _state_path(directory: Path, search_rank: int) -> Path:
     return directory / f"{search_rank:06d}.json"
 
 
+def validate_primary_recovery_reservation(
+    path: Path,
+    *,
+    case: Mapping[str, Any],
+    request: Mapping[str, Any],
+    spec: RunSpec,
+) -> bool:
+    if not path.is_file():
+        return False
+    document = load_json(path)
+    expected = {
+        "schema_version": PRIMARY_RECOVERY_RESERVATION_SCHEMA_VERSION,
+        "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+        "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+        "status": "PRIMARY_RECOVERY_CALL_DURABLY_RESERVED",
+        "method": spec.method,
+        "evaluation": spec.evaluation,
+        "fold": spec.fold,
+        "search_rank": int(case["search_rank"]),
+        "base_request_sha256": request["request_sha256"],
+        "max_output_tokens": INITIAL_MAX_OUTPUT_TOKENS,
+    }
+    mismatches = {
+        field: {"expected": value, "observed": document.get(field)}
+        for field, value in expected.items()
+        if document.get(field) != value
+    }
+    if mismatches:
+        raise LLMProtocolError(
+            f"Invalid primary-recovery reservation for rank {case['search_rank']}: "
+            + canonical_json(mismatches)
+        )
+    return True
+
+
+def reserve_primary_recovery_attempt(
+    path: Path,
+    *,
+    case: Mapping[str, Any],
+    request: Mapping[str, Any],
+    spec: RunSpec,
+    primary_attempt_number: int,
+    actual_payload: Mapping[str, Any],
+    secret: str,
+) -> None:
+    """Durably reserve rank 551's sole additional 512 call before sending."""
+
+    if primary_attempt_number != 1:
+        raise LLMProtocolError("Legacy primary recovery permits exactly one call")
+    if validate_primary_recovery_reservation(
+        path, case=case, request=request, spec=spec
+    ):
+        raise LLMProtocolError(
+            f"Rank {case['search_rank']} already reserved its sole 512 recovery call"
+        )
+    if canonical_json(actual_payload) != canonical_json(request["payload"]):
+        raise LLMProtocolError(
+            f"Primary-recovery payload drift for rank {case['search_rank']}"
+        )
+    atomic_json(
+        path,
+        {
+            "schema_version": PRIMARY_RECOVERY_RESERVATION_SCHEMA_VERSION,
+            "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+            "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+            "status": "PRIMARY_RECOVERY_CALL_DURABLY_RESERVED",
+            "reserved_at": utc_now(),
+            "method": spec.method,
+            "evaluation": spec.evaluation,
+            "fold": spec.fold,
+            "search_rank": int(case["search_rank"]),
+            "base_request_sha256": request["request_sha256"],
+            "max_output_tokens": INITIAL_MAX_OUTPUT_TOKENS,
+            "actual_request_sha256": sha256_text(canonical_json(actual_payload)),
+        },
+        secret=secret,
+    )
+
+
+def _fallback_reservation_count(
+    path: Path,
+    *,
+    case: Mapping[str, Any],
+    request: Mapping[str, Any],
+    spec: RunSpec,
+) -> int:
+    if not path.is_file():
+        return 0
+    document = load_json(path)
+    expected = {
+        "schema_version": FALLBACK_RESERVATION_SCHEMA_VERSION,
+        "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+        "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+        "method": spec.method,
+        "evaluation": spec.evaluation,
+        "fold": spec.fold,
+        "search_rank": int(case["search_rank"]),
+        "base_request_sha256": request["request_sha256"],
+    }
+    mismatches = {
+        field: {"expected": value, "observed": document.get(field)}
+        for field, value in expected.items()
+        if document.get(field) != value
+    }
+    reservations = document.get("reservations")
+    if not isinstance(reservations, list):
+        mismatches["reservations"] = {"expected": "list", "observed": type(reservations).__name__}
+        reservations = []
+    exception_active = (
+        _is_rank_1340_exception_scope(spec, case)
+        and document.get("technical_exception_id") == RANK_1340_EXCEPTION_ID
+        and document.get("technical_exception_sha256")
+        == EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+    )
+    if (
+        document.get("technical_exception_id") is not None
+        or document.get("technical_exception_sha256") is not None
+    ) and not exception_active:
+        mismatches["technical_exception"] = {
+            "expected": "exact M4 A2 Fold 1 rank-1340 exception",
+            "observed": document.get("technical_exception_id"),
+        }
+    expected_fallback_sha = sha256_text(
+        canonical_json(output_token_fallback_payload(request["payload"]))
+    )
+    for index, reservation in enumerate(reservations, start=1):
+        if not (
+            isinstance(reservation, Mapping)
+            and reservation.get("fallback_attempt_number") == index
+            and reservation.get("max_output_tokens") == FALLBACK_MAX_OUTPUT_TOKENS
+            and reservation.get("actual_request_sha256") == expected_fallback_sha
+        ):
+            mismatches[f"reservation_{index}"] = {
+                "expected": "sequential, 2048, canonical fallback hash",
+                "observed": safe_primitive(reservation),
+            }
+    ceiling = (
+        RANK_1340_EXCEPTION_MAX_FALLBACK_ATTEMPTS
+        if exception_active
+        else MAX_FALLBACK_ATTEMPTS_PER_CASE
+    )
+    if len(reservations) > ceiling:
+        mismatches["reservation_count"] = {
+            "expected_maximum": ceiling,
+            "observed": len(reservations),
+        }
+    if document.get("reserved_fallback_attempts") != len(reservations):
+        mismatches["reserved_fallback_attempts"] = {
+            "expected": len(reservations),
+            "observed": document.get("reserved_fallback_attempts"),
+        }
+    if mismatches:
+        raise LLMProtocolError(
+            f"Invalid fallback reservation journal for rank {case['search_rank']}: "
+            + canonical_json(mismatches)
+        )
+    return len(reservations)
+
+
+def reserve_fallback_attempt(
+    path: Path,
+    *,
+    case: Mapping[str, Any],
+    request: Mapping[str, Any],
+    spec: RunSpec,
+    fallback_attempt_number: int,
+    actual_payload: Mapping[str, Any],
+    secret: str,
+    technical_exception_id: str | None = None,
+    technical_exception_sha256: str | None = None,
+) -> None:
+    """Durably reserve a 2048 call before it can reach the API client."""
+
+    existing_count = _fallback_reservation_count(
+        path, case=case, request=request, spec=spec
+    )
+    exception_active = (
+        _is_rank_1340_exception_scope(spec, case)
+        and technical_exception_id == RANK_1340_EXCEPTION_ID
+        and technical_exception_sha256
+        == EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+    )
+    ceiling = (
+        RANK_1340_EXCEPTION_MAX_FALLBACK_ATTEMPTS
+        if exception_active
+        else MAX_FALLBACK_ATTEMPTS_PER_CASE
+    )
+    if (
+        fallback_attempt_number != existing_count + 1
+        or fallback_attempt_number > ceiling
+    ):
+        raise LLMProtocolError(
+            f"Fallback reservation sequence/ceiling violation for rank "
+            f"{case['search_rank']}"
+        )
+    expected_payload = output_token_fallback_payload(request["payload"])
+    if canonical_json(actual_payload) != canonical_json(expected_payload):
+        raise LLMProtocolError(
+            f"Fallback reservation payload drift for rank {case['search_rank']}"
+        )
+    reservations: list[dict[str, Any]] = []
+    created_at = utc_now()
+    if path.is_file():
+        existing = load_json(path)
+        reservations = [dict(item) for item in existing["reservations"]]
+        created_at = str(existing.get("created_at") or created_at)
+    reservations.append(
+        {
+            "fallback_attempt_number": fallback_attempt_number,
+            "reserved_at": utc_now(),
+            "max_output_tokens": FALLBACK_MAX_OUTPUT_TOKENS,
+            "actual_request_sha256": sha256_text(canonical_json(actual_payload)),
+        }
+    )
+    document = {
+            "schema_version": FALLBACK_RESERVATION_SCHEMA_VERSION,
+            "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+            "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+            "status": "FALLBACK_CALLS_DURABLY_RESERVED",
+            "created_at": created_at,
+            "updated_at": utc_now(),
+            "method": spec.method,
+            "evaluation": spec.evaluation,
+            "fold": spec.fold,
+            "search_rank": int(case["search_rank"]),
+            "base_request_sha256": request["request_sha256"],
+            "reserved_fallback_attempts": len(reservations),
+            "reservations": reservations,
+        }
+    if exception_active:
+        document.update(
+            {
+                "technical_exception_id": RANK_1340_EXCEPTION_ID,
+                "technical_exception_sha256": (
+                    EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+                ),
+            }
+        )
+    atomic_json(path, document, secret=secret)
+
+
+LEGACY_MAX_OUTPUT_INCOMPLETE_MESSAGE = (
+    "Response status is 'incomplete'; "
+    "details={'reason': 'max_output_tokens'}"
+)
+LEGACY_LABEL_ORDER_MESSAGE = "means labels are not in frozen ontology order"
+
+
+def _exact_primary_incomplete_provenance(
+    failure: Mapping[str, Any], request: Mapping[str, Any], *, allow_legacy: bool
+) -> dict[str, Any] | None:
+    """Recover a fail-closed 512-token trigger proof from failure history."""
+
+    if failure.get("request_sha256") != request.get("request_sha256"):
+        return None
+    technical = failure.get("technical_execution")
+    if isinstance(technical, Mapping):
+        proof = technical.get("initial_incomplete_response_provenance")
+        if (
+            isinstance(proof, Mapping)
+            and proof.get("response_status") == "incomplete"
+            and isinstance(proof.get("incomplete_details"), Mapping)
+            and proof["incomplete_details"].get("reason") == "max_output_tokens"
+            and proof.get("max_output_tokens") == INITIAL_MAX_OUTPUT_TOKENS
+            and proof.get("actual_request_sha256") == request.get("request_sha256")
+        ):
+            return dict(proof)
+    if not allow_legacy:
+        return None
+    error = failure.get("error")
+    if not isinstance(error, Mapping):
+        return None
+    if (
+        error.get("error_type") != "LLMProtocolError"
+        or error.get("http_status") is not None
+        or error.get("transient") is not False
+        or error.get("message") != LEGACY_MAX_OUTPUT_INCOMPLETE_MESSAGE
+    ):
+        return None
+    return {
+        "source": "PRE_AMENDMENT_PERSISTED_FAILURE_HISTORY",
+        "recorded_at": failure.get("recorded_at"),
+        "response_status": "incomplete",
+        "incomplete_details": {"reason": "max_output_tokens"},
+        "max_output_tokens": INITIAL_MAX_OUTPUT_TOKENS,
+        "actual_request_sha256": request.get("request_sha256"),
+    }
+
+
+def resolve_failure_resume_policy(
+    path: Path,
+    *,
+    case: Mapping[str, Any],
+    request: Mapping[str, Any],
+    spec: RunSpec,
+    fallback_reservation_path: Path | None = None,
+    primary_recovery_reservation_path: Path | None = None,
+) -> dict[str, Any]:
+    """Determine whether a persisted exact trigger permits direct 2048 resume."""
+
+    default = {
+        "start_with_fallback": False,
+        "prior_fallback_attempts": 0,
+        "prior_primary_incomplete_provenance": None,
+        "primary_attempt_limit": None,
+        "primary_recovery_required": False,
+        "fallback_attempt_ceiling": MAX_FALLBACK_ATTEMPTS_PER_CASE,
+        "technical_exception_id": None,
+        "technical_exception_sha256": None,
+        "resume_source": "NO_QUALIFYING_PERSISTED_TRIGGER",
+    }
+    if not path.is_file():
+        return default
+    document = load_json(path)
+    if (
+        document.get("status") != "UNRESOLVED_FAILURE_HISTORY"
+        or int(document.get("search_rank") or 0) != int(case["search_rank"])
+    ):
+        raise LLMProtocolError(
+            f"Malformed failure history for rank {case['search_rank']}"
+        )
+    raw_history = document.get("attempt_history")
+    if not isinstance(raw_history, list) or not raw_history:
+        raise LLMProtocolError(
+            f"Empty failure history for rank {case['search_rank']}"
+        )
+    history = [item for item in raw_history if isinstance(item, Mapping)]
+    if len(history) != len(raw_history):
+        raise LLMProtocolError(
+            f"Non-object failure history entry for rank {case['search_rank']}"
+        )
+    expected_identity = {
+        "method": spec.method,
+        "evaluation": spec.evaluation,
+        "fold": spec.fold,
+        "search_rank": int(case["search_rank"]),
+        "request_sha256": request["request_sha256"],
+    }
+    for failure in history:
+        mismatches = [
+            field
+            for field, expected in expected_identity.items()
+            if failure.get(field) != expected
+        ]
+        if mismatches:
+            raise LLMProtocolError(
+                f"Failure history identity drift for rank {case['search_rank']}: "
+                f"{mismatches}"
+            )
+
+    failure_history_fallback_attempts = 0
+    for failure in history:
+        technical = failure.get("technical_execution")
+        if not isinstance(technical, Mapping):
+            continue
+        count = technical.get("cumulative_output_token_fallback_attempts")
+        if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+            raise LLMProtocolError(
+                f"Invalid fallback count in history for rank {case['search_rank']}"
+            )
+        failure_history_fallback_attempts = max(
+            failure_history_fallback_attempts, count
+        )
+    reserved_fallback_attempts = (
+        _fallback_reservation_count(
+            fallback_reservation_path,
+            case=case,
+            request=request,
+            spec=spec,
+        )
+        if fallback_reservation_path is not None
+        else 0
+    )
+    if reserved_fallback_attempts < failure_history_fallback_attempts:
+        raise LLMProtocolError(
+            f"Rank {case['search_rank']} failure history exceeds its durable "
+            "fallback reservation journal"
+        )
+    prior_fallback_attempts = max(
+        failure_history_fallback_attempts, reserved_fallback_attempts
+    )
+
+    rank = int(case["search_rank"])
+    legacy_allowed = (
+        spec.method == "M3"
+        and spec.evaluation == "A1"
+        and spec.fold is None
+        and rank in {266, 1356}
+    )
+    proof: dict[str, Any] | None = None
+    for failure in reversed(history):
+        proof = _exact_primary_incomplete_provenance(
+            failure, request, allow_legacy=legacy_allowed
+        )
+        if proof is not None:
+            break
+    if proof is None:
+        if prior_fallback_attempts:
+            raise LLMProtocolError(
+                f"Rank {rank} has fallback calls but no valid persisted 512 trigger"
+            )
+        rank_551_order_only = (
+            spec.method == "M3"
+            and spec.evaluation == "A1"
+            and spec.fold is None
+            and rank == 551
+            and all(
+                isinstance(failure.get("error"), Mapping)
+                and failure["error"].get("error_type") == "RequestBuildError"
+                and failure["error"].get("http_status") is None
+                and failure["error"].get("transient") is False
+                and failure["error"].get("message") == LEGACY_LABEL_ORDER_MESSAGE
+                for failure in history
+            )
+        )
+        if rank_551_order_only:
+            if (
+                primary_recovery_reservation_path is not None
+                and validate_primary_recovery_reservation(
+                    primary_recovery_reservation_path,
+                    case=case,
+                    request=request,
+                    spec=spec,
+                )
+            ):
+                raise LLMProtocolError(
+                    "Rank 551 already reserved its sole additional 512 request; "
+                    "a crash-safe resume cannot send a second one"
+                )
+            return {
+                **default,
+                "primary_attempt_limit": 1,
+                "primary_recovery_required": True,
+                "resume_source": "PRE_AMENDMENT_LABEL_ORDER_FAILURE_HISTORY",
+            }
+        return default
+    if _is_rank_1340_exception_scope(spec, case):
+        fallback_sha = sha256_text(
+            canonical_json(output_token_fallback_payload(request["payload"]))
+        )
+        fallback_events = [
+            event
+            for failure in history
+            for event in failure.get("retry_events", [])
+            if isinstance(event, Mapping)
+            and event.get("request_phase") == "FALLBACK_2048"
+        ]
+        no_model_response_fields = (
+            "response_id",
+            "returned_model_id",
+            "response_status",
+            "incomplete_details",
+            "token_usage",
+        )
+        qualifying_429_history = (
+            failure_history_fallback_attempts == MAX_FALLBACK_ATTEMPTS_PER_CASE
+            and reserved_fallback_attempts == MAX_FALLBACK_ATTEMPTS_PER_CASE
+            and len(fallback_events) == MAX_FALLBACK_ATTEMPTS_PER_CASE
+            and all(
+                event.get("http_status") == 429
+                and event.get("max_output_tokens") == FALLBACK_MAX_OUTPUT_TOKENS
+                and event.get("actual_request_sha256") == fallback_sha
+                and all(event.get(field) is None for field in no_model_response_fields)
+                for event in fallback_events
+            )
+        )
+        if qualifying_429_history:
+            return {
+                **default,
+                "start_with_fallback": True,
+                "prior_fallback_attempts": MAX_FALLBACK_ATTEMPTS_PER_CASE,
+                "prior_primary_incomplete_provenance": proof,
+                "fallback_attempt_ceiling": (
+                    RANK_1340_EXCEPTION_MAX_FALLBACK_ATTEMPTS
+                ),
+                "technical_exception_id": RANK_1340_EXCEPTION_ID,
+                "technical_exception_sha256": (
+                    EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+                ),
+                "resume_source": "AUTHORIZED_RANK_1340_HTTP_429_EXCEPTION",
+            }
+    if prior_fallback_attempts >= MAX_FALLBACK_ATTEMPTS_PER_CASE:
+        raise LLMProtocolError(
+            f"Rank {rank} exhausted its two-call 2048-token fallback ceiling"
+        )
+    if prior_fallback_attempts and (
+        reserved_fallback_attempts <= failure_history_fallback_attempts
+    ):
+        # A fully recorded one-call fallback failure is non-retryable.  Only a
+        # reservation not yet reflected in a result record indicates a crash
+        # boundary at which the remaining allowance may be used safely.
+        raise LLMProtocolError(
+            f"Rank {rank} has a non-resumable prior 2048-token failure"
+        )
+    return {
+        "start_with_fallback": True,
+        "prior_fallback_attempts": prior_fallback_attempts,
+        "prior_primary_incomplete_provenance": proof,
+        "primary_attempt_limit": None,
+        "primary_recovery_required": False,
+        "resume_source": (
+            "CRASH_SAFE_FALLBACK_RESERVATION"
+            if reserved_fallback_attempts > failure_history_fallback_attempts
+            else proof.get("source", "STRUCTURED_FAILURE_PROVENANCE")
+        ),
+    }
+
+
+def validate_canonical_m3_a1_amendment_scope(
+    spec: RunSpec,
+    pending: Sequence[
+        tuple[dict[str, Any], dict[str, Any], Mapping[str, Any]]
+    ],
+) -> None:
+    """Fail closed if canonical M3 A1 would resend anything beyond 3 misses."""
+
+    canonical_output = DEFAULT_PREDICTION_ROOT / "m3/a1_test_predictions.jsonl"
+    canonical_state = DEFAULT_LOG_ROOT / "state/m3/a1"
+    if not (
+        spec.method == "M3"
+        and spec.evaluation == "A1"
+        and spec.fold is None
+        and not spec.dry_run
+        and spec.output_path.resolve() == canonical_output.resolve()
+        and spec.state_dir.resolve() == canonical_state.resolve()
+    ):
+        return
+    policies = {
+        int(case["search_rank"]): policy for case, _request, policy in pending
+    }
+    pending_ranks = set(policies)
+    if not pending_ranks <= EXPECTED_M3_A1_AMENDMENT_PENDING_RANKS:
+        raise LLMProtocolError(
+            "Amended M3 A1 resume would send non-authorized ranks: "
+            + canonical_json(sorted(pending_ranks - EXPECTED_M3_A1_AMENDMENT_PENDING_RANKS))
+        )
+    for rank in pending_ranks & {266, 1356}:
+        if policies[rank].get("start_with_fallback") is not True:
+            raise LLMProtocolError(
+                f"Amended M3 A1 rank {rank} must resume directly at 2048"
+            )
+    if 551 in pending_ranks and (
+        policies[551].get("start_with_fallback") is not False
+        or policies[551].get("primary_attempt_limit") != 1
+        or policies[551].get("primary_recovery_required") is not True
+    ):
+        raise LLMProtocolError(
+            "Amended M3 A1 rank 551 must receive exactly one base-512 attempt"
+        )
+
+
+def validate_persisted_success_record(
+    record: Mapping[str, Any],
+    *,
+    request: Mapping[str, Any] | None,
+    context: str,
+) -> dict[str, Any]:
+    """Validate both immutable v1.1 successes and amended v1.2 successes."""
+
+    prediction = builder.validate_structured_output(record.get("validated_prediction"))
+    labels = prediction["acts"] + prediction["means"] + prediction["purposes"]
+    if (
+        record.get("normalized_prediction") != prediction
+        or record.get("predicted_labels") != labels
+    ):
+        raise LLMProtocolError(f"{context} normalized prediction fields disagree")
+    technical = record.get("technical_execution")
+    if technical is None and record.get("runner_version") == "1.1.0":
+        return prediction
+    if record.get("runner_version") != VERSION or not isinstance(
+        technical, Mapping
+    ):
+        raise LLMProtocolError(f"{context} has an unknown execution-policy version")
+    if technical.get("technical_exception_id") is not None and not (
+        record.get("method") == "M4"
+        and record.get("evaluation") == "A2"
+        and record.get("fold") == 1
+        and record.get("search_rank") == 1340
+    ):
+        raise LLMProtocolError(f"{context} has an out-of-scope technical exception")
+    base_request = (
+        request
+        if request is not None
+        else {"request_sha256": record.get("request_sha256")}
+    )
+    _validated_technical_execution_provenance(technical, base_request)
+    raw = record.get("raw_structured_response")
+    canonical_raw = builder.validate_structured_output(raw)
+    if canonical_raw != prediction:
+        raise LLMProtocolError(f"{context} raw-to-canonical prediction mismatch")
+    raw_text = record.get("raw_structured_response_text")
+    try:
+        parsed_text = json.loads(raw_text) if isinstance(raw_text, str) else None
+    except json.JSONDecodeError as exc:
+        raise LLMProtocolError(f"{context} raw response text is invalid JSON") from exc
+    if parsed_text != raw:
+        raise LLMProtocolError(f"{context} raw response text/object mismatch")
+    expected_flag = raw != prediction
+    if record.get("label_array_canonicalization_applied") is not expected_flag:
+        raise LLMProtocolError(f"{context} canonicalization flag is invalid")
+    return prediction
+
+
+def validate_success_fallback_journal(
+    record: Mapping[str, Any], *, path: Path, context: str
+) -> None:
+    technical = record.get("technical_execution")
+    if not isinstance(technical, Mapping) or technical.get(
+        "output_token_fallback_used"
+    ) is not True:
+        return
+    if not path.is_file():
+        raise LLMProtocolError(f"{context} lacks its fallback reservation journal")
+    document = load_json(path)
+    reservations = document.get("reservations")
+    expected_count = technical.get("cumulative_output_token_fallback_attempts")
+    expected = {
+        "schema_version": FALLBACK_RESERVATION_SCHEMA_VERSION,
+        "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+        "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+        "method": record.get("method"),
+        "evaluation": record.get("evaluation"),
+        "fold": record.get("fold"),
+        "search_rank": record.get("search_rank"),
+        "base_request_sha256": record.get("request_sha256"),
+        "reserved_fallback_attempts": expected_count,
+    }
+    mismatches = {
+        field: {"expected": value, "observed": document.get(field)}
+        for field, value in expected.items()
+        if document.get(field) != value
+    }
+    if isinstance(expected_count, int) and expected_count > MAX_FALLBACK_ATTEMPTS_PER_CASE:
+        for field, value in {
+            "technical_exception_id": RANK_1340_EXCEPTION_ID,
+            "technical_exception_sha256": (
+                EXPECTED_RANK_1340_EXCEPTION_ADDENDUM_SHA256
+            ),
+        }.items():
+            if document.get(field) != value:
+                mismatches[field] = {
+                    "expected": value,
+                    "observed": document.get(field),
+                }
+    if not isinstance(reservations, list) or len(reservations) != expected_count:
+        mismatches["reservations"] = {
+            "expected_count": expected_count,
+            "observed": (
+                len(reservations) if isinstance(reservations, list) else None
+            ),
+        }
+    elif not reservations or reservations[-1].get(
+        "actual_request_sha256"
+    ) != technical.get("actual_request_sha256"):
+        mismatches["actual_request_sha256"] = {
+            "expected": technical.get("actual_request_sha256"),
+            "observed": (
+                reservations[-1].get("actual_request_sha256")
+                if reservations
+                else None
+            ),
+        }
+    if mismatches:
+        raise LLMProtocolError(
+            f"{context} fallback journal mismatch: " + canonical_json(mismatches)
+        )
+
+
+def validate_success_primary_recovery_journal(
+    record: Mapping[str, Any], *, path: Path, context: str
+) -> None:
+    if not (
+        record.get("runner_version") == VERSION
+        and record.get("method") == "M3"
+        and record.get("evaluation") == "A1"
+        and record.get("fold") is None
+        and record.get("search_rank") == 551
+    ):
+        return
+    if not path.is_file():
+        raise LLMProtocolError(f"{context} lacks rank 551's 512 reservation journal")
+    document = load_json(path)
+    expected = {
+        "schema_version": PRIMARY_RECOVERY_RESERVATION_SCHEMA_VERSION,
+        "technical_amendment_id": TECHNICAL_AMENDMENT_ID,
+        "technical_amendment_sha256": EXPECTED_TECHNICAL_AMENDMENT_SHA256,
+        "status": "PRIMARY_RECOVERY_CALL_DURABLY_RESERVED",
+        "method": "M3",
+        "evaluation": "A1",
+        "fold": None,
+        "search_rank": 551,
+        "base_request_sha256": record.get("request_sha256"),
+        "actual_request_sha256": record.get("request_sha256"),
+        "max_output_tokens": INITIAL_MAX_OUTPUT_TOKENS,
+    }
+    mismatches = {
+        field: {"expected": value, "observed": document.get(field)}
+        for field, value in expected.items()
+        if document.get(field) != value
+    }
+    if mismatches:
+        raise LLMProtocolError(
+            f"{context} primary-recovery journal mismatch: "
+            + canonical_json(mismatches)
+        )
+
+
 def _load_existing_success(
     path: Path,
     *,
     case: Mapping[str, Any],
     request: Mapping[str, Any],
     spec: RunSpec,
+    fallback_reservation_path: Path | None = None,
+    primary_recovery_reservation_path: Path | None = None,
 ) -> dict[str, Any] | None:
     if not path.is_file():
         return None
@@ -1727,7 +2915,48 @@ def _load_existing_success(
             f"Existing success state conflicts for rank {case['search_rank']}: "
             f"{canonical_json(mismatches)}"
         )
-    builder.validate_structured_output(record.get("validated_prediction"))
+    validate_persisted_success_record(
+        record,
+        request=request,
+        context=f"Existing success state rank {case['search_rank']}",
+    )
+    technical = record.get("technical_execution")
+    if isinstance(technical, Mapping) and technical.get(
+        "output_token_fallback_used"
+    ) is True:
+        if fallback_reservation_path is None:
+            raise LLMProtocolError(
+                f"Existing amended fallback success rank {case['search_rank']} "
+                "was loaded without its reservation path"
+            )
+        count = _fallback_reservation_count(
+            fallback_reservation_path,
+            case=case,
+            request=request,
+            spec=spec,
+        )
+        if count != technical.get("cumulative_output_token_fallback_attempts"):
+            raise LLMProtocolError(
+                f"Existing fallback reservation count differs for rank "
+                f"{case['search_rank']}"
+            )
+    if (
+        record.get("runner_version") == VERSION
+        and spec.method == "M3"
+        and spec.evaluation == "A1"
+        and spec.fold is None
+        and int(case["search_rank"]) == 551
+    ):
+        if primary_recovery_reservation_path is None:
+            raise LLMProtocolError(
+                "Existing amended rank 551 success was loaded without its "
+                "primary reservation path"
+            )
+        validate_success_primary_recovery_journal(
+            record,
+            path=primary_recovery_reservation_path,
+            context="Existing success state rank 551",
+        )
     metadata = record.get("builder_metadata")
     if not isinstance(metadata, Mapping) or record.get(
         "builder_metadata_sha256"
@@ -2138,16 +3367,25 @@ def validate_completed_llm_setting(
             raise LLMProtocolError(
                 f"{spec.setting_id} prediction provenance differs at rank {rank}: {bad}"
             )
-        prediction = builder.validate_structured_output(row.get("validated_prediction"))
-        labels = prediction["acts"] + prediction["means"] + prediction["purposes"]
-        if row.get("normalized_prediction") != prediction or row.get(
-            "predicted_labels"
-        ) != labels:
-            raise LLMProtocolError(
-                f"{spec.setting_id} normalized prediction mismatch at rank {rank}"
-            )
+        validate_persisted_success_record(
+            row,
+            request=None,
+            context=f"{spec.setting_id} rank {rank}",
+        )
         if row.get("request_sha256") != row.get("request_payload_sha256"):
             raise LLMProtocolError(f"{spec.setting_id} request hash mismatch at rank {rank}")
+        validate_success_fallback_journal(
+            row,
+            path=_state_path(spec.state_dir / "fallback_reservations", rank),
+            context=f"{spec.setting_id} rank {rank}",
+        )
+        validate_success_primary_recovery_journal(
+            row,
+            path=_state_path(
+                spec.state_dir / "primary_recovery_reservations", rank
+            ),
+            context=f"{spec.setting_id} rank {rank}",
+        )
         state_path = _state_path(spec.state_dir / "success", rank)
         if not state_path.is_file() or load_json(state_path) != row:
             raise LLMProtocolError(
@@ -2434,12 +3672,20 @@ def _execute_cases_under_lock(
     started_at = utc_now()
     success_dir = spec.state_dir / "success"
     failure_dir = spec.state_dir / "failures"
+    fallback_reservation_dir = spec.state_dir / "fallback_reservations"
+    primary_recovery_reservation_dir = (
+        spec.state_dir / "primary_recovery_reservations"
+    )
     success_dir.mkdir(parents=True, exist_ok=True)
     failure_dir.mkdir(parents=True, exist_ok=True)
+    fallback_reservation_dir.mkdir(parents=True, exist_ok=True)
+    primary_recovery_reservation_dir.mkdir(parents=True, exist_ok=True)
     membership_sha256 = target_membership_hash(cases, spec)
     interrupted = False
     fatal = False
-    pending: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    pending: list[
+        tuple[dict[str, Any], dict[str, Any], dict[str, Any]]
+    ] = []
     prerequisite_provenance: Mapping[str, Any] | None = None
     try:
         # Request construction and resume-state validation stay serialized.
@@ -2464,10 +3710,32 @@ def _execute_cases_under_lock(
                 case=case,
                 request=request,
                 spec=spec,
+                fallback_reservation_path=_state_path(
+                    fallback_reservation_dir, int(case["search_rank"])
+                ),
+                primary_recovery_reservation_path=_state_path(
+                    primary_recovery_reservation_dir,
+                    int(case["search_rank"]),
+                ),
             )
             if existing is not None:
                 continue
-            pending.append((case, request))
+            resume_policy = resolve_failure_resume_policy(
+                _state_path(failure_dir, int(case["search_rank"])),
+                case=case,
+                request=request,
+                spec=spec,
+                fallback_reservation_path=_state_path(
+                    fallback_reservation_dir, int(case["search_rank"])
+                ),
+                primary_recovery_reservation_path=_state_path(
+                    primary_recovery_reservation_dir,
+                    int(case["search_rank"]),
+                ),
+            )
+            pending.append((case, request, resume_policy))
+
+        validate_canonical_m3_a1_amendment_scope(spec, pending)
 
         # Close the build-time check/use window.  Revalidate every canonical
         # byte source, reload the builder contract, then rebuild each pending
@@ -2498,7 +3766,7 @@ def _execute_cases_under_lock(
             config=fresh_config,
             demo_bank=fresh_bank,
         )
-        for case, request in pending:
+        for case, request, _resume_policy in pending:
             revalidate_built_request(
                 request,
                 spec,
@@ -2539,9 +3807,47 @@ def _execute_cases_under_lock(
             validate_canonical_artifact_hashes()
 
         def invoke_task(
-            task: tuple[dict[str, Any], dict[str, Any]]
+            task: tuple[dict[str, Any], dict[str, Any], dict[str, Any]]
         ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-            case, request = task
+            case, request, resume_policy = task
+
+            def reserve_attempt(
+                attempt_number: int, actual_payload: Mapping[str, Any]
+            ) -> None:
+                reserve_fallback_attempt(
+                    _state_path(
+                        fallback_reservation_dir, int(case["search_rank"])
+                    ),
+                    case=case,
+                    request=request,
+                    spec=spec,
+                    fallback_attempt_number=attempt_number,
+                    actual_payload=actual_payload,
+                    secret=secret,
+                    technical_exception_id=resume_policy[
+                        "technical_exception_id"
+                    ],
+                    technical_exception_sha256=resume_policy[
+                        "technical_exception_sha256"
+                    ],
+                )
+
+            def reserve_primary_attempt(
+                attempt_number: int, actual_payload: Mapping[str, Any]
+            ) -> None:
+                reserve_primary_recovery_attempt(
+                    _state_path(
+                        primary_recovery_reservation_dir,
+                        int(case["search_rank"]),
+                    ),
+                    case=case,
+                    request=request,
+                    spec=spec,
+                    primary_attempt_number=attempt_number,
+                    actual_payload=actual_payload,
+                    secret=secret,
+                )
+
             result = invoke_with_retries(
                 client,
                 request["payload"],
@@ -2549,6 +3855,29 @@ def _execute_cases_under_lock(
                 base_backoff_seconds=base_backoff_seconds,
                 sleeper=sleeper,
                 secret=secret,
+                start_with_fallback=bool(
+                    resume_policy["start_with_fallback"]
+                ),
+                prior_fallback_attempts=int(
+                    resume_policy["prior_fallback_attempts"]
+                ),
+                prior_primary_incomplete_provenance=resume_policy[
+                    "prior_primary_incomplete_provenance"
+                ],
+                primary_attempt_limit=resume_policy["primary_attempt_limit"],
+                fallback_attempt_ceiling=int(
+                    resume_policy["fallback_attempt_ceiling"]
+                ),
+                technical_exception_id=resume_policy["technical_exception_id"],
+                technical_exception_sha256=resume_policy[
+                    "technical_exception_sha256"
+                ],
+                fallback_attempt_reserver=reserve_attempt,
+                primary_attempt_reserver=(
+                    reserve_primary_attempt
+                    if resume_policy["primary_recovery_required"]
+                    else None
+                ),
             )
             return case, request, result
 
@@ -2603,9 +3932,10 @@ def _execute_cases_under_lock(
                     fatal = True
                     break
         else:
-            # The official sync client uses a thread-safe HTTP transport.  No
-            # worker mutates filesystem state: completed results return to the
-            # main thread for atomic commits.
+            # The official sync client uses a thread-safe HTTP transport.  A
+            # worker may atomically reserve its own per-case 2048-call journal
+            # immediately before that call; completed result commits remain on
+            # the main thread.
             executor = ThreadPoolExecutor(
                 max_workers=workers, thread_name_prefix="sherloc-llm"
             )

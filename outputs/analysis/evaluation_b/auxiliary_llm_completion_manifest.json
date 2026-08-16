@@ -1,0 +1,87 @@
+{
+  "artifacts": {
+    "aggregate_metrics": {
+      "path": "outputs/analysis/evaluation_b/auxiliary_llm_human_grounded_results.csv",
+      "sha256": "bd61aa9ab6662c90109bd511d0b812c7ea13589a6544625a5b02ee18f0ac2603"
+    },
+    "case_level": {
+      "path": "outputs/analysis/evaluation_b/auxiliary_llm_case_level.csv",
+      "sha256": "cb0afb0614688a55e9e56bbd68b4decdc0ca75882ccba7236a758adba51082b6"
+    },
+    "config": {
+      "path": "config/experiments/eval_b_auxiliary_llm_v1.yaml",
+      "sha256": "b5ecaddf7522f512a42dec6d7ec549525d8dd6c49efd062de51908bc70fc43b5"
+    },
+    "diagnostics": {
+      "path": "outputs/logs/evaluation_b/auxiliary_llm/diagnostics.json",
+      "sha256": "140f6f3eef4e107c0f9141cc40a6d7b75347bb672c92243bf8e9c7d9264f4ffd"
+    },
+    "evaluation_b_membership_manifest": {
+      "path": "outputs/analysis/evaluation_b/eval_b_membership_manifest.json",
+      "sha256": "463d205c6fc4b9bc57550bb94cb8cf8d51f7e54ddf5b50d1d4ac02df5c4ebd68"
+    },
+    "evaluator": {
+      "path": "src/experiments/24_evaluate_evaluation_b_auxiliary.py",
+      "sha256": "0285cf14a34ecef5d40cb095d94b7beadaac4f2efc95760e143d6d0d89da9696"
+    },
+    "human_reference": {
+      "path": "data/annotations/human_grounded_reference_v1.csv",
+      "sha256": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2"
+    },
+    "per_class_metrics": {
+      "path": "outputs/analysis/evaluation_b/auxiliary_llm_per_class_results.csv",
+      "sha256": "223dd265e1481328a46988a9ff62e3698afb44d623e89fa482dbddb369049621"
+    },
+    "pre_execution_freeze": {
+      "path": "outputs/analysis/evaluation_b/auxiliary_llm_pre_execution_freeze.json",
+      "sha256": "e9b58d4adf8e654ac711ce4fcd4851dcd59be2fa35de75d1dc35ddb3d9407f32"
+    },
+    "predictions": {
+      "path": "outputs/predictions/evaluation_b/auxiliary_zero_shot/predictions.jsonl",
+      "sha256": "3c9f572946fb46396be5c55323312350fa7d411c92ddbb07fb2dd2a5f582a5e1"
+    },
+    "prompt": {
+      "path": "config/prompts/eval_b_auxiliary_zero_shot_v1.txt",
+      "sha256": "b7d9d1c132fdd8454aa16de93fad5d34c24e88218795893e706a16a6d63d6fac"
+    },
+    "runner": {
+      "path": "src/experiments/23_run_evaluation_b_auxiliary_llm.py",
+      "sha256": "5fbcab2b12ba7e698877279e0994340bbfd0ee8cf88cbc6b5f77e541fbcabc21"
+    },
+    "schema": {
+      "path": "config/schemas/eval_b_auxiliary_v1.json",
+      "sha256": "3b2a753991f22cfa223e90a93eb7b4c72a802d0b966ec3a38151e543d2362a00"
+    }
+  },
+  "artifacts_sha256": {
+    "config/experiments/eval_b_auxiliary_llm_v1.yaml": "b5ecaddf7522f512a42dec6d7ec549525d8dd6c49efd062de51908bc70fc43b5",
+    "config/prompts/eval_b_auxiliary_zero_shot_v1.txt": "b7d9d1c132fdd8454aa16de93fad5d34c24e88218795893e706a16a6d63d6fac",
+    "config/schemas/eval_b_auxiliary_v1.json": "3b2a753991f22cfa223e90a93eb7b4c72a802d0b966ec3a38151e543d2362a00",
+    "data/annotations/human_grounded_reference_v1.csv": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2",
+    "outputs/analysis/evaluation_b/auxiliary_llm_case_level.csv": "cb0afb0614688a55e9e56bbd68b4decdc0ca75882ccba7236a758adba51082b6",
+    "outputs/analysis/evaluation_b/auxiliary_llm_human_grounded_results.csv": "bd61aa9ab6662c90109bd511d0b812c7ea13589a6544625a5b02ee18f0ac2603",
+    "outputs/analysis/evaluation_b/auxiliary_llm_per_class_results.csv": "223dd265e1481328a46988a9ff62e3698afb44d623e89fa482dbddb369049621",
+    "outputs/analysis/evaluation_b/auxiliary_llm_pre_execution_freeze.json": "e9b58d4adf8e654ac711ce4fcd4851dcd59be2fa35de75d1dc35ddb3d9407f32",
+    "outputs/analysis/evaluation_b/eval_b_membership_manifest.json": "463d205c6fc4b9bc57550bb94cb8cf8d51f7e54ddf5b50d1d4ac02df5c4ebd68",
+    "outputs/logs/evaluation_b/auxiliary_llm/diagnostics.json": "140f6f3eef4e107c0f9141cc40a6d7b75347bb672c92243bf8e9c7d9264f4ffd",
+    "outputs/predictions/evaluation_b/auxiliary_zero_shot/predictions.jsonl": "3c9f572946fb46396be5c55323312350fa7d411c92ddbb07fb2dd2a5f582a5e1",
+    "src/experiments/23_run_evaluation_b_auxiliary_llm.py": "5fbcab2b12ba7e698877279e0994340bbfd0ee8cf88cbc6b5f77e541fbcabc21",
+    "src/experiments/24_evaluate_evaluation_b_auxiliary.py": "0285cf14a34ecef5d40cb095d94b7beadaac4f2efc95760e143d6d0d89da9696"
+  },
+  "evaluation": "A3_HUMAN_GROUNDED_AUXILIARY",
+  "evaluation_b_membership_manifest_sha256": "463d205c6fc4b9bc57550bb94cb8cf8d51f7e54ddf5b50d1d4ac02df5c4ebd68",
+  "human_or_silver_labels_sent_to_model": false,
+  "human_reference_sha256": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2",
+  "model": "gpt-5.6-luna",
+  "schema_version": "sherloc-eval-b-auxiliary-completion-v1",
+  "status": "COMPLETE",
+  "store": false,
+  "substantive_membership_n": 55,
+  "target_n": {
+    "CHILD_INVOLVEMENT": 55,
+    "GEOGRAPHIC_FORM": 55,
+    "ORGANIZED_CRIMINAL_GROUP": 55,
+    "VICTIM_MULTIPLICITY": 55
+  },
+  "zero_shot": true
+}

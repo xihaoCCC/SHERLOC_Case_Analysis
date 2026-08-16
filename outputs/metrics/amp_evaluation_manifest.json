@@ -1,0 +1,163 @@
+{
+  "bootstrap": {
+    "confidence_level": 0.95,
+    "method": "percentile_linear",
+    "n_resamples": 1000,
+    "seed": 20260811,
+    "unit": "test_case_with_all_17_labels"
+  },
+  "created_at": "2026-08-15T06:24:21.084705+00:00",
+  "evaluations": {
+    "A1": {
+      "macro_label_count": 17,
+      "macro_label_ids": [
+        "ACT_RECRUITMENT",
+        "ACT_TRANSPORTATION",
+        "ACT_TRANSFER",
+        "ACT_HARBOURING",
+        "ACT_RECEIPT",
+        "MEANS_THREAT_FORCE_OR_COERCION",
+        "MEANS_ABDUCTION",
+        "MEANS_FRAUD",
+        "MEANS_DECEPTION",
+        "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+        "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL",
+        "PURPOSE_SEXUAL_EXPLOITATION",
+        "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+        "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+        "PURPOSE_SERVITUDE",
+        "PURPOSE_REMOVAL_OF_ORGANS",
+        "PURPOSE_OTHER"
+      ],
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "test_n": 253
+    },
+    "A2": {
+      "macro_label_count": 16,
+      "macro_label_ids": [
+        "ACT_RECRUITMENT",
+        "ACT_TRANSPORTATION",
+        "ACT_TRANSFER",
+        "ACT_HARBOURING",
+        "ACT_RECEIPT",
+        "MEANS_THREAT_FORCE_OR_COERCION",
+        "MEANS_ABDUCTION",
+        "MEANS_FRAUD",
+        "MEANS_DECEPTION",
+        "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+        "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL",
+        "PURPOSE_SEXUAL_EXPLOITATION",
+        "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+        "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+        "PURPOSE_SERVITUDE",
+        "PURPOSE_OTHER"
+      ],
+      "methods": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "organ_removal_rule": "N/A_PER_LABEL_F1_AND_EXCLUDED_FROM_MACRO",
+      "test_n": 861,
+      "zero_reference_support_label_ids": [
+        "PURPOSE_REMOVAL_OF_ORGANS"
+      ]
+    }
+  },
+  "evaluator_version": "1.1.0",
+  "final_completion_gate": "PASSED_M1_M2_M3_M4_A1_A2",
+  "input_files": [
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m1/a1_test_predictions.jsonl",
+      "sha256": "a78d19545d759825a6406c3e7e4ea2f9f47c1ed46d0d64c599c1a6045b210eda"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m2/a1_test_predictions.jsonl",
+      "sha256": "ff848abf3aff8b2852708362a68948a2841cd9a1522d4745aee66a4b994900eb"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m3/a1_test_predictions.jsonl",
+      "sha256": "3962c3f7f6020d50a82ccd696d60126cd23a54392d12062fff10054ed4a1d1b1"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m4/a1_test_predictions.jsonl",
+      "sha256": "47927e0995ae0534368dfd47df77e0836161ae8550b7db4d4264ecf32f11bb44"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m1/a2_fold_1_test_predictions.jsonl",
+      "sha256": "74972eacc6d41ef8da661a854b0c4f694e2a69124193e45f7f2fa4d1f48a9e31"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m1/a2_fold_2_test_predictions.jsonl",
+      "sha256": "994da3cd11a8705b83e33c77636d6ee4d6e51c0e35f0747c9f675bc87e391e8c"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m1/a2_fold_3_test_predictions.jsonl",
+      "sha256": "af63971e6ec4f30a9426201361cf9c904cc5f1857271d6ab04392f2321b3c1a8"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m2/a2_fold_1_test_predictions.jsonl",
+      "sha256": "61fc3cf46e73e14b085fe3c63657f4a00d59a1d886c51a7d8f61a49158e9fb50"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m2/a2_fold_2_test_predictions.jsonl",
+      "sha256": "4f86974ca8c804a567915d848f99f9f12ca6e8ea54b25178bd94d5b65c8d6847"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m2/a2_fold_3_test_predictions.jsonl",
+      "sha256": "d4062740536aee28a478dda10edc67a034b967d92896a4f98712e0096ea3ef9f"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m3/a2_fold_1_test_predictions.jsonl",
+      "sha256": "37f3bd4f4480cea4d3c7cb5e347a4a17c57739b3da0da2f1df439acfdd99d307"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m3/a2_fold_2_test_predictions.jsonl",
+      "sha256": "015afe16034e5556b88b4a7256bec990430460de2a6bad0676ad72dba3f4aaa1"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m3/a2_fold_3_test_predictions.jsonl",
+      "sha256": "5403cb16f529c08b8ab56d7112fcc50887c1a9ec17d16edbe4401ac3ada94fcb"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m4/a2_fold_1_test_predictions.jsonl",
+      "sha256": "1a8bf4fc8d45813f19260d7870f7013d8e4b92ae69a43caf257198d746a3db14"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m4/a2_fold_2_test_predictions.jsonl",
+      "sha256": "08a2e0da265895a408e1466c09a08756cb957d74343d2283bfea26c422598877"
+    },
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m4/a2_fold_3_test_predictions.jsonl",
+      "sha256": "0525d77f721bf7c9b5924e08e3653eccd8385e53c3f769ced4dcda7c09a38c48"
+    }
+  ],
+  "reference_terminology": "SHERLOC Legacy Keywords silver reference",
+  "secondary_metrics": {
+    "contained_partial_match_rate": {
+      "addendum_path": "docs/cpmr_metric_addendum_v1.md",
+      "addendum_sha256": "de72419d3d5e248742f244b1bb65719ffe4189b3b335f57dfc47b309544c492a",
+      "contained_recall_scope": "CPMR_SUCCESS_CASES_ONLY",
+      "families": [
+        "ACT",
+        "MEANS",
+        "PURPOSE"
+      ],
+      "status": "SECONDARY_DIAGNOSTIC"
+    }
+  },
+  "split_validation": {
+    "a1_expected_test_n": 253,
+    "a1_final_split_path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/splits/a1_iid_split_final_v1.csv",
+    "a1_final_split_validated": true,
+    "a2_expected_test_n": 861,
+    "a2_final_split_path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/splits/a2_jurisdiction_folds_final_v1.csv",
+    "a2_final_split_validated": true
+  }
+}

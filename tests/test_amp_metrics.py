@@ -138,11 +138,12 @@ class AmpEvaluatorTest(unittest.TestCase):
         predicted: tuple[str, ...],
         fold: int | None = None,
         variant: str = "PRIMARY",
+        method: str = "M1",
     ):
         return EVALUATOR.PredictionRecord(
             source_path=Path("synthetic.jsonl"),
             source_row=rank,
-            method="M1",
+            method=method,
             evaluation=evaluation,
             fold=fold,
             prediction_variant=variant,
@@ -259,9 +260,111 @@ class AmpEvaluatorTest(unittest.TestCase):
                 primary = list(csv.DictReader(handle))[0]
             self.assertEqual(float(primary["pooled_ood_macro_f1"]), 1.0)
             self.assertLess(float(primary["pooled_micro_f1"]), 1.0)
+            self.assertEqual(float(primary["pooled_act_cpmr"]), 1.0)
+            self.assertAlmostEqual(float(primary["pooled_means_cpmr"]), 1 / 3)
+            self.assertEqual(float(primary["pooled_purpose_cpmr"]), 0.0)
+
+            with (output / "a1/amp_primary_results.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                a1_primary = list(csv.DictReader(handle))[0]
+            self.assertEqual(float(a1_primary["act_cpmr"]), 1.0)
+            self.assertEqual(float(a1_primary["means_cpmr"]), 1.0)
+            self.assertEqual(float(a1_primary["purpose_cpmr"]), 1.0)
+
+            with (output / "a1/amp_cpmr_results.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                a1_cpmr = list(csv.DictReader(handle))[0]
+            self.assertEqual(float(a1_cpmr["act_cpmr"]), 1.0)
+            self.assertEqual(float(a1_cpmr["means_cpmr"]), 1.0)
+            self.assertEqual(float(a1_cpmr["purpose_cpmr"]), 1.0)
+
+            with (output / "a2/amp_cpmr_results.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                a2_cpmr = list(csv.DictReader(handle))[0]
+            self.assertEqual(a2_cpmr["scope"], "POOLED_OOD_TEST")
+            self.assertEqual(a2_cpmr["purpose_mean_contained_recall"], "N/A")
+
+            with (output / "a2/amp_case_level_errors.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                case_rows = list(csv.DictReader(handle))
+            fold_two = next(row for row in case_rows if row["fold"] == "2")
+            self.assertEqual(fold_two["act_cpmr"], "1")
+            self.assertEqual(fold_two["means_cpmr"], "0")
+            self.assertEqual(fold_two["means_contained_recall"], "N/A")
+
+            with (output / "a2/amp_per_fold.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                fold_result = list(csv.DictReader(handle))[0]
+            self.assertIn("act_mean_contained_recall", fold_result)
+            with (output / "a2/amp_per_jurisdiction.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                jurisdiction_result = list(csv.DictReader(handle))[0]
+            self.assertIn("purpose_cpmr", jurisdiction_result)
+
             self.assertTrue((output / "a2/amp_per_fold.csv").is_file())
             self.assertTrue((output / "a2/amp_per_jurisdiction.csv").is_file())
             self.assertTrue((output / "amp_a1_to_a2_deltas.csv").is_file())
+            with (output / "amp_a1_to_a2_deltas.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                delta = list(csv.DictReader(handle))[0]
+            self.assertIn("delta_act_cpmr_a2_minus_a1", delta)
+
+    def test_evaluator_writes_unselected_m3_m4_a2_difference_tables(self) -> None:
+        supported = tuple(
+            label for label in AMP_LABEL_IDS if label != ORGAN_REMOVAL_LABEL
+        )
+        records = []
+        for method in ("M3", "M4"):
+            for fold in (1, 2, 3):
+                labels = supported if fold == 1 else (AMP_LABEL_IDS[fold - 1],)
+                records.append(
+                    self._record(
+                        method=method,
+                        evaluation="A2",
+                        rank=20 + fold,
+                        fold=fold,
+                        labels=labels,
+                        predicted=labels if method == "M3" else (),
+                    )
+                )
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            EVALUATOR.evaluate_predictions(
+                records,
+                output_root=output,
+                n_resamples=10,
+                seed=77,
+            )
+            with (output / "a2/amp_m3_vs_m4_aggregate_deltas.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                aggregate = list(csv.DictReader(handle))
+            self.assertEqual(len(aggregate), 7)
+            macro = next(row for row in aggregate if row["metric"] == "macro_f1")
+            act = next(row for row in aggregate if row["metric"] == "act_cpmr")
+            self.assertLess(float(macro["delta_m4_minus_m3"]), 0.0)
+            self.assertLess(float(act["delta_m4_minus_m3"]), 0.0)
+            self.assertEqual(
+                macro["significance_claim"], "NOT_TESTED_DO_NOT_INFER"
+            )
+
+            with (output / "a2/amp_m3_vs_m4_per_label_deltas.csv").open(
+                encoding="utf-8", newline=""
+            ) as handle:
+                per_label = list(csv.DictReader(handle))
+            self.assertEqual(len(per_label), 17)
+            organ = next(
+                row for row in per_label if row["label_id"] == ORGAN_REMOVAL_LABEL
+            )
+            self.assertEqual(organ["delta_f1_m4_minus_m3"], "N/A")
 
 
 if __name__ == "__main__":

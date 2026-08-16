@@ -40,6 +40,7 @@ try:  # Support package imports and ``python src/experiments/11_...py``.
         ORGAN_REMOVAL_LABEL,
         SILVER_REFERENCE_TERM,
         MetricInputError,
+        compute_amp_cpmr,
         compute_amp_metrics,
         compute_case_errors,
         labels_to_indicator,
@@ -58,6 +59,7 @@ except ImportError:  # pragma: no cover - used by direct CLI invocation.
         ORGAN_REMOVAL_LABEL,
         SILVER_REFERENCE_TERM,
         MetricInputError,
+        compute_amp_cpmr,
         compute_amp_metrics,
         compute_case_errors,
         labels_to_indicator,
@@ -65,16 +67,18 @@ except ImportError:  # pragma: no cover - used by direct CLI invocation.
     )
 
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PREDICTION_ROOT = REPO_ROOT / "outputs/predictions"
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "outputs/metrics"
 DEFAULT_A1_SPLIT = REPO_ROOT / "data/splits/a1_iid_split_final_v1.csv"
 DEFAULT_A2_SPLIT = REPO_ROOT / "data/splits/a2_jurisdiction_folds_final_v1.csv"
+DEFAULT_CPMR_ADDENDUM = REPO_ROOT / "docs/cpmr_metric_addendum_v1.md"
 
 PRIMARY_VARIANT = "PRIMARY"
 FIXED_050_VARIANT = "THRESHOLD_0_50"
 METHOD_ORDER = {"M1": 1, "M2": 2, "M3": 3, "M4": 4}
+CPMR_FAMILY_KEYS = (("ACT", "act"), ("MEANS", "means"), ("PURPOSE", "purpose"))
 
 
 class EvaluationError(RuntimeError):
@@ -550,6 +554,7 @@ def _metric_row(
         "zero_reference_support_label_ids_json": canonical_json(
             metrics["zero_reference_support_label_ids"]
         ),
+        **_cpmr_columns(metrics),
         "reference_terminology": SILVER_REFERENCE_TERM,
     }
     for metric in BOOTSTRAP_METRICS:
@@ -577,6 +582,12 @@ PRIMARY_FIELDS = (
     "macro_label_count",
     "macro_label_ids_json",
     "zero_reference_support_label_ids_json",
+    "act_cpmr",
+    "act_mean_contained_recall",
+    "means_cpmr",
+    "means_mean_contained_recall",
+    "purpose_cpmr",
+    "purpose_mean_contained_recall",
     "reference_terminology",
 )
 
@@ -686,8 +697,9 @@ BOOTSTRAP_FIELDS = (
 def _case_error_rows(records: Sequence[PredictionRecord]) -> list[dict[str, Any]]:
     reference, predicted = _matrices(records)
     errors = compute_case_errors(reference, predicted)
+    cpmr_cases = compute_amp_cpmr(reference, predicted)["per_case"]
     output: list[dict[str, Any]] = []
-    for record, error in zip(records, errors, strict=True):
+    for record, error, cpmr_case in zip(records, errors, cpmr_cases, strict=True):
         output.append(
             {
                 "method": record.method,
@@ -710,6 +722,24 @@ def _case_error_rows(records: Sequence[PredictionRecord]) -> list[dict[str, Any]
                 ),
                 "exact_set_correct": error["exact_set_correct"],
                 "example_jaccard": error["example_jaccard"],
+                "act_cpmr": cpmr_case["act_cpmr"],
+                "act_contained_recall": (
+                    cpmr_case["act_contained_recall"]
+                    if cpmr_case["act_contained_recall"] is not None
+                    else "N/A"
+                ),
+                "means_cpmr": cpmr_case["means_cpmr"],
+                "means_contained_recall": (
+                    cpmr_case["means_contained_recall"]
+                    if cpmr_case["means_contained_recall"] is not None
+                    else "N/A"
+                ),
+                "purpose_cpmr": cpmr_case["purpose_cpmr"],
+                "purpose_contained_recall": (
+                    cpmr_case["purpose_contained_recall"]
+                    if cpmr_case["purpose_contained_recall"] is not None
+                    else "N/A"
+                ),
                 "truncated_input": int(record.truncated_input),
                 "reference_terminology": SILVER_REFERENCE_TERM,
             }
@@ -732,6 +762,12 @@ CASE_ERROR_FIELDS = (
     "false_negative_labels_json",
     "exact_set_correct",
     "example_jaccard",
+    "act_cpmr",
+    "act_contained_recall",
+    "means_cpmr",
+    "means_contained_recall",
+    "purpose_cpmr",
+    "purpose_contained_recall",
     "truncated_input",
     "reference_terminology",
 )
@@ -749,6 +785,7 @@ def _evaluate_group(
     metrics = compute_amp_metrics(
         reference, predicted, macro_label_ids=macro_label_ids
     )
+    metrics["cpmr"] = compute_amp_cpmr(reference, predicted)
     intervals = (
         percentile_bootstrap_confidence_intervals(
             reference,
@@ -761,6 +798,47 @@ def _evaluate_group(
         else None
     )
     return metrics, intervals
+
+
+def _cpmr_columns(
+    metrics: Mapping[str, Any],
+    *,
+    include_success_counts: bool = False,
+    prefix: str = "",
+) -> dict[str, Any]:
+    """Return stable wide CPMR columns for a metric group."""
+
+    output: dict[str, Any] = {}
+    for family, key in CPMR_FAMILY_KEYS:
+        family_result = metrics["cpmr"]["by_family"][family]
+        output[f"{prefix}{key}_cpmr"] = family_result["cpmr"]
+        output[f"{prefix}{key}_mean_contained_recall"] = (
+            family_result["mean_contained_recall"]
+            if family_result["mean_contained_recall"] is not None
+            else "N/A"
+        )
+        if include_success_counts:
+            output[f"{prefix}{key}_cpmr_success_count"] = family_result["success_count"]
+    return output
+
+
+def _cpmr_result_row(
+    method: str, evaluation: str, scope: str, metrics: Mapping[str, Any]
+) -> dict[str, Any]:
+    return {
+        "method": method,
+        "evaluation": evaluation,
+        "scope": scope,
+        "test_n": metrics["test_n"],
+        **_cpmr_columns(metrics, include_success_counts=True),
+        "reference_terminology": SILVER_REFERENCE_TERM,
+    }
+
+
+def _difference_or_na(m4_value: Any, m3_value: Any) -> float | str:
+    if m4_value is None or m3_value is None:
+        return "N/A"
+    return float(m4_value) - float(m3_value)
 
 
 def evaluate_predictions(
@@ -801,6 +879,19 @@ def evaluate_predictions(
             "confidence_level": 0.95,
         },
         "reference_terminology": SILVER_REFERENCE_TERM,
+        "secondary_metrics": {
+            "contained_partial_match_rate": {
+                "status": "SECONDARY_DIAGNOSTIC",
+                "families": [family for family, _ in CPMR_FAMILY_KEYS],
+                "contained_recall_scope": "CPMR_SUCCESS_CASES_ONLY",
+                "addendum_path": str(DEFAULT_CPMR_ADDENDUM.relative_to(REPO_ROOT)),
+                "addendum_sha256": (
+                    sha256_file(DEFAULT_CPMR_ADDENDUM)
+                    if DEFAULT_CPMR_ADDENDUM.is_file()
+                    else "MISSING"
+                ),
+            }
+        },
         "final_completion_gate": (
             "PASSED_M1_M2_M3_M4_A1_A2"
             if require_complete_primary
@@ -821,6 +912,7 @@ def evaluate_predictions(
         per_label_rows: list[dict[str, Any]] = []
         bootstrap_rows: list[dict[str, Any]] = []
         case_rows: list[dict[str, Any]] = []
+        cpmr_rows: list[dict[str, Any]] = []
         macro_labels: tuple[str, ...] | None = None
         for method in a1_methods:
             subset = sorted(
@@ -846,11 +938,15 @@ def evaluate_predictions(
             per_label_rows.extend(_per_label_rows(method, metrics, scope="TEST"))
             bootstrap_rows.extend(_bootstrap_rows(method, "A1", intervals))
             case_rows.extend(_case_error_rows(subset))
+            cpmr_rows.append(_cpmr_result_row(method, "A1", "TEST", metrics))
 
         _atomic_csv(directory / "amp_primary_results.csv", primary_rows, PRIMARY_FIELDS)
         _atomic_csv(directory / "amp_per_label.csv", per_label_rows, PER_LABEL_FIELDS)
         _atomic_csv(directory / "amp_bootstrap_cis.csv", bootstrap_rows, tuple(dict.fromkeys(BOOTSTRAP_FIELDS)))
         _atomic_csv(directory / "amp_case_level_errors.csv", case_rows, CASE_ERROR_FIELDS)
+        _atomic_csv(
+            directory / "amp_cpmr_results.csv", cpmr_rows, tuple(cpmr_rows[0])
+        )
         manifest["evaluations"]["A1"] = {
             "methods": a1_methods,
             "test_n": primary_rows[0]["test_n"],
@@ -871,6 +967,7 @@ def evaluate_predictions(
         case_rows = []
         fold_rows: list[dict[str, Any]] = []
         jurisdiction_rows: list[dict[str, Any]] = []
+        cpmr_rows = []
         pooled_macro_labels: tuple[str, ...] | None = None
         pooled_zero_support: tuple[str, ...] | None = None
         for method in a2_methods:
@@ -924,6 +1021,7 @@ def evaluate_predictions(
                         "micro_f1": fold_result["micro_f1"],
                         "exact_set_accuracy": fold_result["exact_set_accuracy"],
                         "example_jaccard": fold_result["example_jaccard"],
+                        **_cpmr_columns(fold_result),
                         "test_n": fold_result["test_n"],
                         "macro_label_count": len(pooled_macro_labels),
                         "reference_terminology": SILVER_REFERENCE_TERM,
@@ -950,6 +1048,7 @@ def evaluate_predictions(
                     "pooled_example_jaccard": pooled_row["example_jaccard"],
                     "pooled_example_jaccard_ci_lower": pooled_row["example_jaccard_ci_lower"],
                     "pooled_example_jaccard_ci_upper": pooled_row["example_jaccard_ci_upper"],
+                    **_cpmr_columns(metrics, prefix="pooled_"),
                     "test_n": metrics["test_n"],
                     "macro_label_count": metrics["macro_label_count"],
                     "macro_label_ids_json": canonical_json(metrics["macro_label_ids"]),
@@ -962,6 +1061,9 @@ def evaluate_predictions(
             per_label_rows.extend(_per_label_rows(method, metrics, scope="POOLED_OOD_TEST"))
             bootstrap_rows.extend(_bootstrap_rows(method, "A2", intervals))
             case_rows.extend(_case_error_rows(subset))
+            cpmr_rows.append(
+                _cpmr_result_row(method, "A2", "POOLED_OOD_TEST", metrics)
+            )
 
             for jurisdiction in sorted({row.jurisdiction for row in subset}):
                 jurisdiction_subset = [row for row in subset if row.jurisdiction == jurisdiction]
@@ -981,6 +1083,7 @@ def evaluate_predictions(
                         "micro_f1": result["micro_f1"],
                         "exact_set_accuracy": result["exact_set_accuracy"],
                         "example_jaccard": result["example_jaccard"],
+                        **_cpmr_columns(result),
                         "test_n": result["test_n"],
                         "macro_label_count": len(pooled_macro_labels),
                         "reference_terminology": SILVER_REFERENCE_TERM,
@@ -998,6 +1101,119 @@ def evaluate_predictions(
             tuple(jurisdiction_rows[0]),
         )
         _atomic_csv(directory / "amp_case_level_errors.csv", case_rows, CASE_ERROR_FIELDS)
+        _atomic_csv(
+            directory / "amp_cpmr_results.csv", cpmr_rows, tuple(cpmr_rows[0])
+        )
+
+        if {"M3", "M4"}.issubset(a2_methods):
+            m3 = aggregate_by_evaluation_method[("A2", "M3")]
+            m4 = aggregate_by_evaluation_method[("A2", "M4")]
+            comparison_values: list[tuple[str, float, float]] = [
+                ("macro_f1", m3["macro_f1"], m4["macro_f1"]),
+                ("micro_f1", m3["micro_f1"], m4["micro_f1"]),
+                (
+                    "exact_set_accuracy",
+                    m3["exact_set_accuracy"],
+                    m4["exact_set_accuracy"],
+                ),
+                (
+                    "example_jaccard",
+                    m3["example_jaccard"],
+                    m4["example_jaccard"],
+                ),
+            ]
+            for family, key in CPMR_FAMILY_KEYS:
+                m3_family = m3["cpmr"]["by_family"][family]
+                m4_family = m4["cpmr"]["by_family"][family]
+                comparison_values.append(
+                    (f"{key}_cpmr", m3_family["cpmr"], m4_family["cpmr"])
+                )
+            comparison_rows = [
+                {
+                    "metric": metric,
+                    "m3_zero_shot": m3_value,
+                    "m4_six_shot": m4_value,
+                    "delta_m4_minus_m3": m4_value - m3_value,
+                    "test_n": m4["test_n"],
+                    "significance_claim": "NOT_TESTED_DO_NOT_INFER",
+                    "reference_terminology": SILVER_REFERENCE_TERM,
+                }
+                for metric, m3_value, m4_value in comparison_values
+            ]
+            _atomic_csv(
+                directory / "amp_m3_vs_m4_aggregate_deltas.csv",
+                comparison_rows,
+                tuple(comparison_rows[0]),
+            )
+
+            m3_labels = {row["label_id"]: row for row in m3["per_label"]}
+            m4_labels = {row["label_id"]: row for row in m4["per_label"]}
+            label_delta_rows: list[dict[str, Any]] = []
+            for label_id in AMP_LABEL_IDS:
+                m3_label = m3_labels[label_id]
+                m4_label = m4_labels[label_id]
+                if m3_label["support"] != m4_label["support"]:
+                    raise EvaluationError(
+                        f"M3/M4 A2 silver-reference support differs for {label_id}"
+                    )
+                label_delta_rows.append(
+                    {
+                        "comparison": "M4_MINUS_M3",
+                        "evaluation": "A2",
+                        "scope": "POOLED_OOD_TEST",
+                        "label_id": label_id,
+                        "family": m3_label["family"],
+                        "support": m3_label["support"],
+                        "m3_predicted_positive": m3_label["predicted_positive"],
+                        "m4_predicted_positive": m4_label["predicted_positive"],
+                        "delta_predicted_positive": (
+                            m4_label["predicted_positive"]
+                            - m3_label["predicted_positive"]
+                        ),
+                        "m3_precision": (
+                            m3_label["precision"]
+                            if m3_label["precision"] is not None
+                            else "N/A"
+                        ),
+                        "m4_precision": (
+                            m4_label["precision"]
+                            if m4_label["precision"] is not None
+                            else "N/A"
+                        ),
+                        "delta_precision": _difference_or_na(
+                            m4_label["precision"], m3_label["precision"]
+                        ),
+                        "m3_recall": (
+                            m3_label["recall"]
+                            if m3_label["recall"] is not None
+                            else "N/A"
+                        ),
+                        "m4_recall": (
+                            m4_label["recall"]
+                            if m4_label["recall"] is not None
+                            else "N/A"
+                        ),
+                        "delta_recall": _difference_or_na(
+                            m4_label["recall"], m3_label["recall"]
+                        ),
+                        "m3_f1": (
+                            m3_label["f1"] if m3_label["f1"] is not None else "N/A"
+                        ),
+                        "m4_f1": (
+                            m4_label["f1"] if m4_label["f1"] is not None else "N/A"
+                        ),
+                        "delta_f1_m4_minus_m3": _difference_or_na(
+                            m4_label["f1"], m3_label["f1"]
+                        ),
+                        "significance_claim": "NOT_TESTED_DO_NOT_INFER",
+                        "reference_terminology": SILVER_REFERENCE_TERM,
+                    }
+                )
+            _atomic_csv(
+                directory / "amp_m3_vs_m4_per_label_deltas.csv",
+                label_delta_rows,
+                tuple(label_delta_rows[0]),
+            )
         manifest["evaluations"]["A2"] = {
             "methods": a2_methods,
             "test_n": primary_rows[0]["test_n"],
@@ -1090,6 +1306,18 @@ def evaluate_predictions(
                 ),
                 "delta_example_jaccard_a2_minus_a1": (
                     a2["example_jaccard"] - a1["example_jaccard"]
+                ),
+                "delta_act_cpmr_a2_minus_a1": (
+                    a2["cpmr"]["by_family"]["ACT"]["cpmr"]
+                    - a1["cpmr"]["by_family"]["ACT"]["cpmr"]
+                ),
+                "delta_means_cpmr_a2_minus_a1": (
+                    a2["cpmr"]["by_family"]["MEANS"]["cpmr"]
+                    - a1["cpmr"]["by_family"]["MEANS"]["cpmr"]
+                ),
+                "delta_purpose_cpmr_a2_minus_a1": (
+                    a2["cpmr"]["by_family"]["PURPOSE"]["cpmr"]
+                    - a1["cpmr"]["by_family"]["PURPOSE"]["cpmr"]
                 ),
                 "significance_claim": "NOT_TESTED_DO_NOT_INFER",
                 "reference_terminology": SILVER_REFERENCE_TERM,

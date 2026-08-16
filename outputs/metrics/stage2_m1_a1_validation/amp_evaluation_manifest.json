@@ -1,0 +1,52 @@
+{
+  "bootstrap": {
+    "confidence_level": 0.95,
+    "method": "percentile_linear",
+    "n_resamples": 1000,
+    "seed": 20260811,
+    "unit": "test_case_with_all_17_labels"
+  },
+  "created_at": "2026-08-14T04:48:58.308133+00:00",
+  "evaluations": {
+    "A1": {
+      "macro_label_count": 17,
+      "macro_label_ids": [
+        "ACT_RECRUITMENT",
+        "ACT_TRANSPORTATION",
+        "ACT_TRANSFER",
+        "ACT_HARBOURING",
+        "ACT_RECEIPT",
+        "MEANS_THREAT_FORCE_OR_COERCION",
+        "MEANS_ABDUCTION",
+        "MEANS_FRAUD",
+        "MEANS_DECEPTION",
+        "MEANS_ABUSE_OF_POWER_OR_VULNERABILITY",
+        "MEANS_PAYMENTS_OR_BENEFITS_FOR_CONTROL",
+        "PURPOSE_SEXUAL_EXPLOITATION",
+        "PURPOSE_FORCED_LABOUR_OR_SERVICES",
+        "PURPOSE_SLAVERY_OR_SIMILAR_PRACTICES",
+        "PURPOSE_SERVITUDE",
+        "PURPOSE_REMOVAL_OF_ORGANS",
+        "PURPOSE_OTHER"
+      ],
+      "methods": [
+        "M1"
+      ],
+      "test_n": 253
+    }
+  },
+  "evaluator_version": "1.0.0",
+  "input_files": [
+    {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/outputs/predictions/m1/a1_test_predictions.jsonl",
+      "sha256": "a78d19545d759825a6406c3e7e4ea2f9f47c1ed46d0d64c599c1a6045b210eda"
+    }
+  ],
+  "reference_terminology": "SHERLOC Legacy Keywords silver reference",
+  "split_validation": {
+    "a1_expected_test_n": 253,
+    "a1_final_split_path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/splits/a1_iid_split_final_v1.csv",
+    "a1_final_split_validated": true,
+    "a2_final_split_validated": false
+  }
+}

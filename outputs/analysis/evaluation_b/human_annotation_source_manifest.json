@@ -1,0 +1,35 @@
+{
+  "artifact_role": "IMMUTABLE_SINGLE_REVIEWER_HUMAN_ANNOTATION_SOURCE",
+  "audit_generated_at_utc": "2026-08-16T01:36:27+00:00",
+  "authoritative_review_gate": "Done? == 1",
+  "immutable_raw_source": true,
+  "labels_on_done_blank_rows_used": false,
+  "manifest_schema_version": "1.0.0",
+  "row_count": 100,
+  "sha256": "7ec0a40ab6a9d64588cf4b6c8b46d2572683cf7e340d786117604bc6f20081af",
+  "snapshot_copy_created": false,
+  "snapshot_note": "The original repository artifact is preserved in place and frozen by SHA-256.",
+  "source": {
+    "byte_count": 189348,
+    "column_count": 13,
+    "columns_exact": [
+      "reviewer_id",
+      "reliability_case_id",
+      "sentence_splitter_version",
+      "sentence_count",
+      "english_fact_summary_raw",
+      "Done?",
+      "Acts human labeled ",
+      "Means human labeled",
+      "Purpose human labeled",
+      "Geographic Form human labeled",
+      "multiplicity human labeled",
+      "child human labeled",
+      "annotation_notes"
+    ],
+    "filesystem_modified_at_utc": "2026-08-16T00:10:22+00:00",
+    "path": "data/annotations/reviewer_annotation_template.csv",
+    "row_count": 100,
+    "sha256": "7ec0a40ab6a9d64588cf4b6c8b46d2572683cf7e340d786117604bc6f20081af"
+  }
+}

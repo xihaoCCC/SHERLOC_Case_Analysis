@@ -1,0 +1,99 @@
+{
+  "config_id": "eval-b-m2-modernbert-v1",
+  "config_version": "1.0.0",
+  "status": "FROZEN_FIXED_A1_TRANSFER_BEFORE_EVALUATION_B_TRAINING",
+  "method_id": "M2",
+  "evaluation": "B_SINGLE_REVIEWER_HUMAN_GROUNDED",
+  "random_seed": 20260811,
+  "training_source": {
+    "artifact": "data/processed/sherloc_benchmark_v1.jsonl",
+    "artifact_sha256": "2485b8f5aa9918a3e967e7d3602ec6005d99dd8f27a09a7c4306bbf193459020",
+    "cohort_id": "sherloc-tip-2026-08-09-en-legacy-amp-complete-n1263-097ce2027171ebc9",
+    "source_n": 1263,
+    "target": "SHERLOC Legacy Keywords silver-reference AMP labels",
+    "fixed_policy": "USE_ALL_SOURCE_CASES_EXCEPT_EVERY_RETAINED_EVALUATION_B_CASE",
+    "validation_partition": "NONE_FIXED_SIX_EPOCH_PROTOCOL",
+    "human_labels_used_for_fitting_or_selection": false
+  },
+  "evaluation_membership": {
+    "reference_artifact": "data/annotations/human_grounded_reference_v1.csv",
+    "membership_artifact": "outputs/analysis/evaluation_b/human_grounded_reference_membership_v1.csv",
+    "freeze_artifact": "outputs/analysis/evaluation_b/eval_b_membership_manifest.json",
+    "required_review_statuses": ["SUBSTANTIVE", "ABSTAIN"],
+    "exclude_every_retained_case_from_supervised_fit": true
+  },
+  "selection_provenance": {
+    "a1_run_metadata": "outputs/models/m2/a1/run_metadata.json",
+    "a1_run_metadata_sha256": "711a26b26af783fa86f1b3f2a7c73f9a19f65ca63e0fcf3764786293dfcd0743",
+    "selection_data": "FROZEN_A1_VALIDATION_ONLY",
+    "evaluation_b_human_labels_used": false
+  },
+  "model": {
+    "pretrained_model_id": "answerdotai/ModernBERT-base",
+    "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+    "tokenizer_id": "answerdotai/ModernBERT-base",
+    "tokenizer_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+    "num_labels": 17,
+    "problem_type": "multi_label_classification",
+    "fresh_pretrained_initialization": true
+  },
+  "input": {
+    "field": "English Fact Summary",
+    "excluded_fields": [
+      "human Act labels",
+      "human Means labels",
+      "human Purpose labels",
+      "SHERLOC structured metadata at prediction time",
+      "case title",
+      "jurisdiction",
+      "URL"
+    ]
+  },
+  "tokenization": {
+    "max_length": 2048,
+    "truncation": true,
+    "truncation_side": "right",
+    "padding": "dynamic_to_longest_in_batch",
+    "pad_to_multiple_of": 64
+  },
+  "fixed_training": {
+    "learning_rate": 0.00003,
+    "weight_decay": 0.01,
+    "epochs": 6,
+    "early_stopping": false,
+    "physical_train_batch_size": 1,
+    "prediction_batch_size": 2,
+    "gradient_accumulation_steps": 16,
+    "effective_train_batch_size": 16,
+    "gradient_checkpointing": true,
+    "mixed_precision_mps": "bfloat16_autocast",
+    "gradient_scaler_mps": false,
+    "optimizer": "torch.optim.AdamW",
+    "adamw_foreach": false,
+    "warmup_ratio": 0.1,
+    "lr_scheduler_type": "linear",
+    "max_grad_norm": 1.0,
+    "mps_low_watermark_ratio": 1.0,
+    "mps_high_watermark_override": null,
+    "data_seed": 20260811
+  },
+  "thresholding": {
+    "global_threshold": 0.20,
+    "source": "TRANSFERRED_UNCHANGED_FROM_A1_SELECTED_CONFIGURATION",
+    "per_label_thresholds": false,
+    "evaluation_b_tuning": false
+  },
+  "outputs": {
+    "model_dir": "outputs/models/evaluation_b/m2",
+    "prediction_path": "outputs/predictions/evaluation_b/m2/predictions.jsonl"
+  },
+  "scope_guard": {
+    "hyperparameter_grid": false,
+    "threshold_search": false,
+    "best_epoch_selection": false,
+    "early_stopping": false,
+    "human_labels_for_training_or_tuning": false,
+    "evaluation_a_artifacts_mutable": false,
+    "auxiliary_targets": false
+  }
+}

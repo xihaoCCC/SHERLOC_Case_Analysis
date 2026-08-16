@@ -296,7 +296,17 @@ def _validate_case(case: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _ordered_unique_labels(value: Any, allowed: Sequence[str], field: str) -> list[str]:
+def _validated_canonical_labels(
+    value: Any, allowed: Sequence[str], field: str
+) -> list[str]:
+    """Validate semantic membership, then canonicalize an unordered label set.
+
+    Multi-label array order has no semantic meaning.  The versioned technical
+    amendment therefore preserves strict rejection of non-strings, duplicates,
+    and unknown labels while ordering every valid set by the frozen ontology
+    before persistence or scoring.
+    """
+
     if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
         raise RequestBuildError(f"{field} must be an array of strings")
     if len(value) != len(set(value)):
@@ -304,10 +314,8 @@ def _ordered_unique_labels(value: Any, allowed: Sequence[str], field: str) -> li
     unknown = [item for item in value if item not in allowed]
     if unknown:
         raise RequestBuildError(f"{field} contains unknown labels: {unknown}")
-    expected_order = [item for item in allowed if item in set(value)]
-    if value != expected_order:
-        raise RequestBuildError(f"{field} labels are not in frozen ontology order")
-    return list(value)
+    selected = set(value)
+    return [item for item in allowed if item in selected]
 
 
 def validate_structured_output(output: Any) -> dict[str, Any]:
@@ -320,9 +328,11 @@ def validate_structured_output(output: Any) -> dict[str, Any]:
         raise RequestBuildError(
             f"Structured output keys must be exactly {sorted(expected_keys)}"
         )
-    acts = _ordered_unique_labels(output["acts"], ACT_IDS, "acts")
-    means = _ordered_unique_labels(output["means"], MEANS_IDS, "means")
-    purposes = _ordered_unique_labels(output["purposes"], PURPOSE_IDS, "purposes")
+    acts = _validated_canonical_labels(output["acts"], ACT_IDS, "acts")
+    means = _validated_canonical_labels(output["means"], MEANS_IDS, "means")
+    purposes = _validated_canonical_labels(
+        output["purposes"], PURPOSE_IDS, "purposes"
+    )
     return {
         "acts": acts,
         "means": means,

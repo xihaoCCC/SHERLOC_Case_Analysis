@@ -205,7 +205,23 @@ class LLMRequestBuilderTests(unittest.TestCase):
             heldout_jurisdictions=["Belgium"],
         )
 
-    def test_output_validation_rejects_duplicates_unknowns_and_wrong_order(self) -> None:
+    def test_output_validation_canonicalizes_order_after_semantic_validation(self) -> None:
+        unordered = {
+            "acts": ["ACT_TRANSFER", "ACT_RECRUITMENT"],
+            "means": ["MEANS_DECEPTION", "MEANS_ABDUCTION"],
+            "purposes": ["PURPOSE_OTHER", "PURPOSE_SEXUAL_EXPLOITATION"],
+        }
+
+        self.assertEqual(
+            BUILDER.validate_structured_output(unordered),
+            {
+                "acts": ["ACT_RECRUITMENT", "ACT_TRANSFER"],
+                "means": ["MEANS_ABDUCTION", "MEANS_DECEPTION"],
+                "purposes": ["PURPOSE_SEXUAL_EXPLOITATION", "PURPOSE_OTHER"],
+            },
+        )
+
+    def test_output_validation_still_rejects_duplicates_unknowns_and_shape_drift(self) -> None:
         base = six_demos()[0]["output"]
         invalid_outputs = []
         duplicate = copy.deepcopy(base)
@@ -214,9 +230,6 @@ class LLMRequestBuilderTests(unittest.TestCase):
         unknown = copy.deepcopy(base)
         unknown["purposes"] = ["PURPOSE_NOT_REAL"]
         invalid_outputs.append(unknown)
-        wrong_order = copy.deepcopy(base)
-        wrong_order["acts"] = ["ACT_TRANSFER", "ACT_RECRUITMENT"]
-        invalid_outputs.append(wrong_order)
         extra_key = copy.deepcopy(base)
         extra_key["confidence"] = 0.9
         invalid_outputs.append(extra_key)

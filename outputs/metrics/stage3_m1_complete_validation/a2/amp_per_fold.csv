@@ -1,0 +1,4 @@
+method,fold,macro_f1,micro_f1,exact_set_accuracy,example_jaccard,test_n,macro_label_count,reference_terminology
+M1,1,0.5103996047226297,0.7041821764834684,0.0,0.5454539191518358,288,16,SHERLOC Legacy Keywords silver reference
+M1,2,0.45470996927736296,0.7089337175792507,0.003484320557491289,0.5486591031887198,287,16,SHERLOC Legacy Keywords silver reference
+M1,3,0.45332396700908684,0.7006755182855812,0.0,0.5430841691331201,286,16,SHERLOC Legacy Keywords silver reference

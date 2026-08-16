@@ -1,0 +1,1127 @@
+{
+  "schema_version": "1.0",
+  "downloader_version": "1.0.0",
+  "run": {
+    "mode": "full",
+    "started_at": "2026-08-10T03:35:31Z",
+    "finished_at": "2026-08-10T03:36:15Z",
+    "elapsed_seconds": 43.419,
+    "status": "COMPLETE",
+    "target_complete": true,
+    "pilot_passed": false,
+    "full_download_complete": true,
+    "force": false,
+    "delay_seconds": 1.0,
+    "timeout_seconds": 60.0,
+    "max_retries": 4,
+    "backoff_base_seconds": 2.0,
+    "circuit_breaker_reason": null,
+    "tls_ca_bundle": "/etc/ssl/cert.pem"
+  },
+  "source_manifest": {
+    "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/manifests/case_urls.csv",
+    "sha256": "1df2256dbfc063f88b23c2d85062f6650e91e49bd7a21cdb7a5fc11c94988fd5",
+    "expected_rows": 1590,
+    "sole_corpus_membership_source": true
+  },
+  "pilot": {
+    "method": "deterministic_rank_and_path_quantiles_with_temporal_anchors",
+    "pilot_size": 80,
+    "selected_ranks": [
+      1,
+      3,
+      4,
+      35,
+      40,
+      52,
+      69,
+      80,
+      86,
+      122,
+      138,
+      158,
+      159,
+      160,
+      185,
+      197,
+      218,
+      234,
+      275,
+      290,
+      318,
+      319,
+      358,
+      400,
+      437,
+      461,
+      477,
+      478,
+      517,
+      529,
+      559,
+      598,
+      636,
+      637,
+      662,
+      677,
+      717,
+      751,
+      754,
+      757,
+      795,
+      796,
+      833,
+      875,
+      913,
+      937,
+      954,
+      955,
+      992,
+      1001,
+      1035,
+      1067,
+      1074,
+      1113,
+      1114,
+      1150,
+      1153,
+      1155,
+      1163,
+      1193,
+      1207,
+      1234,
+      1272,
+      1274,
+      1295,
+      1312,
+      1341,
+      1354,
+      1370,
+      1394,
+      1423,
+      1431,
+      1432,
+      1471,
+      1483,
+      1523,
+      1529,
+      1553,
+      1574,
+      1590
+    ],
+    "path_type_counts": {
+      "corruptioncrimetype": 3,
+      "criminalgroupcrimetype": 7,
+      "drugcrimetype": 5,
+      "illicitfirearmscrimetype": 5,
+      "migrantsmugglingcrimetype": 5,
+      "moneylaunderingcrimetype": 5,
+      "traffickingpersonscrimetype": 50
+    },
+    "rank_band_counts": {
+      "1-159": 13,
+      "160-318": 8,
+      "319-477": 6,
+      "478-636": 6,
+      "637-795": 8,
+      "796-954": 6,
+      "955-1113": 7,
+      "1114-1272": 9,
+      "1273-1431": 9,
+      "1432-1590": 8
+    },
+    "year_segment_counts": {
+      "1981": 1,
+      "1997": 1,
+      "2002": 3,
+      "2004": 2,
+      "2005": 2,
+      "2006": 4,
+      "2007": 4,
+      "2008": 8,
+      "2009": 8,
+      "2010": 10,
+      "2011": 8,
+      "2012": 4,
+      "2013": 3,
+      "2014": 3,
+      "2015": 4,
+      "2016": 1,
+      "2017": 2,
+      "2018": 2,
+      "2019": 2,
+      "2023": 2,
+      "2024": 1,
+      "NO_YEAR_SEGMENT": 5
+    },
+    "minimum_year_segment": 1981,
+    "maximum_year_segment": 2024,
+    "yearless_selected": 5
+  },
+  "prior_pilot_run": {
+    "run": {
+      "mode": "pilot",
+      "started_at": "2026-08-10T01:54:00Z",
+      "finished_at": "2026-08-10T01:57:49Z",
+      "elapsed_seconds": 229.475,
+      "status": "COMPLETE",
+      "target_complete": true,
+      "pilot_passed": true,
+      "full_download_complete": false,
+      "force": false,
+      "delay_seconds": 1.0,
+      "timeout_seconds": 60.0,
+      "max_retries": 4,
+      "backoff_base_seconds": 2.0,
+      "circuit_breaker_reason": null,
+      "tls_ca_bundle": "/etc/ssl/cert.pem"
+    },
+    "source_manifest": {
+      "path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/manifests/case_urls.csv",
+      "sha256": "1df2256dbfc063f88b23c2d85062f6650e91e49bd7a21cdb7a5fc11c94988fd5",
+      "expected_rows": 1590,
+      "sole_corpus_membership_source": true
+    },
+    "pilot": {
+      "method": "deterministic_rank_and_path_quantiles_with_temporal_anchors",
+      "pilot_size": 80,
+      "selected_ranks": [
+        1,
+        3,
+        4,
+        35,
+        40,
+        52,
+        69,
+        80,
+        86,
+        122,
+        138,
+        158,
+        159,
+        160,
+        185,
+        197,
+        218,
+        234,
+        275,
+        290,
+        318,
+        319,
+        358,
+        400,
+        437,
+        461,
+        477,
+        478,
+        517,
+        529,
+        559,
+        598,
+        636,
+        637,
+        662,
+        677,
+        717,
+        751,
+        754,
+        757,
+        795,
+        796,
+        833,
+        875,
+        913,
+        937,
+        954,
+        955,
+        992,
+        1001,
+        1035,
+        1067,
+        1074,
+        1113,
+        1114,
+        1150,
+        1153,
+        1155,
+        1163,
+        1193,
+        1207,
+        1234,
+        1272,
+        1274,
+        1295,
+        1312,
+        1341,
+        1354,
+        1370,
+        1394,
+        1423,
+        1431,
+        1432,
+        1471,
+        1483,
+        1523,
+        1529,
+        1553,
+        1574,
+        1590
+      ],
+      "path_type_counts": {
+        "corruptioncrimetype": 3,
+        "criminalgroupcrimetype": 7,
+        "drugcrimetype": 5,
+        "illicitfirearmscrimetype": 5,
+        "migrantsmugglingcrimetype": 5,
+        "moneylaunderingcrimetype": 5,
+        "traffickingpersonscrimetype": 50
+      },
+      "rank_band_counts": {
+        "1-159": 13,
+        "160-318": 8,
+        "319-477": 6,
+        "478-636": 6,
+        "637-795": 8,
+        "796-954": 6,
+        "955-1113": 7,
+        "1114-1272": 9,
+        "1273-1431": 9,
+        "1432-1590": 8
+      },
+      "year_segment_counts": {
+        "1981": 1,
+        "1997": 1,
+        "2002": 3,
+        "2004": 2,
+        "2005": 2,
+        "2006": 4,
+        "2007": 4,
+        "2008": 8,
+        "2009": 8,
+        "2010": 10,
+        "2011": 8,
+        "2012": 4,
+        "2013": 3,
+        "2014": 3,
+        "2015": 4,
+        "2016": 1,
+        "2017": 2,
+        "2018": 2,
+        "2019": 2,
+        "2023": 2,
+        "2024": 1,
+        "NO_YEAR_SEGMENT": 5
+      },
+      "minimum_year_segment": 1981,
+      "maximum_year_segment": 2024,
+      "yearless_selected": 5
+    },
+    "counts": {
+      "expected_manifest_rows": 1590,
+      "download_manifest_rows": 1590,
+      "target_rows_this_mode": 80,
+      "target_successes": 80,
+      "target_failures": 0,
+      "all_successful_downloads": 80,
+      "all_remaining_not_successful": 1510,
+      "status_counts": {
+        "HTTP_OK_VALID": 80,
+        "NOT_ATTEMPTED": 1510
+      },
+      "last_action_counts": {
+        "DOWNLOADED": 80,
+        "NONE": 1510
+      }
+    },
+    "failures": [],
+    "http": {
+      "request_attempts": 80,
+      "status_counts": {
+        "200": 80
+      },
+      "retry_attempts": 0,
+      "retry_after_events": 0,
+      "http_403_events": 0,
+      "http_429_events": 0,
+      "redirected_successful_pages": 0,
+      "redirected_ranks": [],
+      "anti_bot_or_rate_limit_observed": false
+    },
+    "url_validation": {
+      "og_url_relation_counts": {
+        "CANONICAL_EQUIVALENT": 80
+      },
+      "final_url_relation_counts": {
+        "CANONICAL_EQUIVALENT": 80
+      },
+      "true_og_url_mismatch_count": 0,
+      "true_og_url_mismatch_ranks": [],
+      "true_final_url_mismatch_count": 0,
+      "true_final_url_mismatch_ranks": []
+    },
+    "page_sizes": {
+      "count": 80,
+      "total_bytes": 21013255,
+      "minimum": 246942,
+      "p01": 247154.51,
+      "p05": 248630.9,
+      "q1": 253237.5,
+      "median": 256601.5,
+      "mean": 262665.6875,
+      "q3": 266141.75,
+      "p95": 281766.85000000003,
+      "p99": 352347.62999999966,
+      "maximum": 399118,
+      "tukey_lower_fence": 233881.125,
+      "tukey_upper_fence": 285498.125,
+      "tukey_outlier_count": 4,
+      "tukey_outliers": [
+        {
+          "search_rank": 138,
+          "byte_count": 339915,
+          "canonical_url": "https://www.unodc.org/cld/case-law-doc/corruptioncrimetype/arg/2015/case_no._91017032.html"
+        },
+        {
+          "search_rank": 751,
+          "byte_count": 288433,
+          "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2010/k_40810_.html"
+        },
+        {
+          "search_rank": 937,
+          "byte_count": 399118,
+          "canonical_url": "https://www.unodc.org/cld/case-law-doc/corruptioncrimetype/srb/2009/kz_i_2880-08.html"
+        },
+        {
+          "search_rank": 1295,
+          "byte_count": 298505,
+          "canonical_url": "https://www.unodc.org/cld/case-law-doc/illicitfirearmscrimetype/swe/2006/case_no_b_1149-06.html"
+        }
+      ],
+      "fixed_small_warning_threshold": 100000,
+      "fixed_large_warning_threshold": 2000000
+    },
+    "checksums": {
+      "unique_successful_sha256": 80,
+      "duplicate_checksum_groups": 0,
+      "duplicate_checksum_rows": 0,
+      "duplicates": []
+    },
+    "template_warnings": {
+      "warning_counts": {
+        "DOCTYPE_COUNT_2": 80,
+        "MISSING_FACT_SUMMARY_MARKER": 3
+      },
+      "marker_issue_ranks": {
+        "MISSING_FACT_SUMMARY_MARKER": [
+          318,
+          1295,
+          1423
+        ],
+        "MISSING_TRAFFICKING_BADGE": [],
+        "MISSING_OG_URL": [],
+        "MISSING_CASE_LAW_CONTENT": [],
+        "MISSING_CASE_LAW_DETAIL": [],
+        "MISSING_CASE_TITLE_MARKER": [],
+        "MISSING_ENGLISH_LOCALE_SIGNAL": []
+      }
+    }
+  },
+  "prior_full_runs": [
+    {
+      "run": {
+        "mode": "full",
+        "started_at": "2026-08-10T02:01:20Z",
+        "finished_at": "2026-08-10T03:33:45Z",
+        "elapsed_seconds": 5539.387,
+        "status": "COMPLETE",
+        "target_complete": false,
+        "pilot_passed": false,
+        "full_download_complete": false,
+        "force": false,
+        "delay_seconds": 1.0,
+        "timeout_seconds": 60.0,
+        "max_retries": 4,
+        "backoff_base_seconds": 2.0,
+        "circuit_breaker_reason": null,
+        "tls_ca_bundle": "/etc/ssl/cert.pem"
+      },
+      "counts": {
+        "expected_manifest_rows": 1590,
+        "download_manifest_rows": 1590,
+        "target_rows_this_mode": 1590,
+        "target_successes": 1588,
+        "target_failures": 2,
+        "all_successful_downloads": 1588,
+        "all_remaining_not_successful": 2,
+        "status_counts": {
+          "HTTP_OK_VALID": 1588,
+          "NETWORK_ERROR": 2
+        },
+        "last_action_counts": {
+          "DOWNLOADED": 1508,
+          "FAILED": 2,
+          "SKIPPED_VALID_EXISTING": 80
+        }
+      },
+      "failures": [
+        {
+          "search_rank": 943,
+          "download_status": "NETWORK_ERROR",
+          "http_status": "",
+          "requested_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/mda/2009/dosar_nr._1ra_5132009.html?lng=en&tmpl=sherloc",
+          "warnings": [
+            "RETRIES_EXHAUSTED"
+          ],
+          "error": "URLError(ConnectionRefusedError(61, 'Connection refused'))"
+        },
+        {
+          "search_rank": 944,
+          "download_status": "NETWORK_ERROR",
+          "http_status": "",
+          "requested_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/svk/2009/1_t_1032003_.html?lng=en&tmpl=sherloc",
+          "warnings": [
+            "RETRIES_EXHAUSTED"
+          ],
+          "error": "URLError(ConnectionRefusedError(61, 'Connection refused'))"
+        }
+      ],
+      "http": {
+        "request_attempts": 1523,
+        "status_counts": {
+          "200": 1508,
+          "NETWORK_ERROR": 15
+        },
+        "retry_attempts": 13,
+        "retry_after_events": 0,
+        "http_403_events": 0,
+        "http_429_events": 0,
+        "redirected_successful_pages": 0,
+        "redirected_ranks": [],
+        "anti_bot_or_rate_limit_observed": false
+      },
+      "url_validation": {
+        "og_url_relation_counts": {
+          "CANONICAL_EQUIVALENT": 1588
+        },
+        "final_url_relation_counts": {
+          "CANONICAL_EQUIVALENT": 1588
+        },
+        "true_og_url_mismatch_count": 0,
+        "true_og_url_mismatch_ranks": [],
+        "true_final_url_mismatch_count": 0,
+        "true_final_url_mismatch_ranks": []
+      },
+      "checksums": {
+        "unique_successful_sha256": 1588,
+        "duplicate_checksum_groups": 0,
+        "duplicate_checksum_rows": 0,
+        "duplicates": []
+      },
+      "template_warnings": {
+        "warning_counts": {
+          "DOCTYPE_COUNT_2": 1588,
+          "MISSING_FACT_SUMMARY_MARKER": 25,
+          "RETRIED_BEFORE_SUCCESS": 4,
+          "RETRIES_EXHAUSTED": 2
+        },
+        "marker_issue_ranks": {
+          "MISSING_FACT_SUMMARY_MARKER": [
+            84,
+            307,
+            318,
+            380,
+            431,
+            543,
+            575,
+            592,
+            593,
+            845,
+            871,
+            911,
+            923,
+            952,
+            965,
+            1007,
+            1022,
+            1231,
+            1255,
+            1295,
+            1317,
+            1419,
+            1423,
+            1435,
+            1482
+          ],
+          "MISSING_TRAFFICKING_BADGE": [],
+          "MISSING_OG_URL": [],
+          "MISSING_CASE_LAW_CONTENT": [],
+          "MISSING_CASE_LAW_DETAIL": [],
+          "MISSING_CASE_TITLE_MARKER": [],
+          "MISSING_ENGLISH_LOCALE_SIGNAL": []
+        }
+      }
+    }
+  ],
+  "counts": {
+    "expected_manifest_rows": 1590,
+    "download_manifest_rows": 1590,
+    "target_rows_this_mode": 1590,
+    "target_successes": 1590,
+    "target_failures": 0,
+    "all_successful_downloads": 1590,
+    "all_remaining_not_successful": 0,
+    "status_counts": {
+      "HTTP_OK_VALID": 1590
+    },
+    "last_action_counts": {
+      "DOWNLOADED": 2,
+      "SKIPPED_VALID_EXISTING": 1588
+    }
+  },
+  "failures": [],
+  "http": {
+    "request_attempts": 2,
+    "status_counts": {
+      "200": 2
+    },
+    "retry_attempts": 0,
+    "retry_after_events": 0,
+    "http_403_events": 0,
+    "http_429_events": 0,
+    "redirected_successful_pages": 0,
+    "redirected_ranks": [],
+    "anti_bot_or_rate_limit_observed": false
+  },
+  "url_validation": {
+    "og_url_relation_counts": {
+      "CANONICAL_EQUIVALENT": 1590
+    },
+    "final_url_relation_counts": {
+      "CANONICAL_EQUIVALENT": 1590
+    },
+    "true_og_url_mismatch_count": 0,
+    "true_og_url_mismatch_ranks": [],
+    "true_final_url_mismatch_count": 0,
+    "true_final_url_mismatch_ranks": []
+  },
+  "page_sizes": {
+    "count": 1590,
+    "total_bytes": 411442034,
+    "minimum": 241704,
+    "p01": 245221.78,
+    "p05": 247588.45,
+    "q1": 251247.25,
+    "median": 255477.5,
+    "mean": 258768.5748427673,
+    "q3": 262526.25,
+    "p95": 280166.3,
+    "p99": 301358.6399999999,
+    "maximum": 399118,
+    "tukey_lower_fence": 234328.75,
+    "tukey_upper_fence": 279444.75,
+    "tukey_outlier_count": 83,
+    "tukey_outliers": [
+      {
+        "search_rank": 37,
+        "byte_count": 283347,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2019/united_states_of_america_v._anthony_donte_collier_932_f.3d_1067_no._18-1025.html"
+      },
+      {
+        "search_rank": 41,
+        "byte_count": 283807,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/deu/2019/513_kls_255_js_63718_3818.html"
+      },
+      {
+        "search_rank": 50,
+        "byte_count": 294699,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/migrantsmugglingcrimetype/lux/2019/arret_n_3419_x.html"
+      },
+      {
+        "search_rank": 58,
+        "byte_count": 283936,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/cri/2018/13-000227-1219-pe.html"
+      },
+      {
+        "search_rank": 67,
+        "byte_count": 282576,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2018/landriel_daniel_y_otros_.html"
+      },
+      {
+        "search_rank": 68,
+        "byte_count": 296737,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/lux/2018/jugt_n_5342018_.html"
+      },
+      {
+        "search_rank": 73,
+        "byte_count": 313570,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/zaf/2017/the_state_vs_eze.html"
+      },
+      {
+        "search_rank": 88,
+        "byte_count": 282281,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2017/figueroa_susana_antonia_y_otros_s_infraccion_ley_26.364._.html"
+      },
+      {
+        "search_rank": 93,
+        "byte_count": 328779,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/usa/2017/united_states_v._rendon-reyes_et_al._no_115-cr-00348_e.d.n.y._jul._16_2015.html"
+      },
+      {
+        "search_rank": 95,
+        "byte_count": 281938,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/zaf/2017/the_state_and_makhosini_mathews_fakudze.html"
+      },
+      {
+        "search_rank": 104,
+        "byte_count": 287439,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2016/montoya_pedro_eduardo_y_otros_.html"
+      },
+      {
+        "search_rank": 107,
+        "byte_count": 317114,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/isr/2016/ibrahim_and_basma_giulani_v._the_state_of_israel.html"
+      },
+      {
+        "search_rank": 127,
+        "byte_count": 321728,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/grc/2016/affaire_l.e._c._grece.html"
+      },
+      {
+        "search_rank": 138,
+        "byte_count": 339915,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/corruptioncrimetype/arg/2015/case_no._91017032.html"
+      },
+      {
+        "search_rank": 166,
+        "byte_count": 283146,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/zaf/2014/the_state_v_mabuza_and_chauke.html"
+      },
+      {
+        "search_rank": 193,
+        "byte_count": 282415,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/col/2014/col031-proceso_no._2009-00001.html"
+      },
+      {
+        "search_rank": 196,
+        "byte_count": 283423,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2014/sanfilippo_jose_et_al._.html"
+      },
+      {
+        "search_rank": 226,
+        "byte_count": 298594,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2013/sentence_1098-2013.html"
+      },
+      {
+        "search_rank": 249,
+        "byte_count": 292710,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bra/2013/acr_0000957-09.2007.404.7210_trf4.html"
+      },
+      {
+        "search_rank": 256,
+        "byte_count": 289222,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/arg/2013/sentence_n_03313.html"
+      },
+      {
+        "search_rank": 270,
+        "byte_count": 286038,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2013/lopez_lopez_and_novello.html"
+      },
+      {
+        "search_rank": 274,
+        "byte_count": 306990,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2013/case_n_369213.html"
+      },
+      {
+        "search_rank": 301,
+        "byte_count": 298462,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/pol/2013/ii_aka_38712.html"
+      },
+      {
+        "search_rank": 332,
+        "byte_count": 301246,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/swe/2012/case_no_2827-12.html"
+      },
+      {
+        "search_rank": 353,
+        "byte_count": 283603,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/ita/2012/case_of_m._and_others_v._italy_and_bulgaria_.html"
+      },
+      {
+        "search_rank": 354,
+        "byte_count": 283600,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bgr/2012/case_of_m._and_others_v._italy_and_bulgaria_.html"
+      },
+      {
+        "search_rank": 365,
+        "byte_count": 293312,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/col/2012/proceso_no.2011-74217.html"
+      },
+      {
+        "search_rank": 368,
+        "byte_count": 316031,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/swe/2012/_case_no_b_897-12.html"
+      },
+      {
+        "search_rank": 370,
+        "byte_count": 286629,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2012/expte._1811.html"
+      },
+      {
+        "search_rank": 371,
+        "byte_count": 282475,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/tha/2012/choen_pai_wan_and_others.html"
+      },
+      {
+        "search_rank": 373,
+        "byte_count": 282058,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2012/united_states_v._rivera_et_al.html"
+      },
+      {
+        "search_rank": 375,
+        "byte_count": 285402,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/swe/2012/case_no_b_6114-11.html"
+      },
+      {
+        "search_rank": 396,
+        "byte_count": 285032,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/arg/2012/case_no._2755.html"
+      },
+      {
+        "search_rank": 461,
+        "byte_count": 280745,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/aus/2011/ho_v_the_queen_leech_v_the_queen_2011_vsca_344_as_related_to_dpp_cth_v_ho_ho_2009_vsc_437.html"
+      },
+      {
+        "search_rank": 462,
+        "byte_count": 280952,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/aus/2011/ho_v_the_queen_leech_v_the_queen_2011_vsca_344_as_related_to_dpp_cth_v_ho_leech_2009_vsc_495.html"
+      },
+      {
+        "search_rank": 471,
+        "byte_count": 282835,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/pol/2011/iv_kk_16211.html"
+      },
+      {
+        "search_rank": 507,
+        "byte_count": 310593,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2011/united_states_v_robinson_.html"
+      },
+      {
+        "search_rank": 546,
+        "byte_count": 342818,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2011/case_no_b_87-11.html"
+      },
+      {
+        "search_rank": 550,
+        "byte_count": 283562,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/phl/2011/crim._case_no._2009-337.html"
+      },
+      {
+        "search_rank": 561,
+        "byte_count": 286193,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/srb/2011/case_no._k.113810.html"
+      },
+      {
+        "search_rank": 573,
+        "byte_count": 288054,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/esp/2011/jose_and_florencia.html"
+      },
+      {
+        "search_rank": 586,
+        "byte_count": 285916,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2011/k_2410_.html"
+      },
+      {
+        "search_rank": 610,
+        "byte_count": 281329,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/phl/2011/crim._case_no._134985.html"
+      },
+      {
+        "search_rank": 611,
+        "byte_count": 311701,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2011/case_no_b_8277-10.html"
+      },
+      {
+        "search_rank": 657,
+        "byte_count": 327739,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2010/case_no_2917-10_and_b_3184-10.html"
+      },
+      {
+        "search_rank": 666,
+        "byte_count": 294697,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/esp/2010/cesar_et_al.html"
+      },
+      {
+        "search_rank": 669,
+        "byte_count": 288751,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/svk/2010/3_to_282010_.html"
+      },
+      {
+        "search_rank": 691,
+        "byte_count": 287204,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/bra/2010/sentenca_n_2007.50.01.013004-6_jfes.html"
+      },
+      {
+        "search_rank": 701,
+        "byte_count": 282969,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/cze/2010/16_t_72009.html"
+      },
+      {
+        "search_rank": 712,
+        "byte_count": 288437,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2010/k_19510.html"
+      },
+      {
+        "search_rank": 737,
+        "byte_count": 280961,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/ita/2010/cass._pen._sez._v_n._35479.html"
+      },
+      {
+        "search_rank": 751,
+        "byte_count": 288433,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2010/k_40810_.html"
+      },
+      {
+        "search_rank": 815,
+        "byte_count": 295183,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bra/2010/processo_no._0004447-11.2005.4.05.8300.html"
+      },
+      {
+        "search_rank": 835,
+        "byte_count": 281951,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aus/2009/r_v_dobie_2009_236_flr_455.html"
+      },
+      {
+        "search_rank": 849,
+        "byte_count": 281880,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2009/united_states_v._valenzuela_et_al.html"
+      },
+      {
+        "search_rank": 865,
+        "byte_count": 306508,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aus/2009/mcivor_v_r_tanuchit_v_r_2009_nswcca_264_.html"
+      },
+      {
+        "search_rank": 897,
+        "byte_count": 298482,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aus/2009/r_v_wei_tang_2009_23_vr_332.html"
+      },
+      {
+        "search_rank": 925,
+        "byte_count": 295216,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/swe/2009/case_no_b_1479-09.html"
+      },
+      {
+        "search_rank": 927,
+        "byte_count": 283433,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/rou/2009/270432008.html"
+      },
+      {
+        "search_rank": 937,
+        "byte_count": 399118,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/corruptioncrimetype/srb/2009/kz_i_2880-08.html"
+      },
+      {
+        "search_rank": 951,
+        "byte_count": 281113,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/esp/2009/benita_et_al.html"
+      },
+      {
+        "search_rank": 1001,
+        "byte_count": 281416,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/bra/2009/processo_n_2008.05.00.101562-0.html"
+      },
+      {
+        "search_rank": 1003,
+        "byte_count": 290835,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aus/2008/r_v_kovacs_2009_2_qd_r_51.html"
+      },
+      {
+        "search_rank": 1027,
+        "byte_count": 280838,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/plw/2008/lolita_pamintuan_at_al._v_republic_of_palau.html"
+      },
+      {
+        "search_rank": 1032,
+        "byte_count": 285801,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/rou/2008/case_ca_brasov_114.html"
+      },
+      {
+        "search_rank": 1066,
+        "byte_count": 279998,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/aus/2008/_r_v_sieders_yotchomchin.html"
+      },
+      {
+        "search_rank": 1109,
+        "byte_count": 279580,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2008/k.br._2608_.html"
+      },
+      {
+        "search_rank": 1126,
+        "byte_count": 348248,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/rou/2008/46_-_2008.html"
+      },
+      {
+        "search_rank": 1132,
+        "byte_count": 288966,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/col/2008/garcia_et_al.html"
+      },
+      {
+        "search_rank": 1136,
+        "byte_count": 280438,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/fra/2008/ministere_public_c_d_et_autres.html"
+      },
+      {
+        "search_rank": 1163,
+        "byte_count": 279718,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/illicitfirearmscrimetype/svn/2007/vsl0023085_.html"
+      },
+      {
+        "search_rank": 1171,
+        "byte_count": 295326,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/usa/2007/united_states_v._daneman.html"
+      },
+      {
+        "search_rank": 1198,
+        "byte_count": 299585,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/bra/2007/habeas_corpus_n._2759-rn_2007.05.00.025014-1.html"
+      },
+      {
+        "search_rank": 1241,
+        "byte_count": 280304,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/est/2007/1-06-5410.html"
+      },
+      {
+        "search_rank": 1254,
+        "byte_count": 289045,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/moneylaunderingcrimetype/bra/2006/habeas_corpus_n._2.596_rn_2006.05.00.062316-0_.html"
+      },
+      {
+        "search_rank": 1255,
+        "byte_count": 302270,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/srb/2006/kz_i_1784-05.html"
+      },
+      {
+        "search_rank": 1277,
+        "byte_count": 293185,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/svk/2006/1_to_612006_.html"
+      },
+      {
+        "search_rank": 1295,
+        "byte_count": 298505,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/illicitfirearmscrimetype/swe/2006/case_no_b_1149-06.html"
+      },
+      {
+        "search_rank": 1307,
+        "byte_count": 281600,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/bra/2006/processo_n_2005.03.99.009508-0_18548.html"
+      },
+      {
+        "search_rank": 1315,
+        "byte_count": 284272,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/isr/2006/state_of_israel_vs._aldenko_et_al.html"
+      },
+      {
+        "search_rank": 1339,
+        "byte_count": 286643,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/criminalgroupcrimetype/srb/2005/k.p.405_.html"
+      },
+      {
+        "search_rank": 1347,
+        "byte_count": 304149,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/drugcrimetype/swe/2005/case_no_b_4156-04.html"
+      },
+      {
+        "search_rank": 1461,
+        "byte_count": 293584,
+        "canonical_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/srb/1999/k_8208_.html"
+      }
+    ],
+    "fixed_small_warning_threshold": 100000,
+    "fixed_large_warning_threshold": 2000000
+  },
+  "checksums": {
+    "unique_successful_sha256": 1590,
+    "duplicate_checksum_groups": 0,
+    "duplicate_checksum_rows": 0,
+    "duplicates": []
+  },
+  "template_warnings": {
+    "warning_counts": {
+      "DOCTYPE_COUNT_2": 1590,
+      "MISSING_FACT_SUMMARY_MARKER": 25,
+      "RETRIED_BEFORE_SUCCESS": 4
+    },
+    "marker_issue_ranks": {
+      "MISSING_FACT_SUMMARY_MARKER": [
+        84,
+        307,
+        318,
+        380,
+        431,
+        543,
+        575,
+        592,
+        593,
+        845,
+        871,
+        911,
+        923,
+        952,
+        965,
+        1007,
+        1022,
+        1231,
+        1255,
+        1295,
+        1317,
+        1419,
+        1423,
+        1435,
+        1482
+      ],
+      "MISSING_TRAFFICKING_BADGE": [],
+      "MISSING_OG_URL": [],
+      "MISSING_CASE_LAW_CONTENT": [],
+      "MISSING_CASE_LAW_DETAIL": [],
+      "MISSING_CASE_TITLE_MARKER": [],
+      "MISSING_ENGLISH_LOCALE_SIGNAL": []
+    }
+  },
+  "request_events": [
+    {
+      "search_rank": 943,
+      "attempt": 1,
+      "started_at": "2026-08-10T03:35:54Z",
+      "status": 200,
+      "elapsed_seconds": 2.468,
+      "response_bytes": 250568,
+      "content_type": "text/html;charset=utf-8",
+      "content_encoding": "",
+      "final_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/mda/2009/dosar_nr._1ra_5132009.html?lng=en&tmpl=sherloc",
+      "redirect_chain": [],
+      "content_valid": true,
+      "validation_errors": []
+    },
+    {
+      "search_rank": 944,
+      "attempt": 1,
+      "started_at": "2026-08-10T03:35:56Z",
+      "status": 200,
+      "elapsed_seconds": 3.48,
+      "response_bytes": 258164,
+      "content_type": "text/html;charset=utf-8",
+      "content_encoding": "",
+      "final_url": "https://www.unodc.org/cld/case-law-doc/traffickingpersonscrimetype/svk/2009/1_t_1032003_.html?lng=en&tmpl=sherloc",
+      "redirect_chain": [],
+      "content_valid": true,
+      "validation_errors": []
+    }
+  ],
+  "outputs": {
+    "download_manifest": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/logs/page_download_manifest.csv",
+    "download_manifest_sha256": "ddfa54ee624473448838fc76794364642b9c178556f987be5b20d9302c2e5bf0",
+    "diagnostics": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/logs/page_download_diagnostics.json",
+    "raw_directory": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/raw_html"
+  }
+}

@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Generate thin, reproducible Phase-4 AMP analysis notebooks.
+"""Generate deterministic notebooks for finalized Evaluation A and Evaluation B.
 
-The generated notebooks are presentation and inspection clients for the
-canonical artifacts written by ``11_evaluate_amp.py``.  They deliberately do
-not import metric implementations, reconstruct predictions, bootstrap cases,
-or calculate F1/Jaccard from labels.  Missing canonical artifacts are reported
-as pending so the notebooks remain usable while the staged experiment is in
-progress, without presenting partial results as final.
+Evaluation A notebooks load paper-facing tables and figures written by
+``16_finalize_evaluation_a.py`` plus canonical case-level evaluator rows where
+manual inspection is useful. They never reconstruct predictions or implement
+metrics. The Evaluation B notebook is an unexecuted thin reader of finalized
+single-reviewer analysis artifacts; unfinished stages report ``NOT YET
+AVAILABLE`` without fabricating results.
 
-By default this script creates the three primary AMP notebooks.  The optional
-auxiliary notebook is only generated with ``--include-auxiliary`` because the
-frozen protocol places auxiliary work after completion of the primary AMP
-benchmark.
+The optional auxiliary notebook is retained only for backward-compatible
+staging and is numbered 11 so it cannot collide with the human-grounded
+Evaluation B notebook. Generating a notebook does not execute any cell.
 """
 
 from __future__ import annotations
@@ -25,16 +24,38 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 
-VERSION = "1.0.0"
+VERSION = "2.0.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "notebooks"
 
-PRIMARY_NOTEBOOK_NAMES = (
+EVALUATION_A_NOTEBOOK_NAMES = (
     "07_a1_amp_results.ipynb",
     "08_a2_amp_results.ipynb",
     "09_amp_error_analysis.ipynb",
 )
-AUXILIARY_NOTEBOOK_NAME = "10_auxiliary_results.ipynb"
+HUMAN_GROUNDED_NOTEBOOK_NAME = "10_human_grounded_evaluation.ipynb"
+PRIMARY_NOTEBOOK_NAMES = EVALUATION_A_NOTEBOOK_NAMES
+AUXILIARY_NOTEBOOK_NAME = "11_auxiliary_results.ipynb"
+
+ANALYSIS_TABLES = (
+    "a1_main_comparison.csv",
+    "a2_main_comparison.csv",
+    "amp_family_level_metrics.csv",
+    "prediction_breadth_summary.csv",
+    "rare_label_sensitivity.csv",
+    "a1_to_a2_distribution_shift.csv",
+    "m3_vs_m4_summary.csv",
+    "m3_vs_m4_per_label_f1.csv",
+    "amp_label_display_mapping.csv",
+    "a2_fold_summary.csv",
+    "a2_jurisdiction_summary.csv",
+)
+CORE_FIGURES = (
+    "figure_1_a1_vs_a2_core_performance.svg",
+    "figure_2_cpmr_by_amp_family.svg",
+    "figure_3_cpmr_vs_contained_recall.svg",
+    "figure_4_per_label_f1.svg",
+)
 
 
 def _cell_id(notebook_name: str, index: int, source: str) -> str:
@@ -56,7 +77,7 @@ def _code(source: str) -> dict[str, Any]:
     }
 
 
-def _notebook(name: str, cells: Sequence[dict[str, Any]]) -> dict[str, Any]:
+def _notebook(name: str, cells: Sequence[dict[str, Any]], *, purpose: str) -> dict[str, Any]:
     output_cells: list[dict[str, Any]] = []
     for index, cell in enumerate(cells):
         with_id = dict(cell)
@@ -74,8 +95,11 @@ def _notebook(name: str, cells: Sequence[dict[str, Any]]) -> dict[str, Any]:
             "sherloc_reporting": {
                 "generator": "src/experiments/12_generate_analysis_notebooks.py",
                 "generator_version": VERSION,
-                "metric_source": "src/experiments/11_evaluate_amp.py",
-                "canonical_metrics_root": "outputs/metrics",
+                "purpose": purpose,
+                "evaluation_a_metric_source": "src/experiments/11_evaluate_amp.py",
+                "evaluation_a_analysis_source": "src/experiments/16_finalize_evaluation_a.py",
+                "evaluation_b_source": "src/experiments/evaluation_b.py",
+                "cells_executed_by_generator": False,
             },
         },
         "nbformat": 4,
@@ -85,20 +109,15 @@ def _notebook(name: str, cells: Sequence[dict[str, Any]]) -> dict[str, Any]:
 
 COMMON_SETUP = r'''from __future__ import annotations
 
-import hashlib
 import json
 import os
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import pandas as pd
-from IPython.display import Markdown, display
-
-EXPECTED_METHODS = ("M1", "M2", "M3", "M4")
+from IPython.display import Markdown, SVG, display
 
 
 def locate_repo_root() -> Path:
-    """Locate the repository without relying on the notebook launch directory."""
     configured = os.environ.get("SHERLOC_REPO_ROOT")
     starts = [Path(configured).expanduser()] if configured else []
     starts.extend([Path.cwd(), *Path.cwd().parents])
@@ -112,460 +131,323 @@ def locate_repo_root() -> Path:
 
 
 REPO_ROOT = locate_repo_root()
+ANALYSIS_ROOT = REPO_ROOT / "outputs/analysis/evaluation_a"
+FIGURE_ROOT = REPO_ROOT / "outputs/figures/evaluation_a"
 METRICS_ROOT = REPO_ROOT / "outputs/metrics"
 
 
-def load_json(path: Path) -> dict:
-    if not path.is_file():
-        display(Markdown(f"> **Pending:** `{path.relative_to(REPO_ROOT)}` does not exist."))
-        return {}
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
 def load_csv(path: Path, required_columns=()) -> pd.DataFrame:
-    """Load an evaluator table, reporting absence without synthesizing results."""
+    """Load a finalized artifact without synthesizing missing rows."""
     if not path.is_file():
-        display(Markdown(f"> **Pending:** `{path.relative_to(REPO_ROOT)}` does not exist."))
+        display(Markdown(f"> **NOT YET AVAILABLE:** `{path.relative_to(REPO_ROOT)}`"))
         return pd.DataFrame(columns=list(required_columns))
     frame = pd.read_csv(path)
     missing = set(required_columns) - set(frame.columns)
     if missing:
-        raise ValueError(f"{path} is missing canonical columns: {sorted(missing)}")
+        raise ValueError(f"{path} is missing required columns: {sorted(missing)}")
     return frame
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def load_json(path: Path) -> dict:
+    if not path.is_file():
+        display(Markdown(f"> **NOT YET AVAILABLE:** `{path.relative_to(REPO_ROOT)}`"))
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def show_or_pending(frame: pd.DataFrame, message="No canonical rows are available yet."):
+def show_table(frame: pd.DataFrame, *, empty_message="No finalized rows are available."):
     if frame.empty:
-        display(Markdown(f"> **Pending:** {message}"))
+        display(Markdown(f"> **NOT YET AVAILABLE:** {empty_message}"))
     else:
         display(frame)
 
 
-def methods_complete(manifest: dict, evaluation: str) -> bool:
-    methods = manifest.get("evaluations", {}).get(evaluation, {}).get("methods", [])
-    return set(methods) == set(EXPECTED_METHODS)
+def show_figure(filename: str):
+    """Display a finalized SVG; never recreate a figure in the notebook."""
+    path = FIGURE_ROOT / filename
+    if not path.is_file():
+        display(Markdown(f"> **NOT YET AVAILABLE:** `{path.relative_to(REPO_ROOT)}`"))
+        return
+    display(SVG(filename=str(path)))
 
 
-manifest_path = METRICS_ROOT / "amp_evaluation_manifest.json"
-evaluation_manifest = load_json(manifest_path)
+manifest = load_json(METRICS_ROOT / "amp_evaluation_manifest.json")
+completion_gate = manifest.get("final_completion_gate", "NOT YET AVAILABLE")
+display(Markdown(f"**Canonical Evaluation A completion gate:** `{completion_gate}`"))
 '''
 
 
-AVAILABILITY_CELL = r'''canonical_inputs = [
-    METRICS_ROOT / "amp_evaluation_manifest.json",
-    METRICS_ROOT / "a1/amp_primary_results.csv",
-    METRICS_ROOT / "a1/amp_per_label.csv",
-    METRICS_ROOT / "a1/amp_bootstrap_cis.csv",
-    METRICS_ROOT / "a1/amp_case_level_errors.csv",
-    METRICS_ROOT / "a2/amp_primary_results.csv",
-    METRICS_ROOT / "a2/amp_per_fold.csv",
-    METRICS_ROOT / "a2/amp_per_label.csv",
-    METRICS_ROOT / "a2/amp_per_jurisdiction.csv",
-    METRICS_ROOT / "a2/amp_bootstrap_cis.csv",
-    METRICS_ROOT / "a2/amp_case_level_errors.csv",
-    METRICS_ROOT / "amp_a1_to_a2_deltas.csv",
-]
-availability = pd.DataFrame(
-    {
-        "artifact": [str(path.relative_to(REPO_ROOT)) for path in canonical_inputs],
-        "available": [path.is_file() for path in canonical_inputs],
-    }
-)
-display(availability)
-
-gate = evaluation_manifest.get("final_completion_gate", "PENDING")
-complete = (
-    gate == "PASSED_M1_M2_M3_M4_A1_A2"
-    and methods_complete(evaluation_manifest, "A1")
-    and methods_complete(evaluation_manifest, "A2")
-)
-if complete:
-    display(Markdown("**Canonical completion gate: PASSED for M1-M4 in A1 and A2.**"))
-else:
-    display(Markdown(
-        "> **Incomplete benchmark:** canonical M1-M4 A1/A2 outputs are not complete. "
-        "Any available rows are technical previews, not the final comparison."
-    ))
+def _artifact_inventory(table_names: Sequence[str], figure_names: Sequence[str]) -> str:
+    return f'''table_names = {list(table_names)!r}
+figure_names = {list(figure_names)!r}
+artifact_inventory = pd.DataFrame([
+    *[
+        {{"artifact": str((ANALYSIS_ROOT / name).relative_to(REPO_ROOT)),
+          "kind": "paper-facing table", "available": (ANALYSIS_ROOT / name).is_file()}}
+        for name in table_names
+    ],
+    *[
+        {{"artifact": str((FIGURE_ROOT / name).relative_to(REPO_ROOT)),
+          "kind": "finalized figure", "available": (FIGURE_ROOT / name).is_file()}}
+        for name in figure_names
+    ],
+])
+display(artifact_inventory)
+if not artifact_inventory["available"].all():
+    display(Markdown("> **NOT YET AVAILABLE:** one or more finalized artifacts are missing."))
 '''
 
 
 def _a1_notebook() -> dict[str, Any]:
-    name = PRIMARY_NOTEBOOK_NAMES[0]
+    name = EVALUATION_A_NOTEBOOK_NAMES[0]
     cells = [
         _markdown(
-            """# A1 AMP Results — IID Test Set
+            """# Evaluation A1 — IID AMP Results
 
-This notebook is a thin presentation layer for the **canonical evaluator outputs** produced by `src/experiments/11_evaluate_amp.py`. It does not calculate F1, Jaccard, bootstrap intervals, thresholds, or predictions. The reference is the **SHERLOC Legacy Keywords silver reference**, not human-adjudicated gold labels.
+This notebook is the concise paper-facing view of finalized Evaluation A1. It loads canonical analysis artifacts produced from the frozen predictions; it does **not** implement metrics, bootstrap confidence intervals, sensitivity rules, or plots.
 
-The notebook reports incomplete artifacts as pending. It does not generate scientific conclusions or change the frozen protocol."""
+The reference labels are **SHERLOC silver-reference labels**, not ground truth. CPMR describes reference-contained prediction behavior and does not establish absolute factual correctness."""
         ),
-        _markdown("## 1. Setup and canonical-artifact contract"),
+        _markdown("## 1. Setup and finalized-artifact gate"),
         _code(COMMON_SETUP),
-        _markdown("## 2. Artifact availability and completion gate"),
-        _code(AVAILABILITY_CELL),
-        _markdown("## 3. Frozen experiment metadata"),
         _code(
-            r'''ontology_path = REPO_ROOT / "config/amp_ontology_v1.yaml"
-demo_path = REPO_ROOT / "config/experiments/demo_bank_amp_v1.yaml"
-llm_path = REPO_ROOT / "config/experiments/llm_extraction_amp_v2.yaml"
-m1_config_path = REPO_ROOT / "config/experiments/m1_tfidf_logreg_amp_v2.yaml"
-m2_config_path = REPO_ROOT / "config/experiments/m2_modernbert_amp_v2.yaml"
-
-ontology = load_json(ontology_path)
-demo_bank = load_json(demo_path)
-llm_config = load_json(llm_path)
-m1_config = load_json(m1_config_path)
-m2_config = load_json(m2_config_path)
-
-frozen_metadata = pd.DataFrame([
-    {"item": "Primary cohort", "value": m1_config.get("primary_cohort_id", "PENDING")},
-    {"item": "Reference terminology", "value": evaluation_manifest.get("reference_terminology", "PENDING")},
-    {"item": "Ontology", "value": ontology.get("ontology_id", "PENDING")},
-    {"item": "Ontology SHA-256", "value": sha256_file(ontology_path) if ontology_path.is_file() else "PENDING"},
-    {"item": "Demo bank", "value": demo_bank.get("bank_id", "PENDING")},
-    {"item": "Demo-bank SHA-256", "value": sha256_file(demo_path) if demo_path.is_file() else "PENDING"},
-    {"item": "M3 prompt SHA-256", "value": llm_config.get("methods", {}).get("M3", {}).get("prompt_sha256", "PENDING")},
-    {"item": "M4 prompt SHA-256", "value": llm_config.get("methods", {}).get("M4", {}).get("prompt_sha256", "PENDING")},
-    {"item": "Bootstrap protocol", "value": json.dumps(evaluation_manifest.get("bootstrap", {}), sort_keys=True)},
-])
-display(frozen_metadata)
-'''
+            _artifact_inventory(
+                (
+                    "a1_main_comparison.csv",
+                    "amp_family_level_metrics.csv",
+                    "prediction_breadth_summary.csv",
+                    "rare_label_sensitivity.csv",
+                    "m3_vs_m4_summary.csv",
+                    "m3_vs_m4_per_label_f1.csv",
+                ),
+                CORE_FIGURES[:2],
+            )
         ),
-        _markdown("## 4. A1 split composition"),
+        _markdown("## 2. Canonical A1 main comparison"),
         _code(
-            r'''a1_split_path = REPO_ROOT / "data/splits/a1_iid_split_final_v1.csv"
-a1_split = load_csv(a1_split_path, ("search_rank", "split", "effective_supervised_train"))
-if not a1_split.empty:
-    split_composition = (
-        a1_split.groupby("split", dropna=False)
-        .agg(cases=("search_rank", "size"), supervised_train=("effective_supervised_train", "sum"))
-        .reset_index()
-    )
-    display(split_composition)
-    display(pd.DataFrame([{"split_sha256": sha256_file(a1_split_path)}]))
-else:
-    show_or_pending(a1_split)
-'''
-        ),
-        _markdown("## 5. Frozen silver-reference label distribution by A1 role"),
-        _code(
-            r'''label_ids = [
-    item["id"]
-    for family in ("ACT", "MEANS", "PURPOSE")
-    for item in ontology.get("families", {}).get(family, [])
-]
-if not a1_split.empty and label_ids:
-    missing_labels = set(label_ids) - set(a1_split.columns)
-    if missing_labels:
-        raise ValueError(f"A1 split lacks ontology columns: {sorted(missing_labels)}")
-    label_distribution = a1_split.groupby("split")[label_ids].sum().T
-    label_distribution.index.name = "label_id"
-    display(label_distribution)
-else:
-    display(Markdown("> **Pending:** frozen split or ontology is unavailable."))
-'''
-        ),
-        _markdown("## 6. M1 and M2 frozen configurations and validation-selected thresholds"),
-        _code(
-            r'''def model_run_summary(method: str) -> dict:
-    metadata = load_json(REPO_ROOT / f"outputs/models/{method.lower()}/a1/run_metadata.json")
-    selection = metadata.get("selection", {})
-    return {
-        "method": method,
-        "status": metadata.get("status", "PENDING"),
-        "run_id": metadata.get("run_id", "PENDING"),
-        "selected_global_threshold": selection.get("selected_global_threshold", "PENDING"),
-        "selected_hyperparameters": json.dumps(selection.get("selected_hyperparameters", {}), sort_keys=True),
-        "selection_data": "VALIDATION_ONLY",
-        "test_labels_used_for_selection": metadata.get("test_labels_used_for_selection", "PENDING"),
-    }
-
-display(pd.DataFrame([model_run_summary("M1"), model_run_summary("M2")]))
-'''
-        ),
-        _markdown("## 7. M3/M4 prompt and demonstration metadata"),
-        _code(
-            r'''llm_rows = []
-for method in ("M3", "M4"):
-    details = llm_config.get("methods", {}).get(method, {})
-    llm_rows.append({
-        "method": method,
-        "experiment_id": details.get("experiment_id", "PENDING"),
-        "prompt_version": details.get("prompt_version", "PENDING"),
-        "prompt_sha256": details.get("prompt_sha256", "PENDING"),
-        "demonstration_count": details.get("demonstration_count", "PENDING"),
-        "model_requested": llm_config.get("api_request", {}).get("model", "PENDING"),
-    })
-display(pd.DataFrame(llm_rows))
-
-a1_bank = llm_config.get("methods", {}).get("M4", {}).get("evaluation_banks", {}).get("A1", {})
-display(pd.DataFrame([{
-    "M4_A1_ordered_search_ranks": a1_bank.get("ordered_search_ranks", "PENDING"),
-    "membership_sha256": a1_bank.get("membership_sha256", "PENDING"),
-}]))
-'''
-        ),
-        _markdown("## 8. Canonical M1–M4 A1 comparison"),
-        _code(
-            r'''a1_primary = load_csv(
-    METRICS_ROOT / "a1/amp_primary_results.csv",
-    ("method", "macro_f1", "micro_f1", "exact_set_accuracy", "example_jaccard", "test_n"),
-)
-if not a1_primary.empty:
-    order = {method: index for index, method in enumerate(EXPECTED_METHODS)}
-    a1_primary = a1_primary.assign(_order=a1_primary["method"].map(order)).sort_values("_order").drop(columns="_order")
-show_or_pending(a1_primary, "run the canonical evaluator after prediction artifacts are complete.")
-'''
-        ),
-        _markdown("## 9. Visual summaries of canonical aggregate metrics"),
-        _code(
-            r'''if not a1_primary.empty:
-    columns = ["macro_f1", "micro_f1", "exact_set_accuracy", "example_jaccard"]
-    axes = a1_primary.set_index("method")[columns].plot.bar(
-        subplots=True, layout=(2, 2), figsize=(12, 8), legend=False, ylim=(0, 1),
-        title=["Macro-F1", "Micro-F1", "Exact-set accuracy", "Example Jaccard"],
-    )
-    plt.suptitle("A1 canonical evaluator metrics (descriptive only)")
-    plt.tight_layout()
-else:
-    display(Markdown("> **Pending:** no canonical A1 aggregate table to plot."))
-'''
-        ),
-        _markdown("## 10. Canonical per-label precision, recall, and F1"),
-        _code(
-            r'''a1_per_label = load_csv(
-    METRICS_ROOT / "a1/amp_per_label.csv",
-    ("method", "label_id", "family", "support", "precision", "recall", "f1", "status"),
-)
-show_or_pending(a1_per_label)
-'''
-        ),
-        _markdown("## 11. Canonical bootstrap confidence intervals"),
-        _code(
-            r'''a1_bootstrap = load_csv(
-    METRICS_ROOT / "a1/amp_bootstrap_cis.csv",
-    ("method", "metric", "estimate", "ci_lower", "ci_upper", "n_resamples", "seed"),
-)
-show_or_pending(a1_bootstrap)
-'''
-        ),
-        _markdown("## 12. Fixed 0.50-threshold sensitivity (M1/M2 only)"),
-        _code(
-            r'''threshold_sensitivity = load_csv(
-    METRICS_ROOT / "amp_threshold_0_50_sensitivity.csv",
-    ("method", "evaluation", "prediction_variant", "macro_f1", "micro_f1"),
-)
-a1_sensitivity = threshold_sensitivity.loc[threshold_sensitivity.get("evaluation", pd.Series(dtype=str)).eq("A1")] if not threshold_sensitivity.empty else threshold_sensitivity
-show_or_pending(a1_sensitivity)
+            r'''a1_main = load_csv(ANALYSIS_ROOT / "a1_main_comparison.csv", ("method", "n"))
+show_table(a1_main)
 '''
         ),
         _markdown(
-            """## 13. Technical observations for researcher review
+            """## 3. Family-level performance and prediction breadth
 
-Add descriptive, non-speculative notes here after the canonical completion gate passes. Do not use test-set observations to alter prompts, demonstrations, thresholds, preprocessing, architecture, or the frozen metric protocol. Paper-level Results/Discussion conclusions are intentionally not generated by this notebook."""
+These are finalized descriptive summaries. Prediction breadth is not a primary performance metric."""
+        ),
+        _code(
+            r'''family_metrics = load_csv(
+    ANALYSIS_ROOT / "amp_family_level_metrics.csv", ("evaluation", "method", "family")
+)
+prediction_breadth = load_csv(
+    ANALYSIS_ROOT / "prediction_breadth_summary.csv", ("evaluation", "method")
+)
+show_table(family_metrics.loc[family_metrics["evaluation"].eq("A1")])
+show_table(prediction_breadth.loc[prediction_breadth["evaluation"].eq("A1")])
+'''
+        ),
+        _markdown(
+            """## 4. Rare-label sensitivity analysis
+
+This section is explicitly **descriptive sensitivity analysis**. It does not replace the frozen official Macro-F1."""
+        ),
+        _code(
+            r'''rare_sensitivity = load_csv(
+    ANALYSIS_ROOT / "rare_label_sensitivity.csv", ("evaluation", "method")
+)
+show_table(rare_sensitivity.loc[rare_sensitivity["evaluation"].eq("A1")])
+'''
+        ),
+        _markdown("## 5. Descriptive M4 minus M3 comparison"),
+        _code(
+            r'''m3_m4 = load_csv(ANALYSIS_ROOT / "m3_vs_m4_summary.csv", ("evaluation",))
+m3_m4_per_label = load_csv(
+    ANALYSIS_ROOT / "m3_vs_m4_per_label_f1.csv", ("evaluation", "label_id")
+)
+show_table(m3_m4.loc[m3_m4["evaluation"].eq("A1")])
+show_table(m3_m4_per_label.loc[m3_m4_per_label["evaluation"].eq("A1")])
+display(Markdown("No statistical-significance claim is made for these descriptive differences."))
+'''
+        ),
+        _markdown("## 6. Core figures"),
+        _code(
+            r'''show_figure("figure_1_a1_vs_a2_core_performance.svg")
+show_figure("figure_2_cpmr_by_amp_family.svg")
+'''
+        ),
+        _markdown(
+            """## 7. Interpretation boundary
+
+Use the finalized tables as the numeric source for paper writing. The figures are presentation views of those same artifacts. Do not tune any frozen model, threshold, prompt, demo bank, split, or ontology from this notebook."""
         ),
     ]
-    return _notebook(name, cells)
+    return _notebook(name, cells, purpose="FINALIZED_EVALUATION_A1_VIEW")
 
 
 def _a2_notebook() -> dict[str, Any]:
-    name = PRIMARY_NOTEBOOK_NAMES[1]
+    name = EVALUATION_A_NOTEBOOK_NAMES[1]
     cells = [
         _markdown(
-            """# A2 AMP Results — Jurisdiction-Held-Out Test Sets
+            """# Evaluation A2 — Jurisdiction-OOD AMP Results
 
-This notebook displays canonical outputs from `src/experiments/11_evaluate_amp.py`. It does not recompute metrics or bootstrap intervals. A2 uses SHERLOC Legacy Keywords as a **silver reference**. Where the pooled A2 reference support for `PURPOSE_REMOVAL_OF_ORGANS` is zero, its per-label F1 is **N/A** and macro-F1 is calculated over the 16 supported labels by the evaluator; all 17 outputs still enter micro/set metrics.
+This notebook loads the finalized pooled, fold, jurisdiction, shift, and sensitivity artifacts for the frozen A2 design. It does not recompute metrics or figures.
 
-No scientific conclusions or protocol changes are generated here."""
+`PURPOSE_REMOVAL_OF_ORGANS` remains a prediction dimension but has zero positive A2 silver-reference support. Its per-label F1 is undefined where appropriate, and the official pooled A2 Macro-F1 uses the 16 supported labels. Jurisdiction rows are descriptive; small-N results must not be ranked as “best” or “worst.”"""
         ),
-        _markdown("## 1. Setup and canonical-artifact contract"),
+        _markdown("## 1. Setup and finalized-artifact gate"),
         _code(COMMON_SETUP),
-        _markdown("## 2. Artifact availability and completion gate"),
-        _code(AVAILABILITY_CELL),
-        _markdown("## 3. A2 fold composition and held-out jurisdictions"),
         _code(
-            r'''a2_split_path = REPO_ROOT / "data/splits/a2_jurisdiction_folds_final_v1.csv"
-a2_split = load_csv(a2_split_path, ("search_rank", "fold_id", "role", "jurisdiction", "heldout_jurisdiction"))
-if not a2_split.empty:
-    fold_composition = (
-        a2_split.groupby(["fold_id", "role"], dropna=False)
-        .agg(cases=("search_rank", "size"), jurisdictions=("jurisdiction", "nunique"))
-        .reset_index()
-    )
-    display(fold_composition)
-    heldout = (
-        a2_split.loc[a2_split["role"].eq("TEST"), ["fold_id", "jurisdiction"]]
-        .drop_duplicates()
-        .sort_values(["fold_id", "jurisdiction"])
-    )
-    display(heldout)
-    display(pd.DataFrame([{"split_sha256": sha256_file(a2_split_path)}]))
-else:
-    show_or_pending(a2_split)
+            _artifact_inventory(
+                (
+                    "a2_main_comparison.csv",
+                    "amp_family_level_metrics.csv",
+                    "prediction_breadth_summary.csv",
+                    "rare_label_sensitivity.csv",
+                    "a1_to_a2_distribution_shift.csv",
+                    "m3_vs_m4_summary.csv",
+                    "m3_vs_m4_per_label_f1.csv",
+                    "amp_label_display_mapping.csv",
+                    "a2_fold_summary.csv",
+                    "a2_jurisdiction_summary.csv",
+                ),
+                CORE_FIGURES,
+            )
+        ),
+        _markdown("## 2. Canonical pooled A2 comparison"),
+        _code(
+            r'''a2_main = load_csv(ANALYSIS_ROOT / "a2_main_comparison.csv", ("method", "n"))
+show_table(a2_main)
 '''
         ),
-        _markdown("## 4. Pooled OOD label support and Organ Removal status"),
+        _markdown("## 3. Family-level performance and prediction breadth"),
         _code(
-            r'''a2_per_label = load_csv(
-    METRICS_ROOT / "a2/amp_per_label.csv",
-    ("method", "label_id", "family", "support", "precision", "recall", "f1", "status", "included_in_macro_f1"),
+            r'''family_metrics = load_csv(
+    ANALYSIS_ROOT / "amp_family_level_metrics.csv", ("evaluation", "method", "family")
 )
-if not a2_per_label.empty:
-    support_view = a2_per_label[["method", "label_id", "family", "support", "status", "included_in_macro_f1"]]
-    display(support_view)
-    organ_rows = a2_per_label.loc[a2_per_label["label_id"].eq("PURPOSE_REMOVAL_OF_ORGANS")]
-    display(Markdown("**Organ Removal evaluator rows:**"))
-    display(organ_rows)
-    display(pd.DataFrame([{
-        "manifest_rule": evaluation_manifest.get("evaluations", {}).get("A2", {}).get("organ_removal_rule", "PENDING"),
-        "macro_label_count": evaluation_manifest.get("evaluations", {}).get("A2", {}).get("macro_label_count", "PENDING"),
-    }]))
-else:
-    show_or_pending(a2_per_label)
-'''
-        ),
-        _markdown("## 5. Canonical per-fold results"),
-        _code(
-            r'''a2_per_fold = load_csv(
-    METRICS_ROOT / "a2/amp_per_fold.csv",
-    ("method", "fold", "macro_f1", "micro_f1", "exact_set_accuracy", "example_jaccard", "test_n"),
+prediction_breadth = load_csv(
+    ANALYSIS_ROOT / "prediction_breadth_summary.csv", ("evaluation", "method")
 )
-show_or_pending(a2_per_fold)
-'''
-        ),
-        _markdown("## 6. Canonical pooled OOD results"),
-        _code(
-            r'''a2_primary = load_csv(
-    METRICS_ROOT / "a2/amp_primary_results.csv",
-    ("method", "fold_1_macro_f1", "fold_2_macro_f1", "fold_3_macro_f1", "pooled_ood_macro_f1", "pooled_micro_f1", "pooled_exact_set_accuracy", "pooled_example_jaccard", "test_n"),
-)
-if not a2_primary.empty:
-    order = {method: index for index, method in enumerate(EXPECTED_METHODS)}
-    a2_primary = a2_primary.assign(_order=a2_primary["method"].map(order)).sort_values("_order").drop(columns="_order")
-show_or_pending(a2_primary)
-'''
-        ),
-        _markdown("## 7. Canonical per-jurisdiction results"),
-        _code(
-            r'''a2_per_jurisdiction = load_csv(
-    METRICS_ROOT / "a2/amp_per_jurisdiction.csv",
-    ("method", "jurisdiction", "fold", "macro_f1", "micro_f1", "exact_set_accuracy", "example_jaccard", "test_n"),
-)
-show_or_pending(a2_per_jurisdiction)
-'''
-        ),
-        _markdown("## 8. Canonical A1 → A2 aggregate deltas"),
-        _code(
-            r'''a1_a2_deltas = load_csv(
-    METRICS_ROOT / "amp_a1_to_a2_deltas.csv",
-    ("method", "delta_macro_f1_a2_minus_a1", "delta_micro_f1_a2_minus_a1", "delta_exact_set_a2_minus_a1", "delta_example_jaccard_a2_minus_a1", "significance_claim"),
-)
-show_or_pending(a1_a2_deltas)
-'''
-        ),
-        _markdown("## 9. Per-label IID/OOD comparison"),
-        _code(
-            r'''a1_per_label = load_csv(
-    METRICS_ROOT / "a1/amp_per_label.csv",
-    ("method", "label_id", "f1", "support", "status"),
-)
-if not a1_per_label.empty and not a2_per_label.empty:
-    # This is a side-by-side view of already-computed evaluator values. It does
-    # not reconstruct F1 or assert statistical significance.
-    per_label_comparison = a1_per_label[["method", "label_id", "f1", "support", "status"]].merge(
-        a2_per_label[["method", "label_id", "f1", "support", "status"]],
-        on=["method", "label_id"], how="outer", suffixes=("_a1", "_a2"), validate="one_to_one",
-    )
-    display(per_label_comparison)
-else:
-    display(Markdown("> **Pending:** both canonical A1 and A2 per-label tables are required."))
-'''
-        ),
-        _markdown("## 10. Canonical pooled bootstrap confidence intervals"),
-        _code(
-            r'''a2_bootstrap = load_csv(
-    METRICS_ROOT / "a2/amp_bootstrap_cis.csv",
-    ("method", "metric", "estimate", "ci_lower", "ci_upper", "n_resamples", "seed"),
-)
-show_or_pending(a2_bootstrap)
-'''
-        ),
-        _markdown("## 11. Descriptive visual summaries"),
-        _code(
-            r'''if not a2_primary.empty:
-    pooled_columns = ["pooled_ood_macro_f1", "pooled_micro_f1", "pooled_exact_set_accuracy", "pooled_example_jaccard"]
-    a2_primary.set_index("method")[pooled_columns].plot.bar(
-        subplots=True, layout=(2, 2), figsize=(12, 8), legend=False, ylim=(0, 1),
-        title=["Pooled macro-F1", "Pooled micro-F1", "Pooled exact-set", "Pooled Jaccard"],
-    )
-    plt.suptitle("A2 canonical evaluator metrics (descriptive only)")
-    plt.tight_layout()
-else:
-    display(Markdown("> **Pending:** no canonical A2 aggregate table to plot."))
+show_table(family_metrics.loc[family_metrics["evaluation"].eq("A2")])
+show_table(prediction_breadth.loc[prediction_breadth["evaluation"].eq("A2")])
 '''
         ),
         _markdown(
-            """## 12. Technical observations for researcher review
+            """## 4. A1 to A2 distribution shift
 
-Record short technical observations only after the completion gate passes. A negative A1→A2 delta is not automatically statistically significant; the canonical delta table explicitly records `NOT_TESTED_DO_NOT_INFER`. Do not change later folds, prompts, demonstrations, models, or thresholds based on these test outcomes."""
+Every delta is pooled A2 minus A1. These are descriptive differences; statistical significance was not tested."""
+        ),
+        _code(
+            r'''shift = load_csv(
+    ANALYSIS_ROOT / "a1_to_a2_distribution_shift.csv", ("method",)
+)
+show_table(shift)
+'''
+        ),
+        _markdown("## 5. Descriptive M4 minus M3 comparison"),
+        _code(
+            r'''m3_m4 = load_csv(ANALYSIS_ROOT / "m3_vs_m4_summary.csv", ("evaluation",))
+m3_m4_per_label = load_csv(
+    ANALYSIS_ROOT / "m3_vs_m4_per_label_f1.csv", ("evaluation", "label_id")
+)
+show_table(m3_m4.loc[m3_m4["evaluation"].eq("A2")])
+show_table(m3_m4_per_label.loc[m3_m4_per_label["evaluation"].eq("A2")])
+'''
+        ),
+        _markdown("## 6. Fold and jurisdiction summaries"),
+        _code(
+            r'''fold_summary = load_csv(
+    ANALYSIS_ROOT / "a2_fold_summary.csv", ("method", "fold", "n")
+)
+jurisdiction_summary = load_csv(
+    ANALYSIS_ROOT / "a2_jurisdiction_summary.csv", ("jurisdiction", "method", "n")
+)
+show_table(fold_summary)
+show_table(jurisdiction_summary)
+display(Markdown(
+    "Per-jurisdiction estimates are descriptive only. Do not rank jurisdictions or overinterpret small N."
+))
+'''
+        ),
+        _markdown("## 7. Rare-label sensitivity and support rule"),
+        _code(
+            r'''rare_sensitivity = load_csv(
+    ANALYSIS_ROOT / "rare_label_sensitivity.csv", ("evaluation", "method")
+)
+show_table(rare_sensitivity.loc[rare_sensitivity["evaluation"].eq("A2")])
+display(Markdown(
+    "A2 Organ Removal support is zero. It remains in predictions and micro/set metrics but is already excluded from the official 16-supported-label Macro-F1."
+))
+'''
+        ),
+        _markdown("## 8. Recorded M3/M4 API execution summary"),
+        _code(
+            r'''a2_api_usage = load_csv(
+    METRICS_ROOT / "a2/amp_llm_api_usage.csv", ("method", "scope")
+)
+show_table(a2_api_usage)
+'''
+        ),
+        _markdown("## 9. Four core paper figures"),
+        _code(
+            r'''for figure_name in (
+    "figure_1_a1_vs_a2_core_performance.svg",
+    "figure_2_cpmr_by_amp_family.svg",
+    "figure_3_cpmr_vs_contained_recall.svg",
+    "figure_4_per_label_f1.svg",
+):
+    show_figure(figure_name)
+
+label_display_mapping = load_csv(
+    ANALYSIS_ROOT / "amp_label_display_mapping.csv",
+    ("ontology_order", "label_id", "family", "display_label", "figure_short_label"),
+)
+display(Markdown("**Figure 4 short-label mapping to the full frozen ontology:**"))
+show_table(label_display_mapping)
+'''
         ),
     ]
-    return _notebook(name, cells)
+    return _notebook(name, cells, purpose="FINALIZED_EVALUATION_A2_VIEW")
 
 
 def _error_notebook() -> dict[str, Any]:
-    name = PRIMARY_NOTEBOOK_NAMES[2]
+    name = EVALUATION_A_NOTEBOOK_NAMES[2]
     cells = [
         _markdown(
-            """# AMP Error Analysis — Manual Inspection Workspace
+            """# Evaluation A — Canonical Error Inspection
 
-This exploratory notebook loads canonical case-level error rows produced by `src/experiments/11_evaluate_amp.py`. It supports transparent filtering and disagreement inspection without recalculating benchmark metrics.
-
-Selections here are post-hoc and must not be used to alter or rerun the frozen primary benchmark. Case examples chosen for publication require a documented, non-cherry-picked sampling rule."""
+This concise, post-hoc workspace filters the canonical one-row-per-case evaluator artifacts. It does not reconstruct predictions or recompute any metric. A mismatch with a SHERLOC silver-reference label is not automatically a factual error; later human adjudication is a separate Evaluation B activity."""
         ),
-        _markdown("## 1. Setup and canonical-artifact contract"),
+        _markdown("## 1. Setup"),
         _code(COMMON_SETUP),
-        _markdown("## 2. Artifact availability and completion gate"),
-        _code(AVAILABILITY_CELL),
-        _markdown("## 3. Load canonical case-level evaluator outputs"),
+        _markdown("## 2. Load canonical case-level rows"),
         _code(
             r'''error_columns = (
-    "method", "case_id", "search_rank", "jurisdiction", "split", "fold", "fact_summary",
+    "method", "case_id", "search_rank", "jurisdiction", "fold", "fact_summary",
     "silver_reference_amp_json", "predicted_amp_json", "false_positive_labels_json",
-    "false_negative_labels_json", "exact_set_correct", "example_jaccard", "truncated_input",
+    "false_negative_labels_json", "exact_set_correct", "example_jaccard",
+    "truncated_input", "act_cpmr", "act_contained_recall", "means_cpmr",
+    "means_contained_recall", "purpose_cpmr", "purpose_contained_recall",
 )
-a1_errors = load_csv(METRICS_ROOT / "a1/amp_case_level_errors.csv", error_columns).assign(evaluation="A1")
-a2_errors = load_csv(METRICS_ROOT / "a2/amp_case_level_errors.csv", error_columns).assign(evaluation="A2")
+a1_errors = load_csv(METRICS_ROOT / "a1/amp_case_level_errors.csv", error_columns)
+a2_errors = load_csv(METRICS_ROOT / "a2/amp_case_level_errors.csv", error_columns)
+if not a1_errors.empty:
+    a1_errors = a1_errors.assign(evaluation="A1")
+if not a2_errors.empty:
+    a2_errors = a2_errors.assign(evaluation="A2")
 case_errors = pd.concat([a1_errors, a2_errors], ignore_index=True)
-case_errors["narrative_char_count"] = case_errors["fact_summary"].fillna("").str.len()
-if not case_errors.empty:
-    display(case_errors.groupby(["evaluation", "method"], dropna=False).size().rename("rows").reset_index())
-else:
-    show_or_pending(case_errors)
+show_table(case_errors.head(20))
 '''
         ),
-        _markdown("## 4. Reusable manual filters"),
+        _markdown("## 3. Reproducible inspection filters"),
         _code(
-            r'''# Edit these controls, then rerun this cell. None of them changes a model or metric.
-EVALUATION = "A1"          # "A1", "A2", or None
-METHOD = None              # "M1", "M2", "M3", "M4", or None
-FOLD = None                # 1, 2, 3, or None
-JURISDICTION = None        # exact string or None
-EXACT_SET_FAILURES_ONLY = False
-TRUNCATED_M2_ONLY = False
-MIN_JACCARD = None
-MAX_JACCARD = None
-LABEL_ID = None            # exact ontology ID found in FP or FN arrays, or None
-SORT = "example_jaccard"   # example_jaccard, narrative_char_count, or search_rank
-ASCENDING = True
+            r'''# Record these values with every exported or cited case set.
+EVALUATION = "A2"       # "A1", "A2", or None
+METHOD = None           # "M1", "M2", "M3", "M4", or None
+FOLD = None             # 1, 2, 3, or None
+JURISDICTION = None     # exact string or None
+LABEL_ID = None         # exact frozen ontology ID or None
+EXACT_SET_FAILURES_ONLY = True
+CPMR_FAMILY = None      # "act", "means", "purpose", or None
+CPMR_SUCCESS_ONLY = False
 MAX_ROWS = 100
 
 filtered = case_errors.copy()
@@ -579,12 +461,6 @@ if JURISDICTION is not None:
     filtered = filtered.loc[filtered["jurisdiction"].eq(JURISDICTION)]
 if EXACT_SET_FAILURES_ONLY:
     filtered = filtered.loc[filtered["exact_set_correct"].eq(0)]
-if TRUNCATED_M2_ONLY:
-    filtered = filtered.loc[filtered["method"].eq("M2") & filtered["truncated_input"].eq(1)]
-if MIN_JACCARD is not None:
-    filtered = filtered.loc[filtered["example_jaccard"].ge(MIN_JACCARD)]
-if MAX_JACCARD is not None:
-    filtered = filtered.loc[filtered["example_jaccard"].le(MAX_JACCARD)]
 if LABEL_ID is not None:
     def contains_label(value):
         return LABEL_ID in json.loads(value)
@@ -592,146 +468,494 @@ if LABEL_ID is not None:
         filtered["false_positive_labels_json"].map(contains_label)
         | filtered["false_negative_labels_json"].map(contains_label)
     ]
+if CPMR_FAMILY not in (None, "act", "means", "purpose"):
+    raise ValueError("CPMR_FAMILY must be act, means, purpose, or None")
+if CPMR_SUCCESS_ONLY:
+    if CPMR_FAMILY is None:
+        raise ValueError("Set CPMR_FAMILY before requesting CPMR successes")
+    filtered = filtered.loc[filtered[f"{CPMR_FAMILY}_cpmr"].eq(1)]
 
 inspection_columns = [
-    "evaluation", "method", "search_rank", "jurisdiction", "fold", "narrative_char_count",
-    "exact_set_correct", "example_jaccard", "truncated_input", "silver_reference_amp_json",
-    "predicted_amp_json", "false_positive_labels_json", "false_negative_labels_json", "fact_summary",
+    "evaluation", "method", "search_rank", "jurisdiction", "fold",
+    "exact_set_correct", "example_jaccard", "truncated_input",
+    "silver_reference_amp_json", "predicted_amp_json",
+    "false_positive_labels_json", "false_negative_labels_json",
+    "act_cpmr", "act_contained_recall", "means_cpmr", "means_contained_recall",
+    "purpose_cpmr", "purpose_contained_recall", "fact_summary",
 ]
-display(filtered.sort_values(SORT, ascending=ASCENDING)[inspection_columns].head(MAX_ROWS))
+show_table(filtered.sort_values(["evaluation", "search_rank"])[inspection_columns].head(MAX_ROWS))
 '''
         ),
-        _markdown("## 5. Prediction disagreements among M1–M4"),
+        _markdown("## 4. Finalized sensitivity and M3/M4 context"),
         _code(
-            r'''if not case_errors.empty:
-    disagreement_key = ["evaluation", "search_rank", "jurisdiction", "fold"]
-    prediction_matrix = case_errors.pivot_table(
-        index=disagreement_key,
-        columns="method",
-        values="predicted_amp_json",
-        aggfunc="first",
-    ).reset_index()
-    method_columns = [method for method in EXPECTED_METHODS if method in prediction_matrix.columns]
-    prediction_matrix["distinct_prediction_count"] = prediction_matrix[method_columns].nunique(axis=1, dropna=True)
-    disagreements = prediction_matrix.loc[prediction_matrix["distinct_prediction_count"].gt(1)]
-    display(disagreements.sort_values(["evaluation", "search_rank"]).head(100))
-else:
-    display(Markdown("> **Pending:** canonical case-level rows are unavailable."))
-'''
-        ),
-        _markdown("## 6. M3 versus M4 and supervised versus LLM views"),
-        _code(
-            r'''if "prediction_matrix" in globals() and not prediction_matrix.empty:
-    if {"M3", "M4"}.issubset(prediction_matrix.columns):
-        m3_m4 = prediction_matrix.loc[
-            prediction_matrix["M3"].notna()
-            & prediction_matrix["M4"].notna()
-            & prediction_matrix["M3"].ne(prediction_matrix["M4"])
-        ]
-        display(Markdown("**M3/M4 prediction disagreements:**"))
-        display(m3_m4.head(100))
-    else:
-        display(Markdown("> **Pending:** both M3 and M4 canonical rows are required."))
-
-    if set(EXPECTED_METHODS).issubset(prediction_matrix.columns):
-        supervised_llm = prediction_matrix.loc[
-            prediction_matrix[["M1", "M2"]].nunique(axis=1).eq(1)
-            & prediction_matrix[["M3", "M4"]].nunique(axis=1).eq(1)
-            & prediction_matrix["M1"].ne(prediction_matrix["M3"])
-        ]
-        display(Markdown("**Cases where supervised methods agree, LLM methods agree, and the groups disagree:**"))
-        display(supervised_llm.head(100))
-    else:
-        display(Markdown("> **Pending:** all four canonical method rows are required for the grouped view."))
-'''
-        ),
-        _markdown("## 7. Canonical jurisdiction performance and M2 truncation cases"),
-        _code(
-            r'''a2_jurisdiction = load_csv(
-    METRICS_ROOT / "a2/amp_per_jurisdiction.csv",
-    ("method", "jurisdiction", "fold", "macro_f1", "micro_f1", "exact_set_accuracy", "example_jaccard", "test_n"),
+            r'''rare_sensitivity = load_csv(
+    ANALYSIS_ROOT / "rare_label_sensitivity.csv", ("evaluation", "method")
 )
-show_or_pending(a2_jurisdiction)
-
-if not case_errors.empty:
-    m2_truncated = case_errors.loc[case_errors["method"].eq("M2") & case_errors["truncated_input"].eq(1)]
-    display(Markdown("**Canonical M2 rows marked as truncated:**"))
-    display(m2_truncated[inspection_columns].sort_values(["evaluation", "search_rank"]))
+m3_m4_per_label = load_csv(
+    ANALYSIS_ROOT / "m3_vs_m4_per_label_f1.csv", ("evaluation", "label_id")
+)
+show_table(rare_sensitivity)
+show_table(m3_m4_per_label)
 '''
         ),
-        _markdown("## 8. Rare-label inspection"),
+        _markdown("## 5. Core diagnostic figures"),
         _code(
-            r'''a1_label = load_csv(METRICS_ROOT / "a1/amp_per_label.csv", ("method", "label_id", "support", "status"))
-a2_label = load_csv(METRICS_ROOT / "a2/amp_per_label.csv", ("method", "label_id", "support", "status"))
-label_support = pd.concat([a1_label.assign(evaluation="A1"), a2_label.assign(evaluation="A2")], ignore_index=True)
-if not label_support.empty:
-    display(label_support.sort_values(["evaluation", "support", "label_id"]))
-display(Markdown(
-    "Set `LABEL_ID` in the manual-filter cell to inspect errors involving a rare label. "
-    "In A2, zero-support Organ Removal is N/A for per-label F1 but false positives remain visible in case-level errors."
-))
+            r'''show_figure("figure_3_cpmr_vs_contained_recall.svg")
+show_figure("figure_4_per_label_f1.svg")
 '''
         ),
         _markdown(
-            """## 9. Researcher notes and post-hoc labeling
+            """## 6. Interpretation boundary
 
-Record the filter settings and selection rule for every saved case set. Mark any analysis developed after viewing test outcomes as **post-hoc exploratory analysis**. Do not use this notebook to tune or rerun the frozen benchmark, and do not infer narrative-grounded correctness from disagreement with the silver reference."""
+Any case selection developed after seeing benchmark outcomes is **post-hoc exploratory analysis** and must be reported as such. Do not use this notebook to tune or rerun Evaluation A, select human reliability cases, reveal hidden reviewer material, or adjudicate silver/human disagreements."""
         ),
     ]
-    return _notebook(name, cells)
+    return _notebook(name, cells, purpose="CANONICAL_EVALUATION_A_ERROR_INSPECTION")
+
+
+HUMAN_SETUP = r'''from __future__ import annotations
+
+import hashlib
+import json
+import os
+from pathlib import Path
+
+import pandas as pd
+from IPython.display import Markdown, SVG, display
+
+
+def locate_repo_root() -> Path:
+    configured = os.environ.get("SHERLOC_REPO_ROOT")
+    starts = [Path(configured).expanduser()] if configured else []
+    starts.extend([Path.cwd(), *Path.cwd().parents])
+    for candidate in starts:
+        if (candidate / "src/experiments/18_evaluate_evaluation_b.py").is_file():
+            return candidate.resolve()
+    raise FileNotFoundError(
+        "Could not locate SHERLOC_Case_Analysis. Start Jupyter in the repository "
+        "or set SHERLOC_REPO_ROOT."
+    )
+
+
+REPO_ROOT = locate_repo_root()
+ANALYSIS_ROOT = REPO_ROOT / "outputs/analysis/evaluation_b"
+FIGURE_ROOT = REPO_ROOT / "outputs/figures/evaluation_b"
+EXPECTED_ANALYSIS_OUTPUTS = {
+    *(f"outputs/analysis/evaluation_b/{name}" for name in (
+        "silver_vs_human_summary.csv",
+        "silver_vs_human_per_label.csv",
+        "silver_vs_human_case_level.csv",
+        "auxiliary_silver_vs_human_summary.csv",
+        "eval_b_main_results.csv",
+        "eval_b_bootstrap_cis.csv",
+        "eval_b_family_results.csv",
+        "eval_b_per_label_results.csv",
+        "eval_b_abstain_results.csv",
+        "eval_b_abstain_case_level.csv",
+        "eval_b_prediction_breadth.csv",
+        "model_silver_vs_human_metric_comparison.csv",
+        "human_grounded_case_level_errors.csv",
+    )),
+    *(f"outputs/figures/evaluation_b/{name}" for name in (
+        "figure_b1_human_grounded_core_performance.svg",
+        "figure_b2_human_grounded_cpmr.svg",
+        "figure_b3_silver_vs_human_model_scores.svg",
+        "figure_b4_silver_human_label_proportions.svg",
+    )),
+    "docs/evaluation_b_human_grounded_report.md",
+}
+REQUIRED_ANALYSIS_INPUTS = {
+    "data/annotations/human_grounded_reference_v1.csv",
+    "data/annotations/reliability_sample_100.csv",
+    "data/processed/sherloc_benchmark_v1.csv",
+    "config/experiments/demo_bank_amp_v1.yaml",
+    "outputs/analysis/evaluation_b/eval_b_membership_manifest.json",
+    "outputs/analysis/evaluation_b/human_grounded_reference_membership_v1.csv",
+    "outputs/analysis/evaluation_b/eval_b_training_exclusion_audit.csv",
+    "outputs/analysis/evaluation_b/human_annotation_source_manifest.json",
+    "outputs/analysis/evaluation_b/human_annotation_qc_summary.json",
+    "outputs/analysis/evaluation_b/evaluation_a_integrity_baseline.json",
+    "outputs/models/evaluation_b/m1/run_metadata.json",
+    "outputs/models/evaluation_b/m2/run_metadata.json",
+    "outputs/logs/evaluation_b/llm/m3_diagnostics.json",
+    "outputs/logs/evaluation_b/llm/m4_diagnostics.json",
+    "outputs/predictions/evaluation_b/m1/predictions.jsonl",
+    "outputs/predictions/evaluation_b/m2/predictions.jsonl",
+    "outputs/predictions/evaluation_b/m3/eval_b_predictions.jsonl",
+    "outputs/predictions/evaluation_b/m4/eval_b_predictions.jsonl",
+}
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def validate_analysis_manifest(manifest: dict) -> tuple[bool, str]:
+    if not manifest:
+        return False, "manifest missing"
+    if manifest.get("status") != "COMPLETE":
+        return False, "manifest status is not COMPLETE"
+    inputs = manifest.get("inputs_sha256")
+    outputs = manifest.get("outputs_sha256")
+    if not isinstance(inputs, dict) or not isinstance(outputs, dict):
+        return False, "manifest hash maps are missing"
+    missing_inputs = REQUIRED_ANALYSIS_INPUTS - set(inputs)
+    missing_outputs = EXPECTED_ANALYSIS_OUTPUTS - set(outputs)
+    if missing_inputs or missing_outputs:
+        return False, f"manifest is incomplete (inputs={sorted(missing_inputs)}, outputs={sorted(missing_outputs)})"
+    for relative, expected in {**inputs, **outputs}.items():
+        path = (REPO_ROOT / relative).resolve()
+        if not path.is_relative_to(REPO_ROOT) or not path.is_file():
+            return False, f"bound artifact missing or outside repository: {relative}"
+        if sha256_file(path) != str(expected):
+            return False, f"bound artifact hash mismatch: {relative}"
+    return True, "all frozen inputs and canonical outputs match"
+
+
+def load_csv(relative: str, required_columns=()) -> pd.DataFrame:
+    """Load a canonical evaluator table without synthesizing missing rows."""
+    if relative in EXPECTED_ANALYSIS_OUTPUTS and not CANONICAL_ANALYSIS_READY:
+        display(Markdown(f"> **NOT YET AVAILABLE:** canonical artifact gate failed for `{relative}`"))
+        return pd.DataFrame(columns=list(required_columns))
+    path = REPO_ROOT / relative
+    if not path.is_file():
+        display(Markdown(f"> **NOT YET AVAILABLE:** `{relative}`"))
+        return pd.DataFrame(columns=list(required_columns))
+    frame = pd.read_csv(path)
+    missing = set(required_columns) - set(frame.columns)
+    if missing:
+        raise ValueError(f"{relative} is missing required columns: {sorted(missing)}")
+    return frame
+
+
+def load_json(relative: str) -> dict:
+    path = REPO_ROOT / relative
+    if not path.is_file():
+        display(Markdown(f"> **NOT YET AVAILABLE:** `{relative}`"))
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_jsonl_inventory(method: str, relative: str, expected_n: int | None) -> dict:
+    path = REPO_ROOT / relative
+    if not path.is_file():
+        return {"method": method, "path": relative, "present": False,
+                "available": False, "expected_count": expected_n,
+                "row_count": None, "validated_count": None}
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+    validated_count = sum(
+        str(row.get("status", "")).upper() == "SUCCESS_VALIDATED" for row in rows
+    )
+    complete = expected_n is not None and len(rows) == expected_n == validated_count
+    return {
+        "method": method,
+        "path": relative,
+        "present": True,
+        "available": complete,
+        "expected_count": expected_n,
+        "row_count": len(rows),
+        "validated_count": validated_count,
+    }
+
+
+def show_table(frame: pd.DataFrame, *, message="canonical rows are unavailable"):
+    if frame.empty:
+        display(Markdown(f"> **NOT YET AVAILABLE:** {message}."))
+    else:
+        display(frame)
+
+
+def show_figure(filename: str):
+    path = FIGURE_ROOT / filename
+    if not CANONICAL_ANALYSIS_READY or not path.is_file():
+        display(Markdown(f"> **NOT YET AVAILABLE:** `{path.relative_to(REPO_ROOT)}`"))
+        return
+    display(SVG(filename=str(path)))
+
+
+analysis_manifest = load_json(
+    "outputs/analysis/evaluation_b/evaluation_b_analysis_manifest.json"
+)
+CANONICAL_ANALYSIS_READY, analysis_gate_detail = validate_analysis_manifest(analysis_manifest)
+analysis_status = "COMPLETE" if CANONICAL_ANALYSIS_READY else "NOT YET AVAILABLE"
+display(Markdown(
+    f"**Canonical Evaluation B analysis:** `{analysis_status}` — {analysis_gate_detail}"
+))
+'''
+
+
+def _human_notebook() -> dict[str, Any]:
+    name = HUMAN_GROUNDED_NOTEBOOK_NAME
+    cells = [
+        _markdown(
+            """# Evaluation B — Single-Reviewer Human-Grounded Narrative Validation
+
+This unexecuted notebook is a thin, readable view of canonical Evaluation B artifacts. Missing upstream artifacts are reported as **NOT YET AVAILABLE**. Notebook cells do not construct the human reference, run models, call an API, implement metrics, bootstrap confidence intervals, or recreate figures.
+
+Terminology: the reviewed labels form a **single-reviewer human-grounded narrative reference**. SHERLOC Legacy Keywords remain a separate **silver reference**. Abstain cases are narrative-insufficiency diagnostics, not ordinary all-negative references."""
+        ),
+        _markdown("## 1. Setup and canonical-artifact gate"),
+        _code(HUMAN_SETUP),
+        _markdown("## 2. Immutable annotation source and QC"),
+        _code(
+            r'''source_manifest = load_json(
+    "outputs/analysis/evaluation_b/human_annotation_source_manifest.json"
+)
+qc_summary = load_json(
+    "outputs/analysis/evaluation_b/human_annotation_qc_summary.json"
+)
+qc_report = load_csv(
+    "outputs/analysis/evaluation_b/human_annotation_qc_report.csv"
+)
+if source_manifest and qc_summary:
+    source = source_manifest.get("source", {})
+    display(pd.DataFrame([{
+        "immutable_source": source.get("path"),
+        "source_rows": source.get("row_count", source_manifest.get("row_count")),
+        "source_sha256": source.get("sha256", source_manifest.get("sha256")),
+        "qc_status": qc_summary.get("status"),
+        "reviewed_n": qc_summary.get("reviewed_n"),
+        "not_reviewed_n": qc_summary.get("not_reviewed_n"),
+        "skip_n": qc_summary.get("skip_n"),
+        "substantive_n": qc_summary.get("substantive_n"),
+        "abstain_n": qc_summary.get("abstain_n"),
+        "retained_n": qc_summary.get("retained_n"),
+        "blocking_issue_count": qc_summary.get("blocking_issue_count"),
+    }]))
+else:
+    display(Markdown("> **NOT YET AVAILABLE:** source-manifest/QC summary pair."))
+show_table(qc_report, message="human annotation QC issue rows are unavailable")
+'''
+        ),
+        _markdown("## 3. Human AMP label supports"),
+        _code(
+            r'''per_label = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_per_label_results.csv",
+    required_columns=("method", "family", "label_id", "support"),
+)
+if not per_label.empty:
+    human_support = per_label.loc[
+        per_label["method"].eq("M1"), ["family", "label_id", "support"]
+    ].drop_duplicates()
+    show_table(human_support, message="human AMP support table is unavailable")
+else:
+    display(Markdown("> **NOT YET AVAILABLE:** finalized human AMP supports."))
+'''
+        ),
+        _markdown("## 4. Silver reference versus human narrative reference"),
+        _code(
+            r'''silver_summary = load_csv(
+    "outputs/analysis/evaluation_b/silver_vs_human_summary.csv",
+	required_columns=(
+	    "family", "n", "substantive_n", "comparable_n",
+	    "silver_reference_unavailable_n", "exact_set_concordance", "mean_jaccard",
+	    "micro_precision_silver_against_human", "micro_recall_silver_against_human",
+	    "micro_f1_silver_against_human", "shared_label_count",
+	    "silver_only_label_count", "human_only_label_count",
+	),
+)
+silver_per_label = load_csv(
+	"outputs/analysis/evaluation_b/silver_vs_human_per_label.csv",
+	required_columns=(
+	    "family", "label_id", "n", "substantive_n", "comparable_n",
+	    "silver_reference_unavailable_n", "silver_support", "human_support",
+	    "shared", "silver_only", "human_only", "raw_agreement",
+	),
+)
+auxiliary_summary = load_csv(
+	"outputs/analysis/evaluation_b/auxiliary_silver_vs_human_summary.csv",
+	required_columns=(
+	    "target", "substantive_n", "comparable_n", "excluded_n",
+	    "exact_concordance", "status",
+	),
+)
+show_table(silver_summary, message="silver-versus-human family summary is unavailable")
+show_table(silver_per_label, message="silver-versus-human per-label rows are unavailable")
+show_table(auxiliary_summary, message="auxiliary descriptive comparison is unavailable")
+'''
+        ),
+        _markdown("## 5. Leakage audit and prediction inventory"),
+        _code(
+            r'''leakage = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_training_exclusion_audit.csv",
+    required_columns=(
+        "reliability_case_id", "search_rank", "membership_sha256",
+        "removed_from_eval_b_supervised_training",
+        "removed_from_eval_b_validation", "removed_from_eval_b_threshold_tuning",
+        "removed_from_eval_b_supervised_label_selection",
+    ),
+)
+show_table(leakage, message="supervised leakage-exclusion audit is unavailable")
+
+membership_manifest = load_json(
+    "outputs/analysis/evaluation_b/eval_b_membership_manifest.json"
+)
+retained_n = membership_manifest.get("retained_n") if membership_manifest else None
+overlap_n = (
+    membership_manifest.get("a1_active_m4_demo_overlap_audit", {}).get("overlap_n")
+    if membership_manifest else None
+)
+m4_expected_n = (
+    int(retained_n) - int(overlap_n)
+    if retained_n is not None and overlap_n is not None else None
+)
+prediction_inventory = pd.DataFrame([
+    load_jsonl_inventory("M1", "outputs/predictions/evaluation_b/m1/predictions.jsonl", retained_n),
+    load_jsonl_inventory("M2", "outputs/predictions/evaluation_b/m2/predictions.jsonl", retained_n),
+    load_jsonl_inventory("M3", "outputs/predictions/evaluation_b/m3/eval_b_predictions.jsonl", retained_n),
+    load_jsonl_inventory("M4", "outputs/predictions/evaluation_b/m4/eval_b_predictions.jsonl", m4_expected_n),
+])
+display(prediction_inventory)
+if not prediction_inventory["available"].all():
+    display(Markdown("> **NOT YET AVAILABLE:** one or more frozen prediction artifacts."))
+'''
+        ),
+        _markdown(
+            """## 6. Main M1–M4 human-grounded results
+
+All primary rows come from one exact common substantive membership. The notebook displays canonical values and deterministic bootstrap intervals; it does not recompute them."""
+        ),
+        _code(
+            r'''main_results = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_main_results.csv",
+    required_columns=(
+        "method", "n", "macro_f1", "micro_f1", "exact_set", "jaccard",
+        "macro_supported_label_count", "act_cpmr", "means_cpmr", "purpose_cpmr",
+    ),
+)
+bootstrap_cis = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_bootstrap_cis.csv",
+    required_columns=("method", "metric", "estimate", "ci_low", "ci_high"),
+)
+show_table(main_results, message="main Evaluation B results are unavailable")
+show_table(bootstrap_cis, message="bootstrap confidence intervals are unavailable")
+'''
+        ),
+        _markdown("## 7. CPMR, contained recall, and empty-reference behavior"),
+        _code(
+            r'''family_results = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_family_results.csv",
+    required_columns=(
+        "method", "family", "cpmr", "mean_contained_recall",
+        "macro_precision_family", "macro_recall_family", "macro_f1_family",
+        "supported_label_count", "nonempty_reference_n",
+        "cpmr_nonempty_reference", "empty_reference_n",
+        "empty_reference_correct_empty_count", "empty_reference_correct_empty_rate",
+    ),
+)
+show_table(family_results, message="family-level CPMR diagnostics are unavailable")
+'''
+        ),
+        _markdown("## 8. Narrative-insufficiency (Abstain) diagnostic"),
+        _code(
+            r'''abstain_results = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_abstain_results.csv",
+    required_columns=(
+        "method", "abstain_n", "all_amp_empty_rate",
+        "narrative_insufficiency_safe_rate", "mean_total_predicted_label_count",
+        "cases_with_any_predicted_act", "cases_with_any_predicted_means",
+        "cases_with_any_predicted_purpose",
+    ),
+)
+abstain_cases = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_abstain_case_level.csv"
+)
+show_table(abstain_results, message="Abstain diagnostics are unavailable")
+show_table(abstain_cases, message="Abstain case-level rows are unavailable")
+'''
+        ),
+        _markdown("## 9. Prediction breadth and silver-scored versus human-scored behavior"),
+        _code(
+            r'''breadth = load_csv(
+    "outputs/analysis/evaluation_b/eval_b_prediction_breadth.csv",
+    required_columns=(
+        "method", "n", "mean_predicted_act_labels", "mean_predicted_means_labels",
+        "mean_predicted_purpose_labels", "mean_total_predicted_labels",
+        "mean_total_human_labels", "silver_act_reference_available_n",
+        "silver_means_reference_available_n", "silver_purpose_reference_available_n",
+        "complete_silver_amp_reference_n", "mean_total_silver_labels",
+    ),
+)
+reference_comparison = load_csv(
+    "outputs/analysis/evaluation_b/model_silver_vs_human_metric_comparison.csv",
+    required_columns=(
+        "method", "metric_scope", "metric", "silver_reference_value",
+        "human_grounded_value", "delta_human_minus_silver", "human_primary_n",
+        "dual_reference_n", "excluded_incomplete_silver_reference_n",
+    ),
+)
+show_table(breadth, message="prediction-breadth rows are unavailable")
+show_table(reference_comparison, message="silver/human model-score deltas are unavailable")
+'''
+        ),
+        _markdown("## 10. Core figures"),
+        _code(
+            r'''for figure_name in (
+    "figure_b1_human_grounded_core_performance.svg",
+    "figure_b2_human_grounded_cpmr.svg",
+    "figure_b3_silver_vs_human_model_scores.svg",
+    "figure_b4_silver_human_label_proportions.svg",
+):
+    show_figure(figure_name)
+'''
+        ),
+        _markdown("## 11. Canonical case-level audit table"),
+        _code(
+            r'''case_level = load_csv(
+    "outputs/analysis/evaluation_b/human_grounded_case_level_errors.csv",
+    required_columns=(
+        "reliability_case_id", "search_rank", "jurisdiction", "fact_summary",
+        "human_act_json", "silver_act_json", "silver_act_reference_available",
+        "complete_silver_amp_reference_available", "m1_prediction_json",
+        "m2_prediction_json", "m3_prediction_json", "m4_prediction_json",
+    ),
+)
+show_table(case_level, message="canonical case-level audit rows are unavailable")
+'''
+        ),
+        _markdown(
+            """## 12. Interpretation boundary
+
+Only one human reviewer was available, so reviewer-to-reviewer reliability is unavailable. Silver-only labels are not automatically errors: SHERLOC structured metadata may be broader than information recoverable from a Fact Summary. Abstain results are descriptive insufficiency diagnostics. Small-N differences and auxiliary concordance must not be overinterpreted. Evaluation A remains frozen, and no auxiliary predictive benchmark is run here."""
+        ),
+    ]
+    notebook = _notebook(name, cells, purpose="CANONICAL_EVALUATION_B_ANALYSIS_VIEW")
+    notebook["metadata"]["sherloc_reporting"]["evaluation_b_analysis_source"] = (
+        "src/experiments/18_evaluate_evaluation_b.py"
+    )
+    return notebook
 
 
 def _auxiliary_notebook() -> dict[str, Any]:
     name = AUXILIARY_NOTEBOOK_NAME
     cells = [
         _markdown(
-            """# Auxiliary Feature Results — Exploratory Only
+            """# Auxiliary Feature Results — Deferred
 
-This optional notebook is separate from the 17-output primary AMP benchmark. It loads only machine-readable artifacts under `outputs/metrics/auxiliary/` and must never add Geographic Form, Victim Multiplicity, Sector, or Child/Minor targets to the core M3/M4 prompt.
-
-All Form/Sector results are **exploratory silver-reference results**. Multiplicity results remain provisional unless backed by completed human confirmation. This notebook does not calculate metrics or generate scientific conclusions."""
+This optional notebook is separate from Evaluation A and Evaluation B. No Geographic Form, Multiplicity, Sector, or Child experiment is executed or reported here. It exists only as a deferred artifact inventory."""
         ),
-        _markdown("## 1. Setup"),
-        _code(COMMON_SETUP),
-        _markdown("## 2. Auxiliary artifact inventory"),
+        _markdown("## Status"),
         _code(
-            r'''auxiliary_root = METRICS_ROOT / "auxiliary"
-if auxiliary_root.is_dir():
-    auxiliary_files = sorted(path for path in auxiliary_root.rglob("*") if path.is_file())
-    display(pd.DataFrame({"artifact": [str(path.relative_to(REPO_ROOT)) for path in auxiliary_files]}))
-else:
-    display(Markdown(
-        "> **Pending by protocol:** `outputs/metrics/auxiliary/` does not exist. "
-        "Primary M1-M4 A1/A2 AMP completion is required before auxiliary execution."
-    ))
+            r'''from IPython.display import Markdown, display
+display(Markdown("**NOT YET AVAILABLE:** auxiliary experiments remain outside the current task."))
 '''
-        ),
-        _markdown("## 3. Protocol status"),
-        _code(
-            r'''auxiliary_status = pd.DataFrame([
-    {"feature": "Geographic Form", "required_label": "EXPLORATORY SILVER-REFERENCE FORM RESULTS", "status": "PENDING_OR_LOAD_FROM_CANONICAL_ARTIFACT"},
-    {"feature": "Victim Multiplicity", "required_label": "PROVISIONAL unless human-confirmed", "status": "PENDING_HUMAN_CONFIRMATION"},
-    {"feature": "Sector", "required_label": "EXPLORATORY SILVER-REFERENCE SECTOR RESULTS", "status": "OPTIONAL_AFTER_PRIMARY"},
-    {"feature": "Child/minor", "required_label": "EXPLORATORY", "status": "DEFERRED"},
-])
-display(auxiliary_status)
-'''
-        ),
-        _markdown(
-            """## 4. Researcher review
-
-Add loaders for specific canonical auxiliary evaluator tables only after those pipelines exist. Do not derive an independent split: intersect auxiliary eligibility with the frozen A1/A2 assignments."""
         ),
     ]
-    return _notebook(name, cells)
+    return _notebook(name, cells, purpose="DEFERRED_AUXILIARY_TEMPLATE")
 
 
 def build_notebooks(*, include_auxiliary: bool = False) -> dict[str, dict[str, Any]]:
     """Return deterministic notebook documents keyed by output filename."""
     notebooks = {
-        PRIMARY_NOTEBOOK_NAMES[0]: _a1_notebook(),
-        PRIMARY_NOTEBOOK_NAMES[1]: _a2_notebook(),
-        PRIMARY_NOTEBOOK_NAMES[2]: _error_notebook(),
+        EVALUATION_A_NOTEBOOK_NAMES[0]: _a1_notebook(),
+        EVALUATION_A_NOTEBOOK_NAMES[1]: _a2_notebook(),
+        EVALUATION_A_NOTEBOOK_NAMES[2]: _error_notebook(),
+        HUMAN_GROUNDED_NOTEBOOK_NAME: _human_notebook(),
     }
     if include_auxiliary:
         notebooks[AUXILIARY_NOTEBOOK_NAME] = _auxiliary_notebook()
@@ -785,7 +1009,7 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--include-auxiliary",
         action="store_true",
-        help="Also generate the post-primary auxiliary reporting notebook.",
+        help="Also generate the deferred notebook 11 auxiliary inventory.",
     )
     parser.add_argument(
         "--check",

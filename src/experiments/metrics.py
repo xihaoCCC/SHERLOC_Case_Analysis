@@ -47,6 +47,7 @@ AMP_FAMILY_BY_LABEL: dict[str, str] = {
 
 ORGAN_REMOVAL_LABEL = "PURPOSE_REMOVAL_OF_ORGANS"
 SILVER_REFERENCE_TERM = "SHERLOC Legacy Keywords silver reference"
+AMP_FAMILIES: tuple[str, ...] = ("ACT", "MEANS", "PURPOSE")
 
 
 class MetricInputError(ValueError):
@@ -192,6 +193,94 @@ def _safe_ratio(numerator: int, denominator: int) -> float | None:
 def _f1_zero_division_zero(tp: int, fp: int, fn: int) -> float:
     denominator = 2 * tp + fp + fn
     return float((2 * tp) / denominator) if denominator else 0.0
+
+
+def contained_partial_match(
+    silver_reference_labels: Iterable[str], predicted_labels: Iterable[str]
+) -> int:
+    """Return 1 for a nonempty prediction contained in the reference set.
+
+    Labels are compared as sets, so input order and duplicate presentation do
+    not affect the result. An empty prediction always returns 0. Consequently,
+    an empty silver-reference set also returns 0 safely.
+    """
+
+    reference_set = frozenset(silver_reference_labels)
+    predicted_set = frozenset(predicted_labels)
+    return int(bool(predicted_set) and predicted_set.issubset(reference_set))
+
+
+def contained_recall(
+    silver_reference_labels: Iterable[str], predicted_labels: Iterable[str]
+) -> float | None:
+    """Return reference coverage only for CPMR successes; otherwise N/A."""
+
+    reference_set = frozenset(silver_reference_labels)
+    predicted_set = frozenset(predicted_labels)
+    if not predicted_set or not predicted_set.issubset(reference_set):
+        return None
+    return float(len(predicted_set) / len(reference_set))
+
+
+def compute_amp_cpmr(
+    silver_reference: Any,
+    prediction: Any,
+    *,
+    label_ids: Sequence[str] = AMP_LABEL_IDS,
+) -> dict[str, Any]:
+    """Calculate independent Act, Means, and Purpose CPMR diagnostics.
+
+    Existing canonical mappings must be applied before this matrix-level
+    function, as they are for the other shared AMP metrics. Per-case contained
+    recall is ``None`` unless the corresponding family CPMR is 1; a family
+    with no CPMR successes also has ``mean_contained_recall=None``.
+    """
+
+    matrices = validate_binary_matrices(
+        silver_reference, prediction, label_ids=label_ids
+    )
+    case_n = matrices.silver_reference.shape[0]
+    per_case: list[dict[str, int | float | None]] = [{} for _ in range(case_n)]
+    by_family: dict[str, dict[str, int | float | None]] = {}
+
+    for family in AMP_FAMILIES:
+        indices = [
+            index
+            for index, label in enumerate(matrices.label_ids)
+            if AMP_FAMILY_BY_LABEL[label] == family
+        ]
+        family_reference = matrices.silver_reference[:, indices]
+        family_prediction = matrices.prediction[:, indices]
+        success = np.logical_and(
+            family_prediction.sum(axis=1) > 0,
+            np.all(family_prediction <= family_reference, axis=1),
+        )
+        reference_count = family_reference.sum(axis=1)
+        predicted_count = family_prediction.sum(axis=1)
+        recalls = np.divide(
+            predicted_count,
+            reference_count,
+            out=np.zeros(case_n, dtype=np.float64),
+            where=success,
+        )
+
+        family_key = family.lower()
+        for case_index, is_success in enumerate(success):
+            per_case[case_index][f"{family_key}_cpmr"] = int(is_success)
+            per_case[case_index][f"{family_key}_contained_recall"] = (
+                float(recalls[case_index]) if is_success else None
+            )
+
+        success_count = int(success.sum())
+        by_family[family] = {
+            "cpmr": float(success.mean()),
+            "mean_contained_recall": (
+                float(recalls[success].mean()) if success_count else None
+            ),
+            "success_count": success_count,
+        }
+
+    return {"test_n": int(case_n), "by_family": by_family, "per_case": per_case}
 
 
 def compute_amp_metrics(
@@ -370,14 +459,18 @@ def compute_case_errors(
 
 
 __all__ = [
+    "AMP_FAMILIES",
     "AMP_FAMILY_BY_LABEL",
     "AMP_LABEL_IDS",
     "BinaryMatrices",
     "MetricInputError",
     "ORGAN_REMOVAL_LABEL",
     "SILVER_REFERENCE_TERM",
+    "compute_amp_cpmr",
     "compute_amp_metrics",
     "compute_case_errors",
+    "contained_partial_match",
+    "contained_recall",
     "indicator_to_labels",
     "labels_to_indicator",
     "supported_label_ids",

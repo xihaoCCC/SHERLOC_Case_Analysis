@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "geographic_form": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Internal",
+          "Transnational"
+        ]
+      },
+      "maxItems": 2
+    },
+    "multiplicity": {
+      "type": "string",
+      "enum": [
+        "SINGLE",
+        "MULTIPLE",
+        "UNKNOWN"
+      ]
+    },
+    "child_involvement": {
+      "type": "string",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ]
+    },
+    "organized_criminal_group": {
+      "type": "string",
+      "enum": [
+        "TRUE",
+        "FALSE"
+      ]
+    }
+  },
+  "required": [
+    "geographic_form",
+    "multiplicity",
+    "child_involvement",
+    "organized_criminal_group"
+  ],
+  "additionalProperties": false
+}

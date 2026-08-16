@@ -1,0 +1,1636 @@
+{
+  "schema_version": "sherloc-extraction-contract-v2",
+  "parser_version": "2.0.0",
+  "run": {
+    "started_at": "2026-08-10T20:13:15Z",
+    "completed_at": "2026-08-10T20:14:20Z",
+    "elapsed_seconds": 64.599,
+    "command_stage": "all",
+    "python_version": "3.10.5",
+    "standard_library_only": true,
+    "corpus_snapshot_date": "2026-08-09"
+  },
+  "manifest_validation": {
+    "status": "PASS",
+    "corpus_manifest_path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/data/manifests/case_urls.csv",
+    "download_manifest_path": "/Users/xihaoc/学术/Data Science/HT_AI_Framework/SHERLOC_Case_Analysis/logs/page_download_manifest.csv",
+    "expected_manifest_rows": 1590,
+    "download_manifest_rows": 1590,
+    "unique_canonical_urls": 1590,
+    "download_status_counts": {
+      "HTTP_OK_VALID": 1590
+    },
+    "url_path_crime_type_counts": {
+      "traffickingpersonscrimetype": 1406,
+      "drugcrimetype": 24,
+      "criminalgroupcrimetype": 103,
+      "migrantsmugglingcrimetype": 30,
+      "moneylaunderingcrimetype": 18,
+      "illicitfirearmscrimetype": 6,
+      "corruptioncrimetype": 3
+    },
+    "join_issue_count": 0
+  },
+  "fixture_validation": {
+    "status": "PASS",
+    "fixture_count": 19,
+    "checks": [
+      {
+        "name": "fixture_count_19",
+        "status": "PASS",
+        "details": 19
+      },
+      {
+        "name": "all_fixtures_join_identity_and_locale",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "all_fixtures_have_fact_summary",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "b637_fact_english_french_separate",
+        "status": "PASS",
+        "details": [
+          "en",
+          "fr"
+        ]
+      },
+      {
+        "name": "causa_2422_multilingual_sections_separate",
+        "status": "PASS",
+        "details": {
+          "fact": [
+            "en",
+            "es"
+          ],
+          "commentary_significant_features": [
+            "es",
+            "en"
+          ],
+          "procedural_information": [
+            "en",
+            "es"
+          ],
+          "sources_citations": [
+            "en",
+            "es"
+          ]
+        }
+      },
+      {
+        "name": "twitter_corporate_respondent_preserved",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "cross_classified_sidebar_strictly_scoped",
+        "status": "PASS",
+        "details": [
+          62,
+          461,
+          418,
+          147
+        ]
+      },
+      {
+        "name": "fixture_legacy_keywords_count_17",
+        "status": "PASS",
+        "details": 17
+      },
+      {
+        "name": "sentencia_migrants_role_preserved",
+        "status": "PASS",
+        "details": [
+          [
+            "victimsPlaintiffs",
+            "Migrants",
+            1
+          ],
+          [
+            "defendantsRespondents",
+            "Defendants / Respondents in the first instance",
+            1
+          ]
+        ]
+      },
+      {
+        "name": "fixture_repeated_record_totals",
+        "status": "PASS",
+        "details": {
+          "person_role_records": 54,
+          "defendant_records": 45,
+          "charge_subject_records": 45,
+          "charge_records": 111,
+          "court_sections": 16
+        }
+      },
+      {
+        "name": "robinson_cardinality_not_truncated",
+        "status": "PASS",
+        "details": {
+          "defendants": 17,
+          "subjects": 17,
+          "charges": 63
+        }
+      },
+      {
+        "name": "court_scoped_to_direct_main_section",
+        "status": "PASS",
+        "details": [
+          "Case No. 21-cv-00485-JCS – John Doe et al. v. Twitter. INC.",
+          "Querela n°11/19",
+          "Sentencia 298/2015"
+        ]
+      },
+      {
+        "name": "no_fixture_parse_errors",
+        "status": "PASS",
+        "details": null
+      }
+    ],
+    "failure_count": 0,
+    "failed_checks": [],
+    "fixture_search_ranks": [
+      5,
+      15,
+      42,
+      62,
+      136,
+      147,
+      161,
+      311,
+      418,
+      461,
+      480,
+      507,
+      522,
+      534,
+      547,
+      559,
+      572,
+      585,
+      590
+    ],
+    "fixtures": [
+      {
+        "fixture": "B637.L6.961-X7-DF.html",
+        "search_rank": 62
+      },
+      {
+        "fixture": "Case 130125.html",
+        "search_rank": 161
+      },
+      {
+        "fixture": "Case No. 21-cv-00485-JCS – John Doe et al. v. Twitter. INC..html",
+        "search_rank": 15
+      },
+      {
+        "fixture": "Case of Hug.html",
+        "search_rank": 572
+      },
+      {
+        "fixture": "Causa 2422.html",
+        "search_rank": 480
+      },
+      {
+        "fixture": "Conviction KOK.br.52_10.html",
+        "search_rank": 522
+      },
+      {
+        "fixture": "Criminal Case No. 23-1556.html",
+        "search_rank": 311
+      },
+      {
+        "fixture": "Dosar nr 1ra - 144_2011.html",
+        "search_rank": 547
+      },
+      {
+        "fixture": "Ho v The Queen; Leech v The Queen [2011] VSCA 344 as related to DPP (Cth) v Ho & Ho [2009] VSC 437.html",
+        "search_rank": 461
+      },
+      {
+        "fixture": "IV KK 52_11.html",
+        "search_rank": 559
+      },
+      {
+        "fixture": "O.O.O. and Others v Commissioner of Police for the Metropolis.html",
+        "search_rank": 534
+      },
+      {
+        "fixture": "People of Philippines vs. Nelia Ogalesco y Torio.html",
+        "search_rank": 585
+      },
+      {
+        "fixture": "Querela n°11_19.html",
+        "search_rank": 42
+      },
+      {
+        "fixture": "R v. N. and R v. Le.html",
+        "search_rank": 418
+      },
+      {
+        "fixture": "R. v. A.A.html",
+        "search_rank": 136
+      },
+      {
+        "fixture": "Rex and Obinna Obeta, Ike and Beatrice Ekweremadu.html",
+        "search_rank": 5
+      },
+      {
+        "fixture": "Sentencia 298_2015.html",
+        "search_rank": 147
+      },
+      {
+        "fixture": "United States v Robinson.html",
+        "search_rank": 507
+      },
+      {
+        "fixture": "United States v. Cha.html",
+        "search_rank": 590
+      }
+    ]
+  },
+  "challenge_validation": {
+    "status": "PASS",
+    "challenge_count": 46,
+    "selection": [
+      {
+        "search_rank": 1,
+        "case_title": "Criminal Case No. 1000711-61.2022.4.01.4200",
+        "reasons": [
+          "direct_english_fact",
+          "newest_url_year",
+          "structured_only_labels"
+        ]
+      },
+      {
+        "search_rank": 3,
+        "case_title": "Sent. n. sez. 1337",
+        "reasons": [
+          "drug_url_path",
+          "no_person_role_section",
+          "rare_sidebar_protection"
+        ]
+      },
+      {
+        "search_rank": 4,
+        "case_title": "G.G. and Deanna Rose v. Salesforce.com, INC.",
+        "reasons": [
+          "criminal_group_url_path",
+          "empty_legacy_keywords"
+        ]
+      },
+      {
+        "search_rank": 7,
+        "case_title": "Basfar v Wong 2022 UKSC 20",
+        "reasons": [
+          "rare_sidebar_sector_other"
+        ]
+      },
+      {
+        "search_rank": 9,
+        "case_title": "(2022) EWCA Crim 106",
+        "reasons": [
+          "maximum_sidebar_field_variety",
+          "rare_other_exploitative_purpose"
+        ]
+      },
+      {
+        "search_rank": 46,
+        "case_title": "Appeal of the Court of First Instance of Liège, 2019/858",
+        "reasons": [
+          "explicit_legal_entity_defendant"
+        ]
+      },
+      {
+        "search_rank": 62,
+        "case_title": "B637.L6.961-X7-DF",
+        "reasons": [
+          "migrant_smuggling_url_path",
+          "no_active_fact_pane",
+          "unlabeled_english_plus_french_fact"
+        ]
+      },
+      {
+        "search_rank": 63,
+        "case_title": "Sent. 3/2018 R. Sent",
+        "reasons": [
+          "malformed_nested_charge_subjects",
+          "missing_closing_divs"
+        ]
+      },
+      {
+        "search_rank": 84,
+        "case_title": "16-82.985",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 89,
+        "case_title": "Proc. nr. 10023/2017/DDA R.G.N.R. Order of precautionary detention",
+        "reasons": [
+          "migrants_heading",
+          "multilingual_procedural",
+          "rare_jurisdiction"
+        ]
+      },
+      {
+        "search_rank": 91,
+        "case_title": "Case N 42/2017",
+        "reasons": [
+          "arabic_multilingual_marker"
+        ]
+      },
+      {
+        "search_rank": 104,
+        "case_title": "Montoya, Pedro Eduardo y otros",
+        "reasons": [
+          "no_active_fact_pane",
+          "unlabeled_english_plus_spanish_fact"
+        ]
+      },
+      {
+        "search_rank": 138,
+        "case_title": "Case no. 91017032",
+        "reasons": [
+          "corruption_url_path",
+          "large_multilingual_multi_defendant"
+        ]
+      },
+      {
+        "search_rank": 226,
+        "case_title": "Sentence 1098-2013",
+        "reasons": [
+          "multi_defendant",
+          "multilingual_person_section"
+        ]
+      },
+      {
+        "search_rank": 307,
+        "case_title": "ACR 200850010084958ES",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 318,
+        "case_title": "1-12-11790",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 380,
+        "case_title": "Criminal Case No. CBU-92284 to CBU 92288",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 431,
+        "case_title": "1-12-700",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 446,
+        "case_title": "Ministère public c. Martinez et autres N° 11/1185,",
+        "reasons": [
+          "well_formed_multilingual_contrast"
+        ]
+      },
+      {
+        "search_rank": 543,
+        "case_title": "Case No. 51- O11-53",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 574,
+        "case_title": "Lovo",
+        "reasons": [
+          "three_pane_duplicate_id_group"
+        ]
+      },
+      {
+        "search_rank": 575,
+        "case_title": "Correctional Tribunal of Charleroi 18-03-2011",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 592,
+        "case_title": "Correctional Tribunal of Tongeren 10-02-2011",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 593,
+        "case_title": "Belgian Supreme Court 09-02-2011",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 767,
+        "case_title": "Tapachula Globeritos Case",
+        "reasons": [
+          "widest_multilingual_section_coverage"
+        ]
+      },
+      {
+        "search_rank": 845,
+        "case_title": "Court of Appeals of Mons 27-11-2009",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 871,
+        "case_title": "KŽ I 442/09",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 911,
+        "case_title": "First Instance Tribunal of Liege 29-06-2009",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 923,
+        "case_title": "First Instance Tribunal of Charleroi 12-06-2009",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 937,
+        "case_title": "KZ I 2880-08",
+        "reasons": [
+          "corruption_url_path",
+          "largest_html",
+          "multi_party_stress"
+        ]
+      },
+      {
+        "search_rank": 952,
+        "case_title": "Presuda Х-K-06/181",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 965,
+        "case_title": "Limited Liability Company T.C. et al.",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1007,
+        "case_title": "Court of Appeals of Ghent 18-12-2008",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1022,
+        "case_title": "Case No. P.08.0951.N",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1171,
+        "case_title": "United States v. Daneman",
+        "reasons": [
+          "maximum_defendant_count"
+        ]
+      },
+      {
+        "search_rank": 1231,
+        "case_title": "Court of Appeals of Antwerp, 28-03-2007",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1255,
+        "case_title": "KZ I 1784-05",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1295,
+        "case_title": "Case No B 1149-06",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1317,
+        "case_title": "Presuda K-111/03",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1419,
+        "case_title": "Case No. II Aka 586/02",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1423,
+        "case_title": "Judgment No. 3162/2003 of the Court of Cassation",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1435,
+        "case_title": "Switzerland v. A and B - Criminal Case ILDC 347 (CH 2002)",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1482,
+        "case_title": "United States v. Steven Lane Crawford, 85-2105",
+        "reasons": [
+          "fact_summary_structurally_absent"
+        ]
+      },
+      {
+        "search_rank": 1483,
+        "case_title": "United States v. Booker",
+        "reasons": [
+          "oldest_url_year"
+        ]
+      },
+      {
+        "search_rank": 1489,
+        "case_title": "S vs Emmanuel Uche Odii and Others",
+        "reasons": [
+          "malformed_nested_charge_subjects",
+          "missing_closing_divs"
+        ]
+      },
+      {
+        "search_rank": 1515,
+        "case_title": "Case No. 2105/2009",
+        "reasons": [
+          "neither_label_source",
+          "smallest_html",
+          "yearless_url"
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "name": "challenge_rank_set_complete",
+        "status": "PASS",
+        "details": {
+          "expected_count": 46,
+          "actual_count": 46
+        }
+      },
+      {
+        "name": "all_25_missing_fact_pages_are_section_absent",
+        "status": "PASS",
+        "details": []
+      },
+      {
+        "name": "all_url_path_crime_types_covered",
+        "status": "PASS",
+        "details": {
+          "corpus": [
+            "corruptioncrimetype",
+            "criminalgroupcrimetype",
+            "drugcrimetype",
+            "illicitfirearmscrimetype",
+            "migrantsmugglingcrimetype",
+            "moneylaunderingcrimetype",
+            "traffickingpersonscrimetype"
+          ],
+          "challenge": [
+            "corruptioncrimetype",
+            "criminalgroupcrimetype",
+            "drugcrimetype",
+            "illicitfirearmscrimetype",
+            "migrantsmugglingcrimetype",
+            "moneylaunderingcrimetype",
+            "traffickingpersonscrimetype"
+          ]
+        }
+      },
+      {
+        "name": "rank_62_unlabeled_en_fr_fact_preserved",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "rank_307_duplicate_tab_identity_preserved",
+        "status": "PASS",
+        "details": [
+          "DUPLICATE_TAB_PANE_ID",
+          "DUPLICATE_TAB_HREF",
+          "TAB_GROUP_NO_ACTIVE_PANE"
+        ]
+      },
+      {
+        "name": "rank_4_legacy_keywords_empty_not_absent",
+        "status": "PASS",
+        "details": "EMPTY"
+      },
+      {
+        "name": "rank_1423_migrants_role_preserved",
+        "status": "PASS",
+        "details": [
+          [
+            "victimsPlaintiffs",
+            "Migrants"
+          ],
+          [
+            "defendantsRespondents",
+            "Defendants / Respondents in the first instance"
+          ]
+        ]
+      },
+      {
+        "name": "rank_46_legal_entity_preserved",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "rank_1171_maximum_defendants_preserved",
+        "status": "PASS",
+        "details": {
+          "defendants": 34,
+          "charge_subjects": 34
+        }
+      },
+      {
+        "name": "malformed_nested_charge_subjects_retained",
+        "status": "PASS",
+        "details": {
+          "subject_counts": {
+            "63": 4,
+            "1489": 3
+          },
+          "orphan_counts": {
+            "63": 0,
+            "1489": 0
+          },
+          "record_local_fallbacks": {
+            "63": {
+              "subjects_excluding_nested": 1,
+              "literal_subtrees_preserved": 1
+            },
+            "1489": {
+              "subjects_excluding_nested": 1,
+              "literal_subtrees_preserved": 1
+            }
+          }
+        }
+      },
+      {
+        "name": "nested_main_record_court_sections_recovered",
+        "status": "PASS",
+        "details": {
+          "1": {
+            "court_present": true,
+            "warning_present": true,
+            "court_excluded_from_charges_fallback": true
+          },
+          "63": {
+            "court_present": true,
+            "warning_present": true,
+            "court_excluded_from_charges_fallback": true
+          }
+        }
+      },
+      {
+        "name": "size_extremes_present",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "oldest_and_newest_url_year_present",
+        "status": "PASS",
+        "details": null
+      },
+      {
+        "name": "no_challenge_parse_errors",
+        "status": "PASS",
+        "details": []
+      },
+      {
+        "name": "challenge_provenance_trace_complete",
+        "status": "PASS",
+        "details": null
+      }
+    ],
+    "failure_count": 0,
+    "failed_checks": []
+  },
+  "corpus_summary": {
+    "total_cases_parsed": 1590,
+    "overall_parse_status_counts": {
+      "FOUND": 1566,
+      "PARTIAL": 24
+    },
+    "parse_error_count": 0,
+    "parse_warning_total": 98,
+    "parse_warning_severity_total": 77,
+    "cases_with_any_parse_warning": 30,
+    "cases_with_warning_or_error_severity": 24,
+    "warning_severity_counts": {
+      "INFO": 21,
+      "WARNING": 77
+    },
+    "warning_code_counts": {
+      "DUPLICATE_TAB_HREF": 28,
+      "DUPLICATE_TAB_PANE_ID": 28,
+      "MULTIPLE_TRAFFICKING_BADGES": 1,
+      "NESTED_CASE_LAW_DETAIL": 4,
+      "NESTED_CHARGE_SUBJECT_RECORDS": 2,
+      "TAB_GROUP_MULTIPLE_ACTIVE_PANES": 14,
+      "TAB_GROUP_NO_ACTIVE_PANE": 21
+    },
+    "fact_summary": {
+      "with_english": 1565,
+      "with_any": 1565,
+      "without_usable": 25,
+      "status_counts": {
+        "FOUND": 1565,
+        "SECTION_ABSENT": 25
+      }
+    },
+    "sidebar_coverage": {
+      "acts_cases": 365,
+      "acts_values": 954,
+      "means_cases": 326,
+      "means_values": 637,
+      "purpose_cases": 348,
+      "purpose_values": 402
+    },
+    "legacy_keyword_coverage": {
+      "acts_cases": 1404,
+      "acts_values": 3571,
+      "means_cases": 1319,
+      "means_values": 2767,
+      "purpose_cases": 1412,
+      "purpose_values": 1628
+    },
+    "multilingual_sections": {
+      "cases_with_tabbed_sections": 218,
+      "tabbed_section_groups": 878,
+      "tabbed_panes": 1757,
+      "cases_with_multi_pane_sections": 191,
+      "multi_pane_section_groups": 845,
+      "cases_with_multilingual_sections": 179,
+      "multilingual_section_groups": 818
+    },
+    "participants": {
+      "cases_with_person_role_section": 1528,
+      "person_role_sections": 1534,
+      "person_role_records": 3464,
+      "cases_with_defendant_respondent_section": 1585,
+      "defendant_respondent_sections": 1585,
+      "defendant_respondent_records": 3372
+    },
+    "charges_claims_decisions": {
+      "cases_with_section": 1541,
+      "subject_records": 3293,
+      "charge_records": 6157
+    },
+    "court": {
+      "cases_with_main_record_court": 1478
+    },
+    "unfamiliar_main_section_headings": {},
+    "partial_section_counts": {
+      "charges_claims_decisions": 4,
+      "jurisdiction": 1,
+      "participants:defendantsRespondents": 9,
+      "procedural_information": 6,
+      "sources_citations": 3,
+      "trafficking_sidebar": 1,
+      "unheaded": 2
+    }
+  },
+  "case_parse_failures": [],
+  "case_diagnostics": [
+    {
+      "search_rank": 1,
+      "case_title": "Criminal Case No. 1000711-61.2022.4.01.4200",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "NESTED_CASE_LAW_DETAIL",
+          "message": "An explicit .case-law-detail block headed 'Court' is nested by malformed HTML; it was recovered as an independent main-record section.",
+          "location": "main_record_sections",
+          "severity": "WARNING"
+        },
+        {
+          "code": "NESTED_CASE_LAW_DETAIL",
+          "message": "An explicit .case-law-detail block headed 'Attachments' is nested by malformed HTML; it was recovered as an independent main-record section.",
+          "location": "main_record_sections",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 60,
+      "case_title": "WP 4517 (W) of 2018",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786327447161en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786327447161en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786327447212en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786327447212en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[2]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 62,
+      "case_title": "B637.L6.961-X7-DF",
+      "overall_parse_status": "FOUND",
+      "warnings": [
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "narrative.fact_summary.tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 63,
+      "case_title": "Sent. 3/2018 R. Sent",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "NESTED_CASE_LAW_DETAIL",
+          "message": "An explicit .case-law-detail block headed 'Court' is nested by malformed HTML; it was recovered as an independent main-record section.",
+          "location": "main_record_sections",
+          "severity": "WARNING"
+        },
+        {
+          "code": "NESTED_CASE_LAW_DETAIL",
+          "message": "An explicit .case-law-detail block headed 'Attachments' is nested by malformed HTML; it was recovered as an independent main-record section.",
+          "location": "main_record_sections",
+          "severity": "WARNING"
+        },
+        {
+          "code": "NESTED_CHARGE_SUBJECT_RECORDS",
+          "message": "3 explicit charge-subject .person blocks are nested inside another .person; all were retained in DOM order.",
+          "location": "charges_claims_decisions",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 104,
+      "case_title": "Montoya, Pedro Eduardo y otros",
+      "overall_parse_status": "FOUND",
+      "warnings": [
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "narrative.fact_summary.tab_groups[1]",
+          "severity": "INFO"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.commentary_significant_features[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 205,
+      "case_title": "R 12/2045 and R 12/1107",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "MULTIPLE_TRAFFICKING_BADGES",
+          "message": "2 trafficking badges were found; each source is retained separately.",
+          "location": "trafficking_sidebar",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 253,
+      "case_title": "ACR 70052205127 RS",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786327973678']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786327973678']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786327973707']",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786327973707']",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 277,
+      "case_title": "Expte. Nº 862-12",
+      "overall_parse_status": "FOUND",
+      "warnings": [
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 307,
+      "case_title": "ACR 200850010084958ES",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786328196539']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786328196539']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 320,
+      "case_title": "Ledesma, Pedro Alberto y otras",
+      "overall_parse_status": "FOUND",
+      "warnings": [
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.commentary_significant_features[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 365,
+      "case_title": "Proceso No.2011-74217",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786328361376es']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786328361376es']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786328361412en']",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786328361412en']",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 472,
+      "case_title": "Case nº 3148/10",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786328670964en']",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786328670964en']",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 487,
+      "case_title": "Causa No. 392-C-2011",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786328723602en']",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786328723602en']",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 574,
+      "case_title": "Lovo",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329008921']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329008921']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 580,
+      "case_title": "EXP. N.° 03976-2010-PHC/TC",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329024825en']",
+          "location": "main_record_sections.unheaded[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329024825en']",
+          "location": "main_record_sections.unheaded[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.unheaded[1].tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 715,
+      "case_title": "Case N 28/09",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329434861en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329434861en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329434909en']",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329434909en']",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 723,
+      "case_title": "Court of Appeals of Antwerp 24-06-2010",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329454069en']",
+          "location": "charges_claims_decisions.tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329454069en']",
+          "location": "charges_claims_decisions.tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "charges_claims_decisions.tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 780,
+      "case_title": "Auto Supremo 037/2010 - Guido Benigno Guardia Flores et al",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329614063en']",
+          "location": "main_record_sections.unheaded[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329614063en']",
+          "location": "main_record_sections.unheaded[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.unheaded[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329614168en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329614168en']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 786,
+      "case_title": "First Instance Tribunal of Charleroi 19-03-2010",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329630177en']",
+          "location": "charges_claims_decisions.tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329630177en']",
+          "location": "charges_claims_decisions.tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "charges_claims_decisions.tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329630235en']",
+          "location": "charges_claims_decisions.tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329630235en']",
+          "location": "charges_claims_decisions.tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "charges_claims_decisions.tab_groups[2]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 890,
+      "case_title": "Orellana",
+      "overall_parse_status": "FOUND",
+      "warnings": [
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "INFO"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 892,
+      "case_title": "ACR 9500309858RJ_TRF2",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786329997006']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786329997006']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 916,
+      "case_title": "ACR 2007.36.00.008024-1MT",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786330063920']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786330063920']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786330063936']",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786330063936']",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[2]",
+          "severity": "INFO"
+        },
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786330063853']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786330063853']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 975,
+      "case_title": "R.H.C., J.C.M. and S.C.C.",
+      "overall_parse_status": "FOUND",
+      "warnings": [
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[3]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 1069,
+      "case_title": "ACR 2008.027440-3 SC",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786330768330']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786330768330']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 1136,
+      "case_title": "Ministere public c D et autres",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786331035407']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786331035407']",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.procedural_information[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 1229,
+      "case_title": "United States v. Telichenko",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786331330977']",
+          "location": "main_record_sections.jurisdiction[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786331330977']",
+          "location": "main_record_sections.jurisdiction[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.jurisdiction[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 1410,
+      "case_title": "Pareja and Álvarez",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786332041567en']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786332041567en']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_MULTIPLE_ACTIVE_PANES",
+          "message": "2 panes are marked active; every pane was retained.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        }
+      ]
+    },
+    {
+      "search_rank": 1463,
+      "case_title": "Farina",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786332277101']",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786332277101']",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "main_record_sections.sources_citations[1].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 1471,
+      "case_title": "Uchida and Contestabille",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "DUPLICATE_TAB_PANE_ID",
+          "message": "Duplicate pane IDs retained in DOM order: ['1786327052131']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "DUPLICATE_TAB_HREF",
+          "message": "Duplicate tab hrefs retained in DOM order: ['1786327052131']",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "WARNING"
+        },
+        {
+          "code": "TAB_GROUP_NO_ACTIVE_PANE",
+          "message": "No pane is marked active; every pane was still extracted.",
+          "location": "participants.sections[2].tab_groups[1]",
+          "severity": "INFO"
+        }
+      ]
+    },
+    {
+      "search_rank": 1489,
+      "case_title": "S vs Emmanuel Uche Odii and Others",
+      "overall_parse_status": "PARTIAL",
+      "warnings": [
+        {
+          "code": "NESTED_CHARGE_SUBJECT_RECORDS",
+          "message": "2 explicit charge-subject .person blocks are nested inside another .person; all were retained in DOM order.",
+          "location": "charges_claims_decisions",
+          "severity": "WARNING"
+        }
+      ]
+    }
+  ]
+}

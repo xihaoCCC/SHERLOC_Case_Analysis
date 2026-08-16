@@ -64,6 +64,41 @@ class FakeResponse:
         }
 
 
+class FakeIncompleteResponse:
+    def __init__(
+        self,
+        *,
+        status: str = "incomplete",
+        reason: str = "max_output_tokens",
+        response_id: str = "resp_incomplete_test",
+    ) -> None:
+        self.id = response_id
+        self.model = "gpt-5.6-luna-2026-08-01"
+        self.status = status
+        self.incomplete_details = {"reason": reason}
+        self.output_text = ""
+        self.output = []
+        self.usage = {
+            "input_tokens": 101,
+            "output_tokens": 512,
+            "total_tokens": 613,
+        }
+
+
+def frozen_base_payload() -> dict[str, object]:
+    return {
+        "model": "gpt-5.6-luna",
+        "input": [
+            {"role": "developer", "content": "frozen instructions"},
+            {"role": "user", "content": "frozen target"},
+        ],
+        "reasoning": {"effort": "low"},
+        "text": {"verbosity": "low"},
+        "max_output_tokens": 512,
+        "store": False,
+    }
+
+
 class FakeResponses:
     def __init__(self, outcomes: list[object] | None = None) -> None:
         self.outcomes = list(outcomes or [])
@@ -152,6 +187,10 @@ class LLMAMPRunnerTests(unittest.TestCase):
         self.assertEqual(
             RUNNER.sha256_file(RUNNER.DEFAULT_BENCHMARK),
             RUNNER.EXPECTED_BENCHMARK_SHA256,
+        )
+        self.assertEqual(
+            RUNNER.sha256_file(RUNNER.DEFAULT_TECHNICAL_AMENDMENT),
+            RUNNER.EXPECTED_TECHNICAL_AMENDMENT_SHA256,
         )
 
     def test_coordinated_config_prompt_substitution_and_alt_paths_are_rejected(self) -> None:
@@ -575,7 +614,7 @@ print("RELEASED", flush=True)
         sleeps: list[float] = []
         result = RUNNER.invoke_with_retries(
             client,
-            {"model": "gpt-5.6-luna", "input": "x"},
+            frozen_base_payload(),
             max_attempts=3,
             base_backoff_seconds=1.0,
             sleeper=sleeps.append,
@@ -586,6 +625,554 @@ print("RELEASED", flush=True)
         self.assertEqual(result["retry_count"], 1)
         self.assertEqual(sleeps, [7.0])
         self.assertNotIn(secret, json.dumps(result["retry_events"]))
+
+    def test_exact_incomplete_trigger_changes_only_output_budget_and_canonicalizes(self) -> None:
+        unordered = {
+            "acts": ["ACT_TRANSFER", "ACT_RECRUITMENT"],
+            "means": ["MEANS_DECEPTION", "MEANS_ABDUCTION"],
+            "purposes": ["PURPOSE_OTHER", "PURPOSE_SEXUAL_EXPLOITATION"],
+        }
+        client = FakeClient(
+            [FakeIncompleteResponse(), FakeResponse(unordered)]
+        )
+        result = RUNNER.invoke_with_retries(
+            client,
+            frozen_base_payload(),
+            max_attempts=5,
+            base_backoff_seconds=0.0,
+            sleeper=lambda _delay: None,
+            secret="sk-offline",
+        )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(len(client.responses.calls), 2)
+        self.assertEqual(
+            [call["max_output_tokens"] for call in client.responses.calls],
+            [512, 2048],
+        )
+        initial = copy.deepcopy(client.responses.calls[0])
+        fallback = copy.deepcopy(client.responses.calls[1])
+        del initial["max_output_tokens"]
+        del fallback["max_output_tokens"]
+        self.assertEqual(initial, fallback)
+        self.assertEqual(result["output_token_fallback_attempts_this_invocation"], 1)
+        self.assertEqual(result["cumulative_output_token_fallback_attempts"], 1)
+        self.assertEqual(
+            result["parsed"]["validated_prediction"],
+            {
+                "acts": ["ACT_RECRUITMENT", "ACT_TRANSFER"],
+                "means": ["MEANS_ABDUCTION", "MEANS_DECEPTION"],
+                "purposes": ["PURPOSE_SEXUAL_EXPLOITATION", "PURPOSE_OTHER"],
+            },
+        )
+        self.assertEqual(result["parsed"]["raw_structured_response"], unordered)
+        trigger = result["retry_events"][0]
+        self.assertIs(trigger["technical_fallback_trigger"], True)
+        self.assertEqual(trigger["response_status"], "incomplete")
+        self.assertEqual(
+            trigger["incomplete_details"], {"reason": "max_output_tokens"}
+        )
+        self.assertEqual(trigger["max_output_tokens"], 512)
+
+    def test_fallback_does_not_activate_for_other_statuses_or_reasons(self) -> None:
+        outcomes = (
+            FakeIncompleteResponse(reason="content_filter"),
+            FakeIncompleteResponse(status="failed", reason="max_output_tokens"),
+        )
+        for outcome in outcomes:
+            with self.subTest(status=outcome.status, reason=outcome.incomplete_details):
+                client = FakeClient([outcome, FakeResponse()])
+                result = RUNNER.invoke_with_retries(
+                    client,
+                    frozen_base_payload(),
+                    max_attempts=5,
+                    base_backoff_seconds=0.0,
+                    sleeper=lambda _delay: None,
+                    secret="sk-offline",
+                )
+                self.assertFalse(result["ok"])
+                self.assertEqual(len(client.responses.calls), 1)
+                self.assertFalse(result["output_token_fallback_used"])
+
+    def test_fallback_has_two_actual_call_ceiling_and_raw_trigger_provenance(self) -> None:
+        client = FakeClient(
+            [
+                FakeIncompleteResponse(response_id="resp_initial"),
+                FakeIncompleteResponse(response_id="resp_fallback_1"),
+                FakeIncompleteResponse(response_id="resp_fallback_2"),
+                FakeResponse(),
+            ]
+        )
+        result = RUNNER.invoke_with_retries(
+            client,
+            frozen_base_payload(),
+            max_attempts=5,
+            base_backoff_seconds=0.0,
+            sleeper=lambda _delay: None,
+            secret="sk-offline",
+        )
+
+        self.assertFalse(result["ok"])
+        self.assertEqual(len(client.responses.calls), 3)
+        self.assertEqual(
+            [call["max_output_tokens"] for call in client.responses.calls],
+            [512, 2048, 2048],
+        )
+        self.assertEqual(result["output_token_fallback_attempts_this_invocation"], 2)
+        self.assertEqual(result["cumulative_output_token_fallback_attempts"], 2)
+        self.assertEqual(
+            result["initial_incomplete_response_provenance"]["response_id"],
+            "resp_initial",
+        )
+        self.assertEqual(
+            [event["response_id"] for event in result["retry_events"]],
+            ["resp_initial", "resp_fallback_1", "resp_fallback_2"],
+        )
+
+    def test_direct_fallback_resume_uses_no_new_512_call(self) -> None:
+        proof = {
+            "source": "PRE_AMENDMENT_PERSISTED_FAILURE_HISTORY",
+            "response_status": "incomplete",
+            "incomplete_details": {"reason": "max_output_tokens"},
+            "max_output_tokens": 512,
+            "actual_request_sha256": RUNNER.sha256_text(
+                RUNNER.canonical_json(frozen_base_payload())
+            ),
+        }
+        client = FakeClient([FakeResponse()])
+        result = RUNNER.invoke_with_retries(
+            client,
+            frozen_base_payload(),
+            max_attempts=5,
+            base_backoff_seconds=0.0,
+            sleeper=lambda _delay: None,
+            secret="sk-offline",
+            start_with_fallback=True,
+            prior_fallback_attempts=0,
+            prior_primary_incomplete_provenance=proof,
+        )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(len(client.responses.calls), 1)
+        self.assertEqual(client.responses.calls[0]["max_output_tokens"], 2048)
+        self.assertEqual(result["base_request_sha256"], proof["actual_request_sha256"])
+
+        invalid_proof = copy.deepcopy(proof)
+        invalid_proof["incomplete_details"] = {"reason": "content_filter"}
+        blocked_client = FakeClient([FakeResponse()])
+        with self.assertRaises(RUNNER.LLMProtocolError):
+            RUNNER.invoke_with_retries(
+                blocked_client,
+                frozen_base_payload(),
+                secret="sk-offline",
+                start_with_fallback=True,
+                prior_primary_incomplete_provenance=invalid_proof,
+            )
+        self.assertEqual(blocked_client.responses.calls, [])
+
+    def test_primary_attempt_limit_allows_only_one_rank_551_base_call(self) -> None:
+        client = FakeClient([HTTPFailure(429), FakeResponse()])
+        result = RUNNER.invoke_with_retries(
+            client,
+            frozen_base_payload(),
+            max_attempts=5,
+            primary_attempt_limit=1,
+            base_backoff_seconds=0.0,
+            sleeper=lambda _delay: None,
+            secret="sk-offline",
+        )
+
+        self.assertFalse(result["ok"])
+        self.assertEqual(len(client.responses.calls), 1)
+        self.assertEqual(client.responses.calls[0]["max_output_tokens"], 512)
+
+    def test_rank_551_primary_reservation_blocks_second_call_after_crash(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = RUNNER.RunSpec(
+                method="M3",
+                evaluation="A1",
+                fold=None,
+                dry_run=False,
+                bank_id=None,
+                output_path=root / "predictions.jsonl",
+                state_dir=root / "state",
+                diagnostics_path=root / "diagnostics.json",
+                failure_manifest_path=root / "failures.jsonl",
+            )
+            payload = frozen_base_payload()
+            request = {
+                "payload": payload,
+                "request_sha256": RUNNER.sha256_text(RUNNER.canonical_json(payload)),
+            }
+            case = {"search_rank": 551}
+            failure = {
+                "method": "M3",
+                "evaluation": "A1",
+                "fold": None,
+                "search_rank": 551,
+                "request_sha256": request["request_sha256"],
+                "recorded_at": "2026-08-15T00:00:00Z",
+                "error": {
+                    "error_type": "RequestBuildError",
+                    "http_status": None,
+                    "transient": False,
+                    "message": RUNNER.LEGACY_LABEL_ORDER_MESSAGE,
+                },
+            }
+            failure_path = root / "failure.json"
+            reservation_path = root / "primary-reservation.json"
+            RUNNER.atomic_json(
+                failure_path,
+                {
+                    "status": "UNRESOLVED_FAILURE_HISTORY",
+                    "search_rank": 551,
+                    "attempt_history": [failure],
+                    "latest_failure": failure,
+                },
+            )
+            policy = RUNNER.resolve_failure_resume_policy(
+                failure_path,
+                case=case,
+                request=request,
+                spec=spec,
+                primary_recovery_reservation_path=reservation_path,
+            )
+            self.assertEqual(policy["primary_attempt_limit"], 1)
+            RUNNER.reserve_primary_recovery_attempt(
+                reservation_path,
+                case=case,
+                request=request,
+                spec=spec,
+                primary_attempt_number=1,
+                actual_payload=payload,
+                secret="sk-offline",
+            )
+
+            with self.assertRaises(RUNNER.LLMProtocolError):
+                RUNNER.resolve_failure_resume_policy(
+                    failure_path,
+                    case=case,
+                    request=request,
+                    spec=spec,
+                    primary_recovery_reservation_path=reservation_path,
+                )
+
+    def test_fallback_reservation_is_cumulative_across_crash_resume(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = RUNNER.RunSpec(
+                method="M3",
+                evaluation="A1",
+                fold=None,
+                dry_run=False,
+                bank_id=None,
+                output_path=root / "predictions.jsonl",
+                state_dir=root / "state",
+                diagnostics_path=root / "diagnostics.json",
+                failure_manifest_path=root / "failures.jsonl",
+            )
+            payload = frozen_base_payload()
+            base_sha = RUNNER.sha256_text(RUNNER.canonical_json(payload))
+            request = {"payload": payload, "request_sha256": base_sha}
+            case = {"search_rank": 266}
+            failure = {
+                "method": "M3",
+                "evaluation": "A1",
+                "fold": None,
+                "search_rank": 266,
+                "request_sha256": base_sha,
+                "recorded_at": "2026-08-15T00:00:00Z",
+                "error": {
+                    "error_type": "LLMProtocolError",
+                    "http_status": None,
+                    "transient": False,
+                    "message": RUNNER.LEGACY_MAX_OUTPUT_INCOMPLETE_MESSAGE,
+                },
+            }
+            failure_path = root / "failure.json"
+            reservation_path = root / "fallback-reservation.json"
+            RUNNER.atomic_json(
+                failure_path,
+                {
+                    "status": "UNRESOLVED_FAILURE_HISTORY",
+                    "search_rank": 266,
+                    "attempt_history": [failure],
+                    "latest_failure": failure,
+                },
+            )
+            fallback_payload = RUNNER.output_token_fallback_payload(payload)
+            RUNNER.reserve_fallback_attempt(
+                reservation_path,
+                case=case,
+                request=request,
+                spec=spec,
+                fallback_attempt_number=1,
+                actual_payload=fallback_payload,
+                secret="sk-offline",
+            )
+            policy = RUNNER.resolve_failure_resume_policy(
+                failure_path,
+                case=case,
+                request=request,
+                spec=spec,
+                fallback_reservation_path=reservation_path,
+            )
+            self.assertTrue(policy["start_with_fallback"])
+            self.assertEqual(policy["prior_fallback_attempts"], 1)
+            self.assertEqual(policy["resume_source"], "CRASH_SAFE_FALLBACK_RESERVATION")
+
+            client = FakeClient([FakeResponse()])
+            result = RUNNER.invoke_with_retries(
+                client,
+                payload,
+                secret="sk-offline",
+                start_with_fallback=True,
+                prior_fallback_attempts=1,
+                prior_primary_incomplete_provenance=policy[
+                    "prior_primary_incomplete_provenance"
+                ],
+                fallback_attempt_reserver=lambda number, actual: (
+                    RUNNER.reserve_fallback_attempt(
+                        reservation_path,
+                        case=case,
+                        request=request,
+                        spec=spec,
+                        fallback_attempt_number=number,
+                        actual_payload=actual,
+                        secret="sk-offline",
+                    )
+                ),
+            )
+            self.assertTrue(result["ok"])
+            self.assertEqual(len(client.responses.calls), 1)
+            self.assertEqual(
+                RUNNER._fallback_reservation_count(
+                    reservation_path, case=case, request=request, spec=spec
+                ),
+                2,
+            )
+            with self.assertRaises(RUNNER.LLMProtocolError):
+                RUNNER.resolve_failure_resume_policy(
+                    failure_path,
+                    case=case,
+                    request=request,
+                    spec=spec,
+                    fallback_reservation_path=reservation_path,
+                )
+
+    def test_rank_1340_exception_allows_only_two_more_identical_2048_calls(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = RUNNER.RunSpec(
+                method="M4",
+                evaluation="A2",
+                fold=1,
+                dry_run=False,
+                bank_id="A2_FOLD_1",
+                output_path=root / "predictions.jsonl",
+                state_dir=root / "state",
+                diagnostics_path=root / "diagnostics.json",
+                failure_manifest_path=root / "failures.jsonl",
+            )
+            case = {"search_rank": 1340}
+            payload = frozen_base_payload()
+            base_sha = RUNNER.sha256_text(RUNNER.canonical_json(payload))
+            request = {"payload": payload, "request_sha256": base_sha}
+            fallback_payload = RUNNER.output_token_fallback_payload(payload)
+            fallback_sha = RUNNER.sha256_text(
+                RUNNER.canonical_json(fallback_payload)
+            )
+            proof = {
+                "response_status": "incomplete",
+                "incomplete_details": {"reason": "max_output_tokens"},
+                "max_output_tokens": 512,
+                "actual_request_sha256": base_sha,
+            }
+            retry_events = [
+                {
+                    "request_phase": "FALLBACK_2048",
+                    "max_output_tokens": 2048,
+                    "actual_request_sha256": fallback_sha,
+                    "http_status": 429,
+                }
+                for _ in range(2)
+            ]
+            failure = {
+                "method": "M4",
+                "evaluation": "A2",
+                "fold": 1,
+                "search_rank": 1340,
+                "request_sha256": base_sha,
+                "retry_events": retry_events,
+                "technical_execution": {
+                    "initial_incomplete_response_provenance": proof,
+                    "cumulative_output_token_fallback_attempts": 2,
+                },
+            }
+            failure_path = root / "failure.json"
+            reservation_path = root / "reservation.json"
+            RUNNER.atomic_json(
+                failure_path,
+                {
+                    "status": "UNRESOLVED_FAILURE_HISTORY",
+                    "search_rank": 1340,
+                    "attempt_history": [failure],
+                    "latest_failure": failure,
+                },
+            )
+            for number in (1, 2):
+                RUNNER.reserve_fallback_attempt(
+                    reservation_path,
+                    case=case,
+                    request=request,
+                    spec=spec,
+                    fallback_attempt_number=number,
+                    actual_payload=fallback_payload,
+                    secret="sk-offline",
+                )
+
+            policy = RUNNER.resolve_failure_resume_policy(
+                failure_path,
+                case=case,
+                request=request,
+                spec=spec,
+                fallback_reservation_path=reservation_path,
+            )
+            self.assertEqual(policy["prior_fallback_attempts"], 2)
+            self.assertEqual(policy["fallback_attempt_ceiling"], 4)
+            self.assertEqual(
+                policy["technical_exception_id"], RUNNER.RANK_1340_EXCEPTION_ID
+            )
+
+            client = FakeClient([HTTPFailure(429), FakeResponse()])
+            result = RUNNER.invoke_with_retries(
+                client,
+                payload,
+                base_backoff_seconds=0.0,
+                sleeper=lambda _delay: None,
+                secret="sk-offline",
+                start_with_fallback=True,
+                prior_fallback_attempts=policy["prior_fallback_attempts"],
+                prior_primary_incomplete_provenance=proof,
+                fallback_attempt_ceiling=policy["fallback_attempt_ceiling"],
+                technical_exception_id=policy["technical_exception_id"],
+                technical_exception_sha256=policy["technical_exception_sha256"],
+                fallback_attempt_reserver=lambda number, actual: (
+                    RUNNER.reserve_fallback_attempt(
+                        reservation_path,
+                        case=case,
+                        request=request,
+                        spec=spec,
+                        fallback_attempt_number=number,
+                        actual_payload=actual,
+                        secret="sk-offline",
+                        technical_exception_id=policy["technical_exception_id"],
+                        technical_exception_sha256=policy[
+                            "technical_exception_sha256"
+                        ],
+                    )
+                ),
+            )
+            self.assertTrue(result["ok"])
+            self.assertEqual(
+                [call["max_output_tokens"] for call in client.responses.calls],
+                [2048, 2048],
+            )
+            self.assertEqual(result["cumulative_output_token_fallback_attempts"], 4)
+            self.assertEqual(
+                RUNNER._fallback_reservation_count(
+                    reservation_path, case=case, request=request, spec=spec
+                ),
+                4,
+            )
+
+    def test_persisted_legacy_trigger_is_narrow_and_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = RUNNER.RunSpec(
+                method="M3",
+                evaluation="A1",
+                fold=None,
+                dry_run=False,
+                bank_id=None,
+                output_path=root / "predictions.jsonl",
+                state_dir=root / "state",
+                diagnostics_path=root / "diagnostics.json",
+                failure_manifest_path=root / "failures.jsonl",
+            )
+            for rank, expected_direct in ((266, True), (1356, True), (551, False)):
+                with self.subTest(rank=rank):
+                    case = {"search_rank": rank}
+                    request = {
+                        "request_sha256": "a" * 64,
+                    }
+                    message = (
+                        RUNNER.LEGACY_MAX_OUTPUT_INCOMPLETE_MESSAGE
+                        if expected_direct
+                        else "means labels are not in frozen ontology order"
+                    )
+                    failure = {
+                        "method": "M3",
+                        "evaluation": "A1",
+                        "fold": None,
+                        "search_rank": rank,
+                        "request_sha256": "a" * 64,
+                        "recorded_at": "2026-08-15T00:00:00Z",
+                        "error": {
+                            "error_type": (
+                                "LLMProtocolError" if expected_direct else "RequestBuildError"
+                            ),
+                            "http_status": None,
+                            "transient": False,
+                            "message": message,
+                        },
+                    }
+                    path = root / f"{rank}.json"
+                    RUNNER.atomic_json(
+                        path,
+                        {
+                            "status": "UNRESOLVED_FAILURE_HISTORY",
+                            "search_rank": rank,
+                            "attempt_history": [failure],
+                            "latest_failure": failure,
+                        },
+                    )
+                    policy = RUNNER.resolve_failure_resume_policy(
+                        path, case=case, request=request, spec=spec
+                    )
+                    self.assertIs(policy["start_with_fallback"], expected_direct)
+                    self.assertEqual(
+                        policy["primary_attempt_limit"],
+                        1 if rank == 551 else None,
+                    )
+                    self.assertIs(
+                        policy["primary_recovery_required"], rank == 551
+                    )
+
+            unauthorized = copy.deepcopy(failure)
+            unauthorized["search_rank"] = 552
+            unauthorized["error"]["error_type"] = "LLMProtocolError"
+            unauthorized["error"]["message"] = (
+                RUNNER.LEGACY_MAX_OUTPUT_INCOMPLETE_MESSAGE
+            )
+            path = root / "552.json"
+            RUNNER.atomic_json(
+                path,
+                {
+                    "status": "UNRESOLVED_FAILURE_HISTORY",
+                    "search_rank": 552,
+                    "attempt_history": [unauthorized],
+                    "latest_failure": unauthorized,
+                },
+            )
+            policy = RUNNER.resolve_failure_resume_policy(
+                path,
+                case={"search_rank": 552},
+                request={"request_sha256": "a" * 64},
+                spec=spec,
+            )
+            self.assertFalse(policy["start_with_fallback"])
 
     def test_atomic_success_state_resume_and_secret_nonserialization(self) -> None:
         secret = "sk-offline-never-write-me"
@@ -668,6 +1255,165 @@ print("RELEASED", flush=True)
             for path in root.rglob("*"):
                 if path.is_file():
                     self.assertNotIn(secret.encode(), path.read_bytes())
+
+    def test_pre_amendment_success_is_accepted_and_never_rewritten(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = temp_spec(root, "M3")
+            prepared = RUNNER.prepare_run(spec, dry_run_count=3)
+            case = prepared["cases"][0]
+            request = RUNNER.build_request_for_case(
+                spec,
+                case,
+                demos=None,
+                demo_metadata=None,
+                heldout_jurisdictions=[],
+                effective_model_id="gpt-5.6-luna",
+                contract=prepared["contract"],
+                config=prepared["config"],
+                config_path=RUNNER.DEFAULT_CONFIG,
+                m3_prompt_path=RUNNER.DEFAULT_M3_PROMPT,
+                m4_prompt_path=RUNNER.DEFAULT_M4_PROMPT,
+            )
+            result = RUNNER.invoke_with_retries(
+                FakeClient(),
+                request["payload"],
+                max_attempts=1,
+                base_backoff_seconds=0.0,
+                sleeper=lambda _delay: None,
+                secret="sk-offline",
+            )
+            record = RUNNER.make_success_record(
+                spec,
+                case,
+                request,
+                result,
+                contract=prepared["contract"],
+                config=prepared["config"],
+                model_marker={"effective_model_id": "gpt-5.6-luna"},
+                sdk_version="2.31.0",
+                demo_metadata=None,
+                split_membership_sha256=RUNNER.target_membership_hash(
+                    prepared["cases"], spec
+                ),
+            )
+            record["runner_version"] = "1.1.0"
+            record.pop("technical_execution")
+            record.pop("label_array_canonicalization_applied")
+            success_path = RUNNER._state_path(
+                spec.state_dir / "success", int(case["search_rank"])
+            )
+            RUNNER.atomic_json(success_path, record)
+            before = success_path.read_bytes()
+
+            loaded = RUNNER._load_existing_success(
+                success_path, case=case, request=request, spec=spec
+            )
+
+            self.assertEqual(loaded, record)
+            self.assertEqual(success_path.read_bytes(), before)
+
+    def test_amended_success_validator_enforces_raw_canonical_and_budget_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = temp_spec(root, "M3")
+            prepared = RUNNER.prepare_run(spec, dry_run_count=3)
+            case = prepared["cases"][0]
+            request = RUNNER.build_request_for_case(
+                spec,
+                case,
+                demos=None,
+                demo_metadata=None,
+                heldout_jurisdictions=[],
+                effective_model_id="gpt-5.6-luna",
+                contract=prepared["contract"],
+                config=prepared["config"],
+                config_path=RUNNER.DEFAULT_CONFIG,
+                m3_prompt_path=RUNNER.DEFAULT_M3_PROMPT,
+                m4_prompt_path=RUNNER.DEFAULT_M4_PROMPT,
+            )
+            unordered = {
+                "acts": ["ACT_TRANSFER", "ACT_RECRUITMENT"],
+                "means": ["MEANS_DECEPTION", "MEANS_ABDUCTION"],
+                "purposes": ["PURPOSE_OTHER", "PURPOSE_SEXUAL_EXPLOITATION"],
+            }
+            result = RUNNER.invoke_with_retries(
+                FakeClient([FakeResponse(unordered)]),
+                request["payload"],
+                max_attempts=1,
+                secret="sk-offline",
+            )
+            record = RUNNER.make_success_record(
+                spec,
+                case,
+                request,
+                result,
+                contract=prepared["contract"],
+                config=prepared["config"],
+                model_marker={"effective_model_id": "gpt-5.6-luna"},
+                sdk_version="2.31.0",
+                demo_metadata=None,
+                split_membership_sha256=RUNNER.target_membership_hash(
+                    prepared["cases"], spec
+                ),
+            )
+            self.assertIs(record["label_array_canonicalization_applied"], True)
+            RUNNER.validate_persisted_success_record(
+                record, request=request, context="offline amended record"
+            )
+
+            bad_flag = copy.deepcopy(record)
+            bad_flag["label_array_canonicalization_applied"] = False
+            with self.assertRaises(RUNNER.LLMProtocolError):
+                RUNNER.validate_persisted_success_record(
+                    bad_flag, request=request, context="bad flag"
+                )
+
+            bad_hash = copy.deepcopy(record)
+            bad_hash["technical_execution"]["actual_request_sha256"] = "0" * 64
+            with self.assertRaises(RUNNER.LLMProtocolError):
+                RUNNER.validate_persisted_success_record(
+                    bad_hash, request=request, context="bad actual hash"
+                )
+
+    def test_canonical_m3_a1_amendment_scope_rejects_any_extra_pending_rank(self) -> None:
+        spec = RUNNER.make_spec(
+            "M3",
+            "A1",
+            None,
+            dry_run=False,
+            prediction_root=RUNNER.DEFAULT_PREDICTION_ROOT,
+            log_root=RUNNER.DEFAULT_LOG_ROOT,
+        )
+        direct = {
+            "start_with_fallback": True,
+            "prior_fallback_attempts": 0,
+            "prior_primary_incomplete_provenance": {"response_status": "incomplete"},
+            "primary_attempt_limit": None,
+            "primary_recovery_required": False,
+        }
+        base = {
+            "start_with_fallback": False,
+            "prior_fallback_attempts": 0,
+            "prior_primary_incomplete_provenance": None,
+            "primary_attempt_limit": 1,
+            "primary_recovery_required": True,
+        }
+        valid_pending = [
+            ({"search_rank": 266}, {}, direct),
+            ({"search_rank": 551}, {}, base),
+            ({"search_rank": 1356}, {}, direct),
+        ]
+        RUNNER.validate_canonical_m3_a1_amendment_scope(spec, valid_pending)
+
+        wrong_budget = copy.deepcopy(valid_pending)
+        wrong_budget[0][2]["start_with_fallback"] = False
+        with self.assertRaises(RUNNER.LLMProtocolError):
+            RUNNER.validate_canonical_m3_a1_amendment_scope(spec, wrong_budget)
+
+        extra = valid_pending + [({"search_rank": 777}, {}, base)]
+        with self.assertRaises(RUNNER.LLMProtocolError):
+            RUNNER.validate_canonical_m3_a1_amendment_scope(spec, extra)
 
     def test_schema_failure_is_persistent_and_never_becomes_empty_prediction(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

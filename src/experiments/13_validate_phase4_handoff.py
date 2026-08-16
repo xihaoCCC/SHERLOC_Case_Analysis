@@ -88,8 +88,9 @@ PRIMARY_NOTEBOOKS = (
     "07_a1_amp_results.ipynb",
     "08_a2_amp_results.ipynb",
     "09_amp_error_analysis.ipynb",
+    "10_human_grounded_evaluation.ipynb",
 )
-AUXILIARY_NOTEBOOK = "10_auxiliary_results.ipynb"
+AUXILIARY_NOTEBOOK = "11_auxiliary_results.ipynb"
 
 CANONICAL_METRIC_FILES = (
     "amp_evaluation_manifest.json",

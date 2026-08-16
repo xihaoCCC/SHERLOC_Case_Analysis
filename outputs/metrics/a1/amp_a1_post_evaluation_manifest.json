@@ -1,0 +1,96 @@
+{
+  "a1_test_n": 253,
+  "comparison_definition": "M4_SIX_SHOT_MINUS_M3_ZERO_SHOT",
+  "deterministic": true,
+  "generator_version": "1.1.0",
+  "inputs": [
+    {
+      "path": "outputs/metrics/amp_evaluation_manifest.json",
+      "sha256": "ae68f62ad90acfd9a800c8f54b46e75d142c9d806e7f6d7e24dbb3b90f161cb5"
+    },
+    {
+      "path": "outputs/metrics/a1/amp_primary_results.csv",
+      "sha256": "79d21dc0c4cc429c34e9e036d9ac39e5a33d4f2101c8f9505a5ee264c7bc8e22"
+    },
+    {
+      "path": "outputs/metrics/a1/amp_per_label.csv",
+      "sha256": "d66d4be32ce4c921db2e7405b91562e3480573d1d4ed506eff40086daa8a241d"
+    },
+    {
+      "path": "outputs/metrics/a1/amp_bootstrap_cis.csv",
+      "sha256": "3750493116da61259363ba63cad5e9f094178b2878c28bb8375c429f65452dd6"
+    },
+    {
+      "path": "outputs/metrics/a1/amp_case_level_errors.csv",
+      "sha256": "2f5492f346f24bd7e0b94ad8cd60053174403ea18881b740903c7a986946a155"
+    },
+    {
+      "path": "outputs/metrics/amp_threshold_0_50_sensitivity.csv",
+      "sha256": "15a1afb5610c53b20728ca54360c4b33b8f36accccdd0d1dbef86d6e8cae902b"
+    },
+    {
+      "path": "outputs/predictions/m2/a1_test_predictions.jsonl",
+      "sha256": "ff848abf3aff8b2852708362a68948a2841cd9a1522d4745aee66a4b994900eb"
+    },
+    {
+      "path": "outputs/predictions/m3/a1_test_predictions.jsonl",
+      "sha256": "3962c3f7f6020d50a82ccd696d60126cd23a54392d12062fff10054ed4a1d1b1"
+    },
+    {
+      "path": "outputs/logs/llm/m3_a1_failures.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/logs/llm/m3_a1_diagnostics.json",
+      "sha256": "1efd0a63ed2e204416307553c0e23efad0a9957628024db517a453afeaaa2315"
+    },
+    {
+      "path": "outputs/predictions/m4/a1_test_predictions.jsonl",
+      "sha256": "47927e0995ae0534368dfd47df77e0836161ae8550b7db4d4264ecf32f11bb44"
+    },
+    {
+      "path": "outputs/logs/llm/m4_a1_failures.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/logs/llm/m4_a1_diagnostics.json",
+      "sha256": "1f8b99e68135136ef4cc9b79c4fbc5a3b9cc2a941537d2438b0f158823261f94"
+    }
+  ],
+  "methods": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+  ],
+  "narrative_word_count_definition": "COUNT_OF_NON_WHITESPACE_TOKEN_RUNS",
+  "outputs": [
+    {
+      "byte_count": 1010,
+      "path": "amp_m3_vs_m4_aggregate_deltas.csv",
+      "sha256": "84fd076cb82920401c88e3a2a4833f0db61af2a834dd59b9209cae18cf7af311"
+    },
+    {
+      "byte_count": 3907,
+      "path": "amp_per_label_comparison.csv",
+      "sha256": "93bd013d51f16ee576714b86d5373703d32959ac9d76a847f7b5142c88eb109f"
+    },
+    {
+      "byte_count": 4391,
+      "path": "amp_m3_vs_m4_per_label_deltas.csv",
+      "sha256": "f9fdd136dd2e260f1af3c4cc0fffeb94b2bf4067724d294f62e82351e3b846f9"
+    },
+    {
+      "byte_count": 797682,
+      "path": "amp_case_level_comparison.csv",
+      "sha256": "c1cd98d1b5d2c5a7d2ae13fe0a18ca6e1a4982682975033d2d1a38fe200438c7"
+    },
+    {
+      "byte_count": 1217,
+      "path": "amp_llm_api_usage.csv",
+      "sha256": "4bf0e15d5864209c18b043f50e9d3ae9112133754c3dc66bef755a890830a1ca"
+    }
+  ],
+  "schema_version": "sherloc-a1-post-evaluation-reporting-v1",
+  "significance_claim": "NOT_TESTED_DO_NOT_INFER"
+}

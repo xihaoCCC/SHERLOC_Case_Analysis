@@ -1,0 +1,103 @@
+{
+  "config_id": "eval-b-auxiliary-zero-shot-llm-v1",
+  "config_version": "1.0.0",
+  "status": "FROZEN_PRE_EXECUTION",
+  "frozen_on": "2026-08-16",
+  "evaluation": "A3_EVALUATION_B_HUMAN_GROUNDED_AUXILIARY",
+  "membership": {
+    "reference_path": "data/annotations/human_grounded_reference_v1.csv",
+    "reference_sha256": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2",
+    "membership_manifest_path": "outputs/analysis/evaluation_b/eval_b_membership_manifest.json",
+    "membership_manifest_sha256": "463d205c6fc4b9bc57550bb94cb8cf8d51f7e54ddf5b50d1d4ac02df5c4ebd68",
+    "inclusion": "review_status == SUBSTANTIVE and substantive_amp_evaluable == 1",
+    "expected_case_count": 55,
+    "excluded_review_statuses": [
+      "ABSTAIN",
+      "SKIP",
+      "UNREVIEWED"
+    ]
+  },
+  "method": {
+    "method_id": "AUX_LLM_ZERO_SHOT",
+    "prompt_version": "eval-b-auxiliary-zero-shot-v1",
+    "demonstration_count": 0,
+    "training_performed": false,
+    "case_specific_tuning": false
+  },
+  "prompt": {
+    "path": "config/prompts/eval_b_auxiliary_zero_shot_v1.txt",
+    "sha256": "b7d9d1c132fdd8454aa16de93fad5d34c24e88218795893e706a16a6d63d6fac"
+  },
+  "structured_output": {
+    "format_type": "json_schema",
+    "schema_name": "sherloc_eval_b_auxiliary_v1",
+    "strict": true,
+    "schema_path": "config/schemas/eval_b_auxiliary_v1.json",
+    "schema_file_sha256": "3b2a753991f22cfa223e90a93eb7b4c72a802d0b966ec3a38151e543d2362a00",
+    "geographic_form_order": [
+      "Internal",
+      "Transnational"
+    ]
+  },
+  "targets": {
+    "geographic_form": [
+      "Internal",
+      "Transnational"
+    ],
+    "multiplicity": [
+      "SINGLE",
+      "MULTIPLE",
+      "UNKNOWN"
+    ],
+    "child_involvement": [
+      "TRUE",
+      "FALSE",
+      "UNKNOWN"
+    ],
+    "organized_criminal_group": [
+      "TRUE",
+      "FALSE"
+    ]
+  },
+  "api_request": {
+    "provider": "OpenAI",
+    "endpoint": "Responses API",
+    "model": "gpt-5.6-luna",
+    "one_case_per_request": true,
+    "store": false,
+    "reasoning": {
+      "effort": "low"
+    },
+    "text_verbosity": "low",
+    "initial_max_output_tokens": 512,
+    "fallback_max_output_tokens": 2048,
+    "fallback_trigger": "response.status == incomplete and incomplete_details.reason == max_output_tokens",
+    "max_fallback_attempts_per_case": 2,
+    "max_transient_attempts": 4,
+    "base_backoff_seconds": 2.0,
+    "max_backoff_seconds": 60.0,
+    "tools": "NONE",
+    "previous_response_id": "NONE",
+    "temperature": "OMITTED",
+    "top_p": "OMITTED",
+    "credential_source": "OPENAI_API_KEY_ENVIRONMENT_ONLY"
+  },
+  "input_contract": {
+    "case_specific_input": "exact English Fact Summary only",
+    "human_reference_labels_sent": false,
+    "sherloc_silver_labels_sent": false,
+    "prior_model_predictions_sent": false,
+    "case_title_sent": false,
+    "jurisdiction_sent": false,
+    "canonical_url_sent": false
+  },
+  "outputs": {
+    "predictions": "outputs/predictions/evaluation_b/auxiliary_zero_shot/predictions.jsonl",
+    "diagnostics": "outputs/logs/evaluation_b/auxiliary_llm/diagnostics.json",
+    "pre_execution_freeze": "outputs/analysis/evaluation_b/auxiliary_llm_pre_execution_freeze.json",
+    "completion_manifest": "outputs/analysis/evaluation_b/auxiliary_llm_completion_manifest.json",
+    "aggregate_metrics": "outputs/analysis/evaluation_b/auxiliary_llm_human_grounded_results.csv",
+    "per_class_metrics": "outputs/analysis/evaluation_b/auxiliary_llm_per_class_results.csv",
+    "case_level": "outputs/analysis/evaluation_b/auxiliary_llm_case_level.csv"
+  }
+}

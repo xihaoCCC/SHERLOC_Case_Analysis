@@ -1,0 +1,57 @@
+{
+  "n_files": 19,
+  "fact_summary_found": 19,
+  "fact_summary_english_found": 19,
+  "multilingual_fact_summary_cases": 2,
+  "sidebar_acts_found": 6,
+  "sidebar_means_found": 6,
+  "sidebar_purpose_found": 5,
+  "legacy_keywords_found": 13,
+  "victim_sections_found": 15,
+  "defendant_sections_found": 18,
+  "charges_sections_found": 18,
+  "court_sections_found": 18,
+  "cross_classified_url_paths": [
+    {
+      "file": "B637.L6.961-X7-DF.html",
+      "url_path_crime_type": "migrantsmugglingcrimetype"
+    },
+    {
+      "file": "Ho v The Queen; Leech v The Queen [2011] VSCA 344 as related to DPP (Cth) v Ho & Ho [2009] VSC 437.html",
+      "url_path_crime_type": "criminalgroupcrimetype"
+    },
+    {
+      "file": "R v. N. and R v. Le.html",
+      "url_path_crime_type": "drugcrimetype"
+    },
+    {
+      "file": "Sentencia 298_2015.html",
+      "url_path_crime_type": "migrantsmugglingcrimetype"
+    }
+  ],
+  "multilingual_fact_summary_details": [
+    {
+      "file": "B637.L6.961-X7-DF.html",
+      "languages": [
+        "en",
+        "fr"
+      ],
+      "tab_labels": [
+        "",
+        "Français"
+      ]
+    },
+    {
+      "file": "Causa 2422.html",
+      "languages": [
+        "en",
+        "es"
+      ],
+      "tab_labels": [
+        "English",
+        "Español"
+      ]
+    }
+  ],
+  "warnings": []
+}

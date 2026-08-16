@@ -1,0 +1,4 @@
+family,substantive_n,comparable_n,silver_reference_unavailable_n,exact_set_concordance,mean_jaccard,shared_label_count,silver_only_label_count,human_only_label_count,silver_only_rate_of_silver_labels,human_only_rate_of_human_labels,proportion_silver_labels_supported_by_human,proportion_human_labels_contained_in_silver,availability_policy
+ACT,55,54,1,0.3888888888888889,0.7148148148148148,120,19,38,0.1366906474820144,0.24050632911392406,0.8633093525179856,0.759493670886076,EXCLUDE_STRUCTURALLY_ABSENT_SILVER_FAMILY
+MEANS,55,54,1,0.6851851851851852,0.8395061728395061,108,7,17,0.06086956521739131,0.136,0.9391304347826087,0.864,EXCLUDE_STRUCTURALLY_ABSENT_SILVER_FAMILY
+PURPOSE,55,55,0,0.8181818181818182,0.909090909090909,61,8,3,0.11594202898550725,0.046875,0.8840579710144928,0.953125,EXCLUDE_STRUCTURALLY_ABSENT_SILVER_FAMILY

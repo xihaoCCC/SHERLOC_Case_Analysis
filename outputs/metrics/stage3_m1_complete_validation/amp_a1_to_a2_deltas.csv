@@ -1,0 +1,2 @@
+method,delta_macro_f1_a2_minus_a1,delta_micro_f1_a2_minus_a1,delta_exact_set_a2_minus_a1,delta_example_jaccard_a2_minus_a1,significance_claim,reference_terminology
+M1,0.013168744791775544,-0.009968102073365182,-0.0027911289841300443,-0.012174727203786206,NOT_TESTED_DO_NOT_INFER,SHERLOC Legacy Keywords silver reference

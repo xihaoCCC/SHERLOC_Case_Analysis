@@ -1,0 +1,5 @@
+target,N,macro_f1,micro_f1,accuracy,precision,recall,f1,balanced_accuracy,exact_set_accuracy,example_jaccard,model,prompt_version,reference_type
+GEOGRAPHIC_FORM,55,0.763204225352,0.789915966387,,,,,,0.618181818182,0.736363636364,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1,single-reviewer human-grounded narrative reference
+VICTIM_MULTIPLICITY,55,0.621421589164,,0.927272727273,,,,,,,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1,single-reviewer human-grounded narrative reference
+CHILD_INVOLVEMENT,55,0.907170224412,,0.927272727273,,,,,,,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1,single-reviewer human-grounded narrative reference
+ORGANIZED_CRIMINAL_GROUP,55,,,0.836363636364,0.400000000000,1.000000000000,0.571428571429,0.908163265306,,,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1,single-reviewer human-grounded narrative reference

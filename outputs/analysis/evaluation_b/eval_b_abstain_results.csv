@@ -1,0 +1,5 @@
+method,abstain_n,all_amp_empty_count,all_amp_empty_rate,narrative_insufficiency_safe_rate,mean_total_predicted_label_count,median_total_predicted_label_count,cases_with_any_predicted_act,cases_with_any_predicted_means,cases_with_any_predicted_purpose,total_unsupported_predicted_label_count_under_abstention_interpretation,status
+M1,6,0,0.0,0.0,8.5,8.5,6,6,6,51,DESCRIPTIVE_ABSTENTION_DIAGNOSTIC
+M2,6,0,0.0,0.0,7.833333333333333,8.5,6,6,6,47,DESCRIPTIVE_ABSTENTION_DIAGNOSTIC
+M3,6,6,1.0,1.0,0.0,0.0,0,0,0,0,DESCRIPTIVE_ABSTENTION_DIAGNOSTIC
+M4,6,6,1.0,1.0,0.0,0.0,0,0,0,0,DESCRIPTIVE_ABSTENTION_DIAGNOSTIC

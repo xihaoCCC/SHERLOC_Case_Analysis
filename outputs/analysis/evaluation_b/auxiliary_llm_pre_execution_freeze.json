@@ -1,0 +1,380 @@
+{
+  "artifacts": {
+    "config": {
+      "path": "config/experiments/eval_b_auxiliary_llm_v1.yaml",
+      "sha256": "b5ecaddf7522f512a42dec6d7ec549525d8dd6c49efd062de51908bc70fc43b5"
+    },
+    "human_reference": {
+      "path": "data/annotations/human_grounded_reference_v1.csv",
+      "sha256": "83a49362477eb7842448c6c6a179422cfbda9c58ee569617bb8554e3cd2221c2"
+    },
+    "membership_manifest": {
+      "path": "outputs/analysis/evaluation_b/eval_b_membership_manifest.json",
+      "sha256": "463d205c6fc4b9bc57550bb94cb8cf8d51f7e54ddf5b50d1d4ac02df5c4ebd68"
+    },
+    "prompt": {
+      "path": "config/prompts/eval_b_auxiliary_zero_shot_v1.txt",
+      "sha256": "b7d9d1c132fdd8454aa16de93fad5d34c24e88218795893e706a16a6d63d6fac"
+    },
+    "runner": {
+      "path": "src/experiments/23_run_evaluation_b_auxiliary_llm.py",
+      "sha256": "5fbcab2b12ba7e698877279e0994340bbfd0ee8cf88cbc6b5f77e541fbcabc21"
+    },
+    "schema": {
+      "path": "config/schemas/eval_b_auxiliary_v1.json",
+      "sha256": "3b2a753991f22cfa223e90a93eb7b4c72a802d0b966ec3a38151e543d2362a00"
+    }
+  },
+  "demonstration_count": 0,
+  "expected_new_prediction_cases": 55,
+  "frozen_at": "2026-08-16T07:23:34Z",
+  "human_reference_labels_sent": false,
+  "membership_sha256": "3df23d05c74804ef849e91862c6a4022872b5a3512d90601b53535b591c014bc",
+  "model": "gpt-5.6-luna",
+  "model_access_marker": {
+    "checked_at": "2026-08-14T23:13:08Z",
+    "effective_model_id": "gpt-5.6-luna",
+    "path": "outputs/logs/llm/model_access.json",
+    "requested_model_id": "gpt-5.6-luna",
+    "sdk_version": "2.31.0",
+    "sha256": "aebc10150ac0b29c77ae8983457991120b28e93110808aba5e93d926e134133c"
+  },
+  "prior_predictions_sent": false,
+  "request_index": [
+    {
+      "input_sha256": "86feaa04873e5aeb0202ec517bac72d0fc4842f0adc2645a851944139365f3e0",
+      "reliability_case_id": "HRV1-014",
+      "request_sha256": "4649efe75fcd6533e71599d1fcf6472ba3bb404c71eb58a7c386541946b3ffee",
+      "search_rank": 13
+    },
+    {
+      "input_sha256": "b256b5e58112891a1eff77586a7755b37aa8863311fac995bee373f063e1fbca",
+      "reliability_case_id": "HRV1-003",
+      "request_sha256": "bfdd0adb74af1575cd8b1278f64c6ed20f612e277782a3c803caf386aa470acd",
+      "search_rank": 23
+    },
+    {
+      "input_sha256": "34bba3eb864658b7e3283d8939c06a4181bf44429cd2865d08d2923b7c1e51b5",
+      "reliability_case_id": "HRV1-024",
+      "request_sha256": "a9d1e0eed83e66a070e13611fd6d629a10c066b0a99854921615a1fb2ef16620",
+      "search_rank": 34
+    },
+    {
+      "input_sha256": "5fa88c3e5c764be660b5d93b016fc2bba2ab34c4b115bb2ad4f3348b07ff0ff7",
+      "reliability_case_id": "HRV1-005",
+      "request_sha256": "8ca89b0f7103b1b92742d1f5982842e20f2f99b3af148028b8a62be538504db5",
+      "search_rank": 38
+    },
+    {
+      "input_sha256": "82163da3ead4597040aa6b03460a64cc0c7792d0d2e23ed03bd997d84ef809d6",
+      "reliability_case_id": "HRV1-040",
+      "request_sha256": "f2c0e4e0c6f61648f69b0fcb63cf40d2bdd73b17d407fd957a3cbdb43a6882b2",
+      "search_rank": 52
+    },
+    {
+      "input_sha256": "c89e96b55744fd044df0a12e10c57636f3d286afce5f1b034512d1d2ead4ac64",
+      "reliability_case_id": "HRV1-078",
+      "request_sha256": "23762d8124a400058e1db9237540d5a47198d9c9172bf9c8286cc4db827fc824",
+      "search_rank": 53
+    },
+    {
+      "input_sha256": "50e612f47861aba79545e934260befcb411669d705d987693b38748a76417bbf",
+      "reliability_case_id": "HRV1-007",
+      "request_sha256": "7398f9e79d325a5020e8d88eafcfe8a1d5cbea282b10f4134226b6a37b9a29a8",
+      "search_rank": 54
+    },
+    {
+      "input_sha256": "a6b61bbb7b21d6fbe0b6434555a1053ed8ca8c87c140cb973b07d4f26c6b4729",
+      "reliability_case_id": "HRV1-008",
+      "request_sha256": "9f366b2c3b98f126563d9c1a29265198877e171ef1fe49788c765524bcebbd21",
+      "search_rank": 58
+    },
+    {
+      "input_sha256": "50283e6d11fb78de730ba0c38fa959759f3027efcb83dfcb7be0344c7b7c15d6",
+      "reliability_case_id": "HRV1-006",
+      "request_sha256": "0e17875c70c9e0495e07cfb3255ebcb53f432050df59fbc72f5478fd758894b8",
+      "search_rank": 68
+    },
+    {
+      "input_sha256": "d777410fddf8ce2439fcb59f74f9b9a9cfbd409fe9e36344d7690aa013fbd628",
+      "reliability_case_id": "HRV1-039",
+      "request_sha256": "10f1e2f2e417e1820f5b80a081315d263e4afebb8de4bfa53d52af92b9fba1a9",
+      "search_rank": 123
+    },
+    {
+      "input_sha256": "84fd4c08efd763c1349011d59cd155dfed2625f00f45bd90281cc0e5283ad121",
+      "reliability_case_id": "HRV1-044",
+      "request_sha256": "c93ff4f1da49c9248e4ac45a5858851b17cce29714fe5c146cdaeeb1e78e9d68",
+      "search_rank": 127
+    },
+    {
+      "input_sha256": "a60579c84ffeb169cb69cfb95ea9e542c4356a723fc9c7ec5daa6a2a46f5eee0",
+      "reliability_case_id": "HRV1-052",
+      "request_sha256": "579083fc97010a963fc7d4171fa912f702a690807308eb41b95025ba7967ed22",
+      "search_rank": 146
+    },
+    {
+      "input_sha256": "572276b92022235df5d30b41098b06ee3729dc93a49f381c582e7e7823714eea",
+      "reliability_case_id": "HRV1-056",
+      "request_sha256": "740ef12ef91f0ea535bedefe18a7741e15ed07bbb9c34bc3a762ff642e4e1391",
+      "search_rank": 167
+    },
+    {
+      "input_sha256": "9782dd1f249fce6b2b9893b282c1ba59ffa0dcabed677814c9ab46ce3a2a14ea",
+      "reliability_case_id": "HRV1-004",
+      "request_sha256": "dea454669e3465d2a5d33566040c722ecb168eb7774c524738cd10428a63f87d",
+      "search_rank": 202
+    },
+    {
+      "input_sha256": "6a4f652ca3e7b3856238952827a891877e0dc5f5d5b20646053d2c085cde7253",
+      "reliability_case_id": "HRV1-042",
+      "request_sha256": "6797d015ef68515f238f7be9e4c2ed64bc049edfddec5ec9c1d674047ed7db17",
+      "search_rank": 235
+    },
+    {
+      "input_sha256": "ca3811126a985dfe86410ac69c1a6e25308abb858319023d9b5b83d6c9c5bef3",
+      "reliability_case_id": "HRV1-001",
+      "request_sha256": "efde4144bc95253442c2479e406d22f41cfc881269c93244e58bb46b6abf8380",
+      "search_rank": 237
+    },
+    {
+      "input_sha256": "0bf79aad8eb95edcff317be6f6cf2eb564a200cff751879f21ed6e952e138477",
+      "reliability_case_id": "HRV1-070",
+      "request_sha256": "e66f134813d86c9cb80f3c070f67a955507384697cfebd75b9540e9918a9d4f3",
+      "search_rank": 238
+    },
+    {
+      "input_sha256": "952c22eefba4206e0f1f661a328cc8afd4221875e1026e0f1fc87988871b2481",
+      "reliability_case_id": "HRV1-034",
+      "request_sha256": "152444caa648380d75f80e6184f2d256d1a60cd63a672e12d4cd001c57a2df62",
+      "search_rank": 262
+    },
+    {
+      "input_sha256": "62a1fcb24a63cab0daaece4a55f3666b94017e5b9ed67ccc4685f9a2b44964f9",
+      "reliability_case_id": "HRV1-045",
+      "request_sha256": "40d815b5477f36193c325799ae3a5114f7f1e91c6ee5f0c910f665bd0858ddb0",
+      "search_rank": 285
+    },
+    {
+      "input_sha256": "d34640cb75083cab778d3a1e3ee52d82f2fb3cebc917ebdc9b740f0c94366b4f",
+      "reliability_case_id": "HRV1-023",
+      "request_sha256": "898676fb7ff308de32ca3e366c2c2057ea0efb0418751496ba05bc1a9fa6135a",
+      "search_rank": 304
+    },
+    {
+      "input_sha256": "373e57f233403a4050e39edd66b9c2ce5914c0de6d97264dcff6a091250e4f54",
+      "reliability_case_id": "HRV1-051",
+      "request_sha256": "bb705641afa98de38535e6e7db7bd1d861c61adb69fb3aa399e26526efa7cc33",
+      "search_rank": 317
+    },
+    {
+      "input_sha256": "3835310d6ef3734f0224585633d9850d2949edbf5774e79da96ea27df8a1a551",
+      "reliability_case_id": "HRV1-033",
+      "request_sha256": "ee7c9a6ebc92f3b3a8679ec7420d48f4a6e006db86a6222f047300a6e93541fb",
+      "search_rank": 375
+    },
+    {
+      "input_sha256": "dfe6082e2b8e4f8f1055c1c9a9fb6fc0ee7734bc971ccf741e114653bca99124",
+      "reliability_case_id": "HRV1-037",
+      "request_sha256": "6435d8ae92ca524c259c8a72362a5e7aa8c0861b26f4290476f7f0f6636012ff",
+      "search_rank": 409
+    },
+    {
+      "input_sha256": "539f4ae5ab8650bcc5b46c61c97b8d9c0770734ef9d0bbe499be9f60bceac85b",
+      "reliability_case_id": "HRV1-062",
+      "request_sha256": "8dd0a4225e59faf0e395b8414437fd36d75b4d8ee99d5d8c9575dfa369fe7f99",
+      "search_rank": 418
+    },
+    {
+      "input_sha256": "f596acbc90a42ffc52dbfe0845426cb2b09b49c4d734a09ae9d7d0ac4762b3de",
+      "reliability_case_id": "HRV1-035",
+      "request_sha256": "39d1fb55f309048d22283a12bd1e04ac15494689f8c68b77b2d3fcd57c171d62",
+      "search_rank": 468
+    },
+    {
+      "input_sha256": "a16834e34703ed28e20ddc6367f2895fb2b84efad3ed5d762eea2eedb1aec302",
+      "reliability_case_id": "HRV1-049",
+      "request_sha256": "ca1d319ae571eaf999517dfc2db6ae91b08f947b554993c6238f61faa216e755",
+      "search_rank": 480
+    },
+    {
+      "input_sha256": "b342ca6598513a7e78738c2d23e9807fa8f293da997f67fb6e79765254078f9e",
+      "reliability_case_id": "HRV1-030",
+      "request_sha256": "399151b345b7479e1964b4036513bf644f52d5ad115f90b799bd6e44a4fd9872",
+      "search_rank": 509
+    },
+    {
+      "input_sha256": "e8af8e6e07e6670813b42cc9f4a2bccb2c73c3cf8aa13d85d576635f4143f67a",
+      "reliability_case_id": "HRV1-072",
+      "request_sha256": "e7d6396045f792af18d486631ebd13a6c1f1093e3ffff8365ed7fee26456d04f",
+      "search_rank": 513
+    },
+    {
+      "input_sha256": "7bb552033f8a7a12ad5c49dd07260080db394e06d35718071b4d66dba49d14b4",
+      "reliability_case_id": "HRV1-031",
+      "request_sha256": "d447cfbbfb8dde5d2b12464ce5bbf4ed533f8e9c0b35673b6ce6ab0447442bfe",
+      "search_rank": 546
+    },
+    {
+      "input_sha256": "1f99de18744e7ffaff93fa694c6cb8dbd87099f1232a25722dd46562afabf91d",
+      "reliability_case_id": "HRV1-055",
+      "request_sha256": "658f76108c234d06bc912d7efc1b13e2c90be4b84d5519451ec9a03659004277",
+      "search_rank": 574
+    },
+    {
+      "input_sha256": "bcee71fc72e232507529f27dbf3dc9e09edd88d588c99da0bb20aaed9c0d5228",
+      "reliability_case_id": "HRV1-071",
+      "request_sha256": "b2e3fcf94187f9e9ca2fed764b11cab3ac6a0a196a658dff14a674564f599778",
+      "search_rank": 582
+    },
+    {
+      "input_sha256": "6faba033f4cd2246a257401a66ee86d93d450991ccb602fd414fe9f1a9d7821b",
+      "reliability_case_id": "HRV1-013",
+      "request_sha256": "b02546c8a3fb6a669797d12e65cac5badb456dbb2f7864085867a530dc9a1221",
+      "search_rank": 615
+    },
+    {
+      "input_sha256": "4045a1b308d5fa2afca2f785ffb4afe0ba1065d3553a3413795074233d48a771",
+      "reliability_case_id": "HRV1-067",
+      "request_sha256": "ae1b5d282284d20eb6a99dc2cb5368d8e2a7736e9e64328bf2717773031fad65",
+      "search_rank": 633
+    },
+    {
+      "input_sha256": "d04021f6bbae697429df7ba74569aa2d15d07d42e276592a20b513b5dfdd5135",
+      "reliability_case_id": "HRV1-069",
+      "request_sha256": "f7de157bb8030b0ef1872570e768d1bec44abd3e12ec99a9c73e2a22f46609f2",
+      "search_rank": 751
+    },
+    {
+      "input_sha256": "a1342bf1df530d950728c18d51599b511db02bb92233ef31c9da7cd714e53937",
+      "reliability_case_id": "HRV1-065",
+      "request_sha256": "8505d0dea00f7fd1120253bedb94ee955d4b52ff0348a462e970b441a8d71c35",
+      "search_rank": 759
+    },
+    {
+      "input_sha256": "2422325a108035aa84304d0cb65502e98601c5ffa4eb9c2469a64b963a0c180d",
+      "reliability_case_id": "HRV1-050",
+      "request_sha256": "7cba4e77700cc5e8349806cb14646cd9c46ee12619c33f4e45a9c0a3a7ff04dc",
+      "search_rank": 769
+    },
+    {
+      "input_sha256": "e80f6a1a9da58947a3d032cc5c623ca35f007dfab5d4862ca5c35b1a005bd5da",
+      "reliability_case_id": "HRV1-060",
+      "request_sha256": "242d7d8f91a69cff492f5336f07d77691563e8e45b8dffb07e51c26668aea6d6",
+      "search_rank": 839
+    },
+    {
+      "input_sha256": "e31d6728153c7e531efa0a44e04536c69b5d0a24150ae0c2ef4c2b9ef18d01ee",
+      "reliability_case_id": "HRV1-047",
+      "request_sha256": "8caf2e77a76a2177e1faefead58d0f09bd8d37e4dc19c8c51efe9a9c9b84510d",
+      "search_rank": 842
+    },
+    {
+      "input_sha256": "07e67c4360bdef3c185ccb5ca9d833ffbdf4c7a8916556d25145e9e749d93a22",
+      "reliability_case_id": "HRV1-018",
+      "request_sha256": "11c9d740b85434fade79009b37f3a5a8cd3e99d3b1034ca5e0819db90d59ff8e",
+      "search_rank": 889
+    },
+    {
+      "input_sha256": "45a51a2025d51c4c551ca1a526b93d3121e73fc540603fe6dbf4468e34c90730",
+      "reliability_case_id": "HRV1-016",
+      "request_sha256": "dad9eecf5f4b83cf3b2ed2068132eb10cacb39a0c3862921a87ecb3bd8e9433a",
+      "search_rank": 898
+    },
+    {
+      "input_sha256": "c31a56843a7c9927c3a88e85fc3d0ff67f1bda84251bf4f60bf249402817b390",
+      "reliability_case_id": "HRV1-012",
+      "request_sha256": "df0c88509d335025e98c9c951077e8c2066a0de7b3d6577319fb18e3ff9fcbb6",
+      "search_rank": 917
+    },
+    {
+      "input_sha256": "b6310895411c9c831670f6766a7ab95019e16f99d121f07e1005560a99e17433",
+      "reliability_case_id": "HRV1-019",
+      "request_sha256": "074d50e8d164af65396bbefc841dd48067f7dc47dab4039f8f1d1db09bdac072",
+      "search_rank": 934
+    },
+    {
+      "input_sha256": "339463d573486bd149c38188947890f322bb113333ded99db77109300cea0acf",
+      "reliability_case_id": "HRV1-022",
+      "request_sha256": "f99440f62f8cbddb099ae637929c2c416445e88440d054dd87c0a26e044c0a58",
+      "search_rank": 962
+    },
+    {
+      "input_sha256": "6c9f8cb05c63ab791e31ae67f96d0fc8482e37ac81574dd9b02927de5ffc8626",
+      "reliability_case_id": "HRV1-077",
+      "request_sha256": "a1d1549982c5ac34bc440ce5fc661ef987a6363bf9e7c51db7348dac5930377e",
+      "search_rank": 1105
+    },
+    {
+      "input_sha256": "bbf9662f30e07afbead2421076eea576329f9c7f46b545262e97f03674911233",
+      "reliability_case_id": "HRV1-032",
+      "request_sha256": "d302c20cc271fcbdecb2bae1035b04ed4ee1ca0161d02f4080fe89091794b89c",
+      "search_rank": 1111
+    },
+    {
+      "input_sha256": "ddb663d14fabd8e325420928a8c2d209f9ee7bc19a4007465b72321665678d01",
+      "reliability_case_id": "HRV1-057",
+      "request_sha256": "a75bc0575091a1a6a04376ca20434480e775fec51081420961f7e5ef056fcada",
+      "search_rank": 1142
+    },
+    {
+      "input_sha256": "d74d0ddde4f160e2fab40642476d4c899d10a135810cb88d806b6cad78edcaaa",
+      "reliability_case_id": "HRV1-046",
+      "request_sha256": "d4228fdc6a59f2d9ae68c48b7ca2a7ebc74d36a1616053afb3c43dec73523c77",
+      "search_rank": 1159
+    },
+    {
+      "input_sha256": "0d9ddc6ceaadf8cc2804d3df34ffb9b80a3056133f4b5660c7d599fc40a53278",
+      "reliability_case_id": "HRV1-068",
+      "request_sha256": "14a4f5a1da0af0004d7f169e82003f012f5036e8bca00e37f99facd32b406e09",
+      "search_rank": 1229
+    },
+    {
+      "input_sha256": "f6470886c4f4eba9882b044f1297335feb29a76799133b672149d41a13d1ef94",
+      "reliability_case_id": "HRV1-010",
+      "request_sha256": "2183be81a2e17076203ddda0d62e530afc739bab5b19cfc153613e01597654fd",
+      "search_rank": 1238
+    },
+    {
+      "input_sha256": "64db1dd6b3886fa3518e3d9bd2bca787ba9e1ee18ff1d7fecf546ba23c023909",
+      "reliability_case_id": "HRV1-011",
+      "request_sha256": "7229a19e0eee39b6ed866d4bea3f8339414a6804d836b146414410140c8d92a4",
+      "search_rank": 1396
+    },
+    {
+      "input_sha256": "cb818b0f477903cfb5ea96aeecdc42b27be472cb933f87b85b9698798bac0064",
+      "reliability_case_id": "HRV1-036",
+      "request_sha256": "b8ea5c52fa18e1dc33e3e2782d9363ca20e8d1ff9df6b12c43bd17ed07b62ded",
+      "search_rank": 1399
+    },
+    {
+      "input_sha256": "d9fa77ff5f7f3e372f4aa5c6aee598d4bcb8024d37cf8774a3102b6b8f72a547",
+      "reliability_case_id": "HRV1-029",
+      "request_sha256": "845c7b88180f4edd05b7a0c9cbd39587d2f408915789bed74813c0e99a97a5bc",
+      "search_rank": 1462
+    },
+    {
+      "input_sha256": "4df8300134faf41aa4a54a5d48ce531a850bdb8fe8483748ac4de57609ea22f8",
+      "reliability_case_id": "HRV1-020",
+      "request_sha256": "234fe4f0f27a4d2693fa2ba2723d8ca14e90b4dd3261eccfbc6cce03190092fc",
+      "search_rank": 1508
+    },
+    {
+      "input_sha256": "65baf1a0f25d8386ee9bcc5a82c95806cf4551fe71df7c0446c134787e0e3a7e",
+      "reliability_case_id": "HRV1-048",
+      "request_sha256": "17dd5d6583f518d5c4a2cc224ff49f96576adcd4413dcc5ee786b5a75378d684",
+      "search_rank": 1517
+    },
+    {
+      "input_sha256": "207e7f2a4d17d7fcb86f1ce73a067996fe8c3e0793856a54032178c5fb87ee05",
+      "reliability_case_id": "HRV1-041",
+      "request_sha256": "a22744a688988db08ee0a73cd316a2cb0b7f38ad799e40913b21a76105533ed5",
+      "search_rank": 1566
+    }
+  ],
+  "request_index_sha256": "2e597ec16cfe5a84d1c3da50e1fbfa1e5a5583b057e877cdbc293083ed579ff2",
+  "schema_version": "sherloc-eval-b-auxiliary-pre-execution-freeze-v1",
+  "silver_reference_labels_sent": false,
+  "status": "FROZEN_BEFORE_MODEL_PERFORMANCE",
+  "store": false
+}

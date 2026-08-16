@@ -1,0 +1,14 @@
+target,metric,value,n,support_json,confusion_matrix_json,model,prompt_version
+GEOGRAPHIC_FORM,MACRO_F1,0.763204225352,55,"{""Internal"":21,""Transnational"":35}",,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+GEOGRAPHIC_FORM,MICRO_F1,0.789915966387,55,"{""Internal"":21,""Transnational"":35}",,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+GEOGRAPHIC_FORM,EXACT_SET_ACCURACY,0.618181818182,55,"{""Internal"":21,""Transnational"":35}",,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+GEOGRAPHIC_FORM,EXAMPLE_JACCARD,0.736363636364,55,"{""Internal"":21,""Transnational"":35}",,gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+VICTIM_MULTIPLICITY,ACCURACY,0.927272727273,55,"{""MULTIPLE"":39,""SINGLE"":14,""UNKNOWN"":2}","{""MULTIPLE"":{""MULTIPLE"":37,""SINGLE"":2,""UNKNOWN"":0},""SINGLE"":{""MULTIPLE"":0,""SINGLE"":14,""UNKNOWN"":0},""UNKNOWN"":{""MULTIPLE"":1,""SINGLE"":1,""UNKNOWN"":0}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+VICTIM_MULTIPLICITY,MACRO_F1,0.621421589164,55,"{""MULTIPLE"":39,""SINGLE"":14,""UNKNOWN"":2}","{""MULTIPLE"":{""MULTIPLE"":37,""SINGLE"":2,""UNKNOWN"":0},""SINGLE"":{""MULTIPLE"":0,""SINGLE"":14,""UNKNOWN"":0},""UNKNOWN"":{""MULTIPLE"":1,""SINGLE"":1,""UNKNOWN"":0}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+CHILD_INVOLVEMENT,ACCURACY,0.927272727273,55,"{""FALSE"":4,""TRUE"":22,""UNKNOWN"":29}","{""FALSE"":{""FALSE"":3,""TRUE"":0,""UNKNOWN"":1},""TRUE"":{""FALSE"":0,""TRUE"":21,""UNKNOWN"":1},""UNKNOWN"":{""FALSE"":0,""TRUE"":2,""UNKNOWN"":27}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+CHILD_INVOLVEMENT,MACRO_F1,0.907170224412,55,"{""FALSE"":4,""TRUE"":22,""UNKNOWN"":29}","{""FALSE"":{""FALSE"":3,""TRUE"":0,""UNKNOWN"":1},""TRUE"":{""FALSE"":0,""TRUE"":21,""UNKNOWN"":1},""UNKNOWN"":{""FALSE"":0,""TRUE"":2,""UNKNOWN"":27}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+ORGANIZED_CRIMINAL_GROUP,ACCURACY,0.836363636364,55,"{""FALSE"":49,""TRUE"":6}","{""FALSE"":{""FALSE"":40,""TRUE"":9},""TRUE"":{""FALSE"":0,""TRUE"":6}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+ORGANIZED_CRIMINAL_GROUP,PRECISION,0.400000000000,55,"{""FALSE"":49,""TRUE"":6}","{""FALSE"":{""FALSE"":40,""TRUE"":9},""TRUE"":{""FALSE"":0,""TRUE"":6}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+ORGANIZED_CRIMINAL_GROUP,RECALL,1.000000000000,55,"{""FALSE"":49,""TRUE"":6}","{""FALSE"":{""FALSE"":40,""TRUE"":9},""TRUE"":{""FALSE"":0,""TRUE"":6}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+ORGANIZED_CRIMINAL_GROUP,F1,0.571428571429,55,"{""FALSE"":49,""TRUE"":6}","{""FALSE"":{""FALSE"":40,""TRUE"":9},""TRUE"":{""FALSE"":0,""TRUE"":6}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1
+ORGANIZED_CRIMINAL_GROUP,BALANCED_ACCURACY,0.908163265306,55,"{""FALSE"":49,""TRUE"":6}","{""FALSE"":{""FALSE"":40,""TRUE"":9},""TRUE"":{""FALSE"":0,""TRUE"":6}}",gpt-5.6-luna,eval-b-auxiliary-zero-shot-v1

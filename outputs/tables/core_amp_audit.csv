@@ -1,0 +1,188 @@
+7. The human set should deliberately contain both complete and missing metadata cases
+
+I would not sample 150 randomly from the 1,263.
+
+Instead, build it to expose precisely this problem.
+
+Something like:
+
+Group A — ordinary/representative cases
+
+~70–80 cases
+
+Mostly from the 1,263 core cohort.
+
+Purpose:
+
+normal extraction quality;
+evidence-span validation;
+ensure results aren't based only on challenge cases.
+Group B — structured metadata exists but narrative support may be weak
+
+~25–30 cases
+
+Purpose:
+
+Can a model reasonably recover the official SHERLOC label from the permitted input?
+
+This identifies input–ground-truth mismatch.
+
+Group C — structured field missing, but narrative may contain the information
+
+~25–30 cases
+
+Purpose:
+
+Does the model extract correct information that SHERLOC structured metadata omitted?
+
+This is potentially one of the most interesting findings in the paper.
+
+Group D — narrative genuinely lacks enough information
+
+~15–20 cases
+
+Purpose:
+
+Does the model abstain instead of hallucinating?
+
+Total:
+
+≈140−160
+
+We can adjust it to 120 if annotation time becomes tight.analysis,population,source,field_or_combination,metric,value,denominator,percentage,notes
+availability,all_cases,Legacy,A,available_cases,1404,1590,88.301887,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,M,available_cases,1319,1590,82.955975,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,P,available_cases,1412,1590,88.805031,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,A+M,available_cases,1299,1590,81.698113,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,A+P,available_cases,1365,1590,85.849057,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,M+P,available_cases,1289,1590,81.069182,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,A+M+P,available_cases,1273,1590,80.062893,Availability is based only on at least one raw value per required field.
+availability,all_cases,Legacy,none,available_cases,135,1590,8.490566,
+availability,all_cases,Sidebar,A,available_cases,365,1590,22.955975,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,M,available_cases,326,1590,20.503145,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,P,available_cases,348,1590,21.886792,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,A+M,available_cases,318,1590,20.0,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,A+P,available_cases,329,1590,20.691824,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,M+P,available_cases,300,1590,18.867925,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,A+M+P,available_cases,293,1590,18.427673,Availability is based only on at least one raw value per required field.
+availability,all_cases,Sidebar,none,available_cases,1205,1590,75.786164,
+availability,all_cases,Union,A,available_cases,1507,1590,94.779874,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,M,available_cases,1405,1590,88.36478,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,P,available_cases,1501,1590,94.402516,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,A+M,available_cases,1387,1590,87.232704,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,A+P,available_cases,1457,1590,91.63522,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,M+P,available_cases,1369,1590,86.100629,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,A+M+P,available_cases,1353,1590,85.09434,Availability is based only on at least one raw value per required field.
+availability,all_cases,Union,none,available_cases,37,1590,2.327044,
+legacy_mutually_exclusive_availability,all_cases,Legacy,A only,case_count,13,1590,0.81761,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,M only,case_count,4,1590,0.251572,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,P only,case_count,31,1590,1.949686,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,A+M only,case_count,26,1590,1.63522,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,A+P only,case_count,92,1590,5.786164,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,M+P only,case_count,16,1590,1.006289,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,A+M+P,case_count,1273,1590,80.062893,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,all_cases,Legacy,none,case_count,135,1590,8.490566,Categories are mutually exclusive and exhaustive.
+availability,english_fact_summary,Legacy,A,available_cases,1387,1565,88.626198,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,M,available_cases,1307,1565,83.514377,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,P,available_cases,1394,1565,89.073482,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,A+M,available_cases,1288,1565,82.300319,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,A+P,available_cases,1350,1565,86.261981,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,M+P,available_cases,1279,1565,81.72524,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,A+M+P,available_cases,1263,1565,80.702875,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Legacy,none,available_cases,131,1565,8.370607,
+availability,english_fact_summary,Sidebar,A,available_cases,362,1565,23.13099,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,M,available_cases,326,1565,20.830671,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,P,available_cases,344,1565,21.980831,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,A+M,available_cases,318,1565,20.319489,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,A+P,available_cases,326,1565,20.830671,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,M+P,available_cases,300,1565,19.169329,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,A+M+P,available_cases,293,1565,18.722045,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Sidebar,none,available_cases,1184,1565,75.654952,
+availability,english_fact_summary,Union,A,available_cases,1489,1565,95.14377,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,M,available_cases,1393,1565,89.009585,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,P,available_cases,1483,1565,94.760383,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,A+M,available_cases,1376,1565,87.923323,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,A+P,available_cases,1441,1565,92.076677,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,M+P,available_cases,1359,1565,86.837061,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,A+M+P,available_cases,1343,1565,85.814696,Availability is based only on at least one raw value per required field.
+availability,english_fact_summary,Union,none,available_cases,33,1565,2.108626,
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,A only,case_count,12,1565,0.766773,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,M only,case_count,3,1565,0.191693,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,P only,case_count,28,1565,1.789137,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,A+M only,case_count,25,1565,1.597444,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,A+P only,case_count,87,1565,5.559105,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,M+P only,case_count,16,1565,1.022364,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,A+M+P,case_count,1263,1565,80.702875,Categories are mutually exclusive and exhaustive.
+legacy_mutually_exclusive_availability,english_fact_summary,Legacy,none,case_count,131,1565,8.370607,Categories are mutually exclusive and exhaustive.
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Act,legacy_only,1142,1590,71.823899,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Act,sidebar_only,103,1590,6.477987,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Act,both,262,1590,16.477987,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Act,neither,83,1590,5.220126,
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Act,exact_raw_set_match,50,262,19.083969,Exact raw string equality; no normalization.
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Act,partial_overlap,170,262,64.885496,Exact raw string equality; no normalization.
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Act,disjoint,42,262,16.030534,Exact raw string equality; no normalization.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Act,legacy_subset_of_sidebar,16,170,9.411765,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Act,sidebar_subset_of_legacy,0,170,0.0,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Act,overlap_neither_subset,154,170,90.588235,Proper-subset categories; denominator is partial-overlap cases.
+raw_set_similarity,all_cases,Legacy_vs_Sidebar,Act,mean_jaccard,0.503404822489,,,Equally weighted across 262 both-source cases; exact labels only.
+raw_set_similarity,all_cases,Legacy_vs_Sidebar,Act,median_jaccard,0.5,,,Equally weighted across 262 both-source cases; exact labels only.
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Means,legacy_only,1079,1590,67.861635,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Means,sidebar_only,86,1590,5.408805,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Means,both,240,1590,15.09434,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Means,neither,185,1590,11.63522,
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Means,exact_raw_set_match,95,240,39.583333,Exact raw string equality; no normalization.
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Means,partial_overlap,102,240,42.5,Exact raw string equality; no normalization.
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Means,disjoint,43,240,17.916667,Exact raw string equality; no normalization.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Means,legacy_subset_of_sidebar,3,102,2.941176,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Means,sidebar_subset_of_legacy,1,102,0.980392,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Means,overlap_neither_subset,98,102,96.078431,Proper-subset categories; denominator is partial-overlap cases.
+raw_set_similarity,all_cases,Legacy_vs_Sidebar,Means,mean_jaccard,0.579444444444,,,Equally weighted across 240 both-source cases; exact labels only.
+raw_set_similarity,all_cases,Legacy_vs_Sidebar,Means,median_jaccard,0.5,,,Equally weighted across 240 both-source cases; exact labels only.
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Purpose,legacy_only,1153,1590,72.515723,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Purpose,sidebar_only,89,1590,5.597484,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Purpose,both,259,1590,16.289308,
+legacy_vs_sidebar_availability,all_cases,Legacy_vs_Sidebar,Purpose,neither,89,1590,5.597484,
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Purpose,exact_raw_set_match,248,259,95.752896,Exact raw string equality; no normalization.
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Purpose,partial_overlap,10,259,3.861004,Exact raw string equality; no normalization.
+raw_set_agreement,all_cases,Legacy_vs_Sidebar,Purpose,disjoint,1,259,0.3861,Exact raw string equality; no normalization.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Purpose,legacy_subset_of_sidebar,2,10,20.0,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Purpose,sidebar_subset_of_legacy,6,10,60.0,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,all_cases,Legacy_vs_Sidebar,Purpose,overlap_neither_subset,2,10,20.0,Proper-subset categories; denominator is partial-overlap cases.
+raw_set_similarity,all_cases,Legacy_vs_Sidebar,Purpose,mean_jaccard,0.975868725869,,,Equally weighted across 259 both-source cases; exact labels only.
+raw_set_similarity,all_cases,Legacy_vs_Sidebar,Purpose,median_jaccard,1.0,,,Equally weighted across 259 both-source cases; exact labels only.
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Act,legacy_only,1127,1565,72.01278,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Act,sidebar_only,102,1565,6.517572,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Act,both,260,1565,16.613419,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Act,neither,76,1565,4.85623,
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Act,exact_raw_set_match,50,260,19.230769,Exact raw string equality; no normalization.
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Act,partial_overlap,170,260,65.384615,Exact raw string equality; no normalization.
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Act,disjoint,40,260,15.384615,Exact raw string equality; no normalization.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Act,legacy_subset_of_sidebar,16,170,9.411765,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Act,sidebar_subset_of_legacy,0,170,0.0,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Act,overlap_neither_subset,154,170,90.588235,Proper-subset categories; denominator is partial-overlap cases.
+raw_set_similarity,english_fact_summary,Legacy_vs_Sidebar,Act,mean_jaccard,0.507277167277,,,Equally weighted across 260 both-source cases; exact labels only.
+raw_set_similarity,english_fact_summary,Legacy_vs_Sidebar,Act,median_jaccard,0.5,,,Equally weighted across 260 both-source cases; exact labels only.
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Means,legacy_only,1067,1565,68.178914,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Means,sidebar_only,86,1565,5.495208,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Means,both,240,1565,15.335463,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Means,neither,172,1565,10.990415,
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Means,exact_raw_set_match,95,240,39.583333,Exact raw string equality; no normalization.
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Means,partial_overlap,102,240,42.5,Exact raw string equality; no normalization.
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Means,disjoint,43,240,17.916667,Exact raw string equality; no normalization.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Means,legacy_subset_of_sidebar,3,102,2.941176,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Means,sidebar_subset_of_legacy,1,102,0.980392,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Means,overlap_neither_subset,98,102,96.078431,Proper-subset categories; denominator is partial-overlap cases.
+raw_set_similarity,english_fact_summary,Legacy_vs_Sidebar,Means,mean_jaccard,0.579444444444,,,Equally weighted across 240 both-source cases; exact labels only.
+raw_set_similarity,english_fact_summary,Legacy_vs_Sidebar,Means,median_jaccard,0.5,,,Equally weighted across 240 both-source cases; exact labels only.
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Purpose,legacy_only,1139,1565,72.779553,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Purpose,sidebar_only,89,1565,5.686901,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Purpose,both,255,1565,16.29393,
+legacy_vs_sidebar_availability,english_fact_summary,Legacy_vs_Sidebar,Purpose,neither,82,1565,5.239617,
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Purpose,exact_raw_set_match,244,255,95.686275,Exact raw string equality; no normalization.
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Purpose,partial_overlap,10,255,3.921569,Exact raw string equality; no normalization.
+raw_set_agreement,english_fact_summary,Legacy_vs_Sidebar,Purpose,disjoint,1,255,0.392157,Exact raw string equality; no normalization.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Purpose,legacy_subset_of_sidebar,2,10,20.0,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Purpose,sidebar_subset_of_legacy,6,10,60.0,Proper-subset categories; denominator is partial-overlap cases.
+partial_overlap_subtype,english_fact_summary,Legacy_vs_Sidebar,Purpose,overlap_neither_subset,2,10,20.0,Proper-subset categories; denominator is partial-overlap cases.
+raw_set_similarity,english_fact_summary,Legacy_vs_Sidebar,Purpose,mean_jaccard,0.975490196078,,,Equally weighted across 255 both-source cases; exact labels only.
+raw_set_similarity,english_fact_summary,Legacy_vs_Sidebar,Purpose,median_jaccard,1.0,,,Equally weighted across 255 both-source cases; exact labels only.

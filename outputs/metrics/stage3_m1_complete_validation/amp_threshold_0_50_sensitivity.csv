@@ -1,0 +1,3 @@
+method,evaluation,prediction_variant,macro_f1,micro_f1,exact_set_accuracy,example_jaccard,test_n,macro_label_count,reference_terminology
+M1,A1,THRESHOLD_0_50,0.3428179140148675,0.7102739726027397,0.039525691699604744,0.5692365495725179,253,17,SHERLOC Legacy Keywords silver reference
+M1,A2,THRESHOLD_0_50,0.3986917753880463,0.7026597856292179,0.022067363530778164,0.5500326328723542,861,16,SHERLOC Legacy Keywords silver reference
